@@ -3289,6 +3289,28 @@ button.pmTag{cursor:pointer;}
 #tvOrderNow{background:rgba(255,244,225,.95);border:1.6px dashed #f0cf92;border-radius:14px;padding:9px 12px;
   margin-top:9px;font-size:12px;color:#b5813c;font-weight:800;text-align:center;line-height:1.6;}
 
+/* --- お店の内装（せんよう画面） --- */
+#stShop{position:fixed;inset:0;z-index:3250;display:none;flex-direction:column;background:linear-gradient(180deg,#eaf4fb,#fdf3ec);}
+#stShop.show{display:flex;}
+#stMain{flex:1;display:flex;min-height:0;}
+#stStage{flex:1;display:flex;align-items:center;justify-content:center;padding:6px 8px calc(8px + env(safe-area-inset-bottom));min-width:0;}
+#stStage svg{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 4px 14px rgba(110,140,160,.2);touch-action:none;}
+#stShop #decoBar{position:relative;top:auto;right:auto;bottom:auto;width:126px;flex:0 0 126px;display:none;box-shadow:-3px 0 14px rgba(110,140,160,.14);}
+#stShop.editing #decoBar{display:flex;}
+#stShop.editing #decoDetail.on{display:block;}
+.stItem{cursor:grab;}
+.stItem.on{outline:none;}
+@media (max-width:380px){#stShop #decoBar{width:112px;flex:0 0 112px;}}
+/* --- ほかのプレイヤー（じぶんの半分くらい） --- */
+.tvOth{width:15px;opacity:.92;}
+.tvOth .tvCatNm{font-size:7px;}
+#tvHideRow{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.86);border-radius:14px;padding:0 11px;
+  font-size:11.5px;font-weight:800;color:#7fa3b8;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(120,150,170,.12);}
+#tvHideRow input{accent-color:#5b9cb8;width:15px;height:15px;}
+#shpDeco{width:100%;border:none;background:rgba(143,190,220,.16);color:#5c93ad;font-family:"Yomogi","Kosugi Maru",sans-serif;
+  font-size:14px;font-weight:900;border-radius:16px;padding:12px;cursor:pointer;margin-top:8px;}
+#shpDeco:active{transform:translateY(1px);}
+
 </style>
 </head>
 <body>
@@ -3690,27 +3712,6 @@ button.pmTag{cursor:pointer;}
   <button id="roomBag" type="button" aria-label="プロフィール・衣装"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M11 13 a5 5 0 0 1 10 0" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round"/><rect x="6.5" y="13" width="19" height="15" rx="3.5" fill="none" stroke="#5c93ad" stroke-width="2.4"/><path d="M6.5 19 H25.5" stroke="#5c93ad" stroke-width="2.2"/></svg><span id="roomBagBadge" class="coinBadge" hidden></span></button>
   <button id="roomCam" type="button" aria-label="カメラ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M11 7 L13 4 L19 4 L21 7 L27 7 Q29 7 29 9 L29 24 Q29 26 27 26 L5 26 Q3 26 3 24 L3 9 Q3 7 5 7 Z" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linejoin="round"/><circle cx="16" cy="16" r="6" fill="none" stroke="#5c93ad" stroke-width="2.4"/></svg></button>
   <button id="roomShop" type="button" aria-label="ショップ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 H8 L10.6 20.5 H24.4 L26.6 10 H10.3" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="25" r="2.2" fill="#5c93ad"/><circle cx="22.5" cy="25" r="2.2" fill="#5c93ad"/></svg></button>
-  <button id="roomDeco" type="button" aria-label="内装">🛋</button>
-  <div id="decoBar">
-    <div id="decoTabs">
-      <button class="decoTab on" type="button" data-t="wall">かべ</button>
-      <button class="decoTab" type="button" data-t="floor">ゆか</button>
-      <button class="decoTab" type="button" data-t="window">まど</button>
-      <button class="decoTab" type="button" data-t="item">もの</button>
-    </div>
-    <div id="decoList"></div>
-    <div id="decoDetail">
-      <div class="decoRow"><span class="decoLbl">大きさ</span><input type="range" id="decoS" min="30" max="260" value="100"/></div>
-      <div class="decoRow"><span class="decoLbl">かたむき</span><input type="range" id="decoR" min="-180" max="180" value="0"/></div>
-      <div class="decoRow"><span class="decoLbl">いろ</span><input type="range" id="decoH" min="0" max="360" value="0"/></div>
-      <div class="decoRow">
-        <button class="decoBtn" id="decoDown" type="button">↓うしろ</button>
-        <button class="decoBtn" id="decoUp" type="button">↑まえ</button>
-        <button class="decoBtn del" id="decoDel" type="button">🗑</button>
-      </div>
-    </div>
-    <button id="decoDone" type="button">かんりょう</button>
-  </div>
   <button id="roomDoor" type="button" aria-label="いってらっしゃい" hidden>いってらっしゃい</button>
   <div id="editBar">
     <div id="editTray"></div>
@@ -6883,7 +6884,7 @@ function catInner(body,ear,pose,dir,expr,cos){
     case "bed":base=poseBed(body,ear,dir);break;
     default:base=poseSit(body,ear,dir);
   }
-  return base+(cos?costumeSVG(cos,pose,body,ear,dir):"");
+  return base+(cos?costumeSVG(cos,pose,body,ear,dir):"")+((typeof _artCosSVG==="function")?_artCosSVG():"");
 }
 function catFaceSvg(body,ear,cos){
   _setEyeColors(body);
@@ -10572,7 +10573,6 @@ function roomSceneSVG(part){
 <rect x="0" y="${floorY-2}" width="${W}" height="16" fill="#f2d6bf"/>
 <rect x="0" y="${floorY}" width="${W}" height="22" fill="#000000" opacity="0.06"/>
 <g stroke="#d6b98c" stroke-width="2" opacity="0.45">${[0.16,0.36,0.56,0.78,0.95].map(f=>`<line x1="${(W*f).toFixed(0)}" y1="${floorY+4}" x2="${(W*(f-0.5)*1.5+W*0.5).toFixed(0)}" y2="${H}"/>`).join("")}</g>
-${_decoWallFloorSVG(W,H,floorY)}
 <polygon class="rmBeam" style="--bo:${beamOp}" points="${winX+14},${winY+winH-6} ${winX+winW-14},${winY+winH-6} ${winX+winW+60},${Math.round(floorY+band*0.5)} ${winX-40},${Math.round(floorY+band*0.5)}" fill="${beamFill}"/>
 <ellipse class="rmBeam" style="--bo:${(beamOp*0.7).toFixed(3)}" cx="${winX+winW/2}" cy="${Math.round(floorY+band*0.16)}" rx="${Math.round(winW*0.62)}" ry="${Math.round(band*0.1)}" fill="${beamFill}"/>
 <g>
@@ -10584,7 +10584,6 @@ ${celes}
 <ellipse cx="${winX+44}" cy="${winY+winH-40}" rx="34" ry="20" fill="${hillCol}"/><ellipse cx="${winX+winW-50}" cy="${winY+winH-32}" rx="40" ry="22" fill="${hillCol2}"/>
 ${showClouds?`<g fill="#ffffff" opacity="0.95"><ellipse cx="${winX+54}" cy="${winY+54}" rx="22" ry="9"/><ellipse cx="${winX+72}" cy="${winY+48}" rx="15" ry="8"/></g>`:""}
 <g stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity=".32"><line x1="${winX+winW*0.22}" y1="${winY+winH*0.62}" x2="${winX+winW*0.46}" y2="${winY+winH*0.18}"/><line x1="${winX+winW*0.34}" y1="${winY+winH*0.72}" x2="${winX+winW*0.52}" y2="${winY+winH*0.4}"/></g>
-${_decoWindowSVG(winX,winY,winW,winH)}
 <rect x="${winX+winW/2-4}" y="${winY+9}" width="8" height="${winH-18}" fill="#ffffff"/><rect x="${winX+9}" y="${winY+winH/2-4}" width="${winW-18}" height="8" fill="#ffffff"/>
 <path d="M${winX-2} ${winY} q-12 ${winH*0.3} 0 ${winH*0.55} q-14 ${winH*0.25} 2 ${winH*0.45} l10 0 l0 ${-winH} Z" fill="#ffc2d6"/>
 <g stroke="#f0a8c2" stroke-width="2" fill="none" opacity=".7"><path d="M${winX+1} ${winY+6} q-7 ${winH*0.28} -1 ${winH*0.5}"/><path d="M${winX+5} ${winY+6} q-4 ${winH*0.3} 0 ${winH*0.52}"/></g>
@@ -10677,7 +10676,7 @@ return c;})()}</g>
 ${tint}
 ${drawBedObj(bedX,bedY,bedS)}
 </svg>`;
-  const _actors=`${_decoItemsSVG(W,H,floorY)}${placedItemsSVG()}
+  const _actors=`${placedItemsSVG()}
 ${ballSVG(getEquippedBall(),ballX,ballY,ballR)}
 ${cat}
 <g class="rmExtra">${extra}</g>`;
@@ -18943,6 +18942,7 @@ function _drRender(){
     else{ctx.beginPath();ctx.moveTo(_drPts[0].x*_drScale,_drPts[0].y*_drScale);
       for(let i=1;i<_drPts.length;i++)ctx.lineTo(_drPts[i].x*_drScale,_drPts[i].y*_drScale);ctx.stroke();}
   }
+  try{_drPastePreview(ctx);}catch(_){}
   if(_drLine&&_drLine.length){
     ctx.lineCap="round";ctx.lineJoin="round";
     ctx.strokeStyle=ART_PAL[_drCol];ctx.lineWidth=ART_W[_drWi]*_drCanvasSize.w*_drScale;
@@ -19055,6 +19055,7 @@ function _drStrokeCount(){let n=0;_drLayers.forEach(l=>{n+=(l.s||[]).length;});r
       const tab=t.closest(".shpTab");
       if(tab){try{playClick();}catch(_){}_shpGo(parseInt(tab.dataset.p,10));return;}
       if(t.closest("#shpMake")){try{playClick();}catch(_){}openDrawPick();return;}
+      if(t.closest("#shpDeco")){try{playClick();}catch(_){}openStEdit();return;}
       if(t.closest("#shpRename")){
         const s=getShop()||{};
         const v=prompt("お店の なまえ",s.name||"");
@@ -19067,6 +19068,12 @@ function _drStrokeCount(){let n=0;_drLayers.forEach(l=>{n+=(l.s||[]).length;});r
         const a=artById(_menuArt);
         if(a){try{playClick();}catch(_){}
           $("artMenuTtl").textContent="「"+(a.name||"むめい")+"」どうする？";
+          const _au=$("amUse");
+          if(_au)_au.textContent=
+            a.use==="cos"?(artCosOn(a.id)?"👕 ぬぐ":"👕 きる"):
+            a.use==="stamp"?(artStampOn(a.id)?"🔵 スタンプから はずす":"🔵 スタンプに くわえる"):
+            a.use==="emo"?(artEmoOn(a.id)?"😊 絵文字から はずす":"😊 絵文字に くわえる"):
+            "🛋 お店に かざる";
           $("artMenu").classList.add("show");}
         return;
       }
@@ -19092,6 +19099,8 @@ function _drStrokeCount(){let n=0;_drLayers.forEach(l=>{n+=(l.s||[]).length;});r
     if(pk)pk.addEventListener("click",e=>{
       const t=e.target;if(!t)return;
       if(t.closest("#drPickClose")||t===pk){pk.classList.remove("show");return;}
+      const pa=t.closest("[data-paste]");
+      if(pa){pk.classList.remove("show");_drPasteStart(pa.dataset.paste);return;}
       const b=t.closest(".drUse");if(!b)return;
       try{playClick();}catch(_){}
       const use=b.dataset.use,sub=b.dataset.sub;
@@ -19154,6 +19163,9 @@ function _drStrokeCount(){let n=0;_drLayers.forEach(l=>{n+=(l.s||[]).length;});r
       }
       const ly2=t.closest("[data-ly]");
       if(ly2){_drCur=parseInt(ly2.dataset.ly,10);_drPaintLayers();return;}
+      if(t.closest("#drPasteBtn")){try{playClick();}catch(_){}_drPasteList();return;}
+      if(t.closest("#drPasteOk")){_drPasteStrokes();return;}
+      if(t.closest("#drPasteNo")){_drPaste=null;const pb=$("drPasteBar");if(pb)pb.hidden=true;_drRender();return;}
       if(t.closest("#drTraceBtn")){const f=$("drTraceIn");if(f)f.click();return;}
       if(t.closest("#drTraceOff")){_drSetUnder(null);return;}
       if(t.closest("#drCatBtn")){
@@ -19188,6 +19200,13 @@ function _drStrokeCount(){let n=0;_drLayers.forEach(l=>{n+=(l.s||[]).length;});r
       cv.addEventListener("pointerdown",e=>{
         e.preventDefault();
         const p=_drPos(e);
+        if(_drPaste){
+          _drPaste.x=p.x;_drPaste.y=p.y;_drRender();
+          const mv=ev=>{const q=_drPos(ev);_drPaste.x=q.x;_drPaste.y=q.y;_drRender();};
+          const uu=()=>{window.removeEventListener("pointermove",mv);window.removeEventListener("pointerup",uu);};
+          window.addEventListener("pointermove",mv);window.addEventListener("pointerup",uu);
+          return;
+        }
         if(_drMode==="line"){
           if(_drLine&&_drLine.length){
             const last=_drLine[_drLine.length-1];
@@ -19404,7 +19423,7 @@ function _decoItemsSVG(W,H,floorY){
 /* --- 内装モードのUI --- */
 let _decoOn=false,_decoTab="wall",_decoSel=-1;
 function openDeco(){
-  _decoOn=true;_decoSel=-1;
+  _decoOn=true;_decoSel=-1;   /* 未使用（お店の内装画面に移行） */
   const r=$("catRoom");if(r)r.classList.add("decoing");
   _decoPaintTabs();_decoPaintList();_decoPaintDetail();
   try{renderBackdrop();renderRoom();}catch(_){}
@@ -19450,7 +19469,7 @@ function _decoUpd(fn){
   if(_decoSel<0||!d.items[_decoSel])return;
   fn(d.items[_decoSel],d);
   setDeco(d);
-  try{renderRoom();}catch(_){}
+  try{_stDraw();}catch(_){}
 }
 function _decoPlace(id){
   const d=getDeco();
@@ -19458,7 +19477,7 @@ function _decoPlace(id){
   d.items.push({a:id,x:0.5,y:0.62,s:1,r:0,h:0});
   setDeco(d);_decoSel=d.items.length-1;
   _decoPaintDetail();
-  try{renderRoom();}catch(_){}
+  try{_stDraw();}catch(_){}
   try{playPop();}catch(_){}
 }
 
@@ -19473,31 +19492,40 @@ function _decoPlace(id){
       const t=e.target;if(!t)return;
       e.stopPropagation();
       const tab=t.closest(".decoTab");
-      if(tab){_decoTab=tab.dataset.t;_decoSel=-1;_decoPaintTabs();_decoPaintList();_decoPaintDetail();try{renderRoom();}catch(_){}return;}
+      if(tab){_decoTab=tab.dataset.t;_decoSel=-1;_decoPaintTabs();_decoPaintList();_decoPaintDetail();try{_stDraw();}catch(_){}return;}
       const pat=t.closest("[data-pat]");
       if(pat){const d=getDeco();d[_decoTab]=pat.dataset.pat;setDeco(d);_decoPaintList();
-        try{renderBackdrop();}catch(_){}try{playClick();}catch(_){}return;}
+        try{_stDraw();}catch(_){}try{playClick();}catch(_){}return;}
       const cl=t.closest("[data-clear]");
       if(cl){const d=getDeco();d[cl.dataset.clear]=null;setDeco(d);_decoPaintList();
-        try{renderBackdrop();}catch(_){}return;}
+        try{_stDraw();}catch(_){}return;}
       const put=t.closest("[data-put]");
       if(put){_decoPlace(put.dataset.put);return;}
       if(t.closest("#decoUp")){
         const d=getDeco();if(_decoSel<0||_decoSel>=d.items.length-1)return;
         const a=d.items[_decoSel];d.items[_decoSel]=d.items[_decoSel+1];d.items[_decoSel+1]=a;_decoSel++;
-        setDeco(d);try{renderRoom();}catch(_){}return;
+        setDeco(d);try{_stDraw();}catch(_){}return;
       }
       if(t.closest("#decoDown")){
         const d=getDeco();if(_decoSel<=0)return;
         const a=d.items[_decoSel];d.items[_decoSel]=d.items[_decoSel-1];d.items[_decoSel-1]=a;_decoSel--;
-        setDeco(d);try{renderRoom();}catch(_){}return;
+        setDeco(d);try{_stDraw();}catch(_){}return;
       }
       if(t.closest("#decoDel")){
         const d=getDeco();if(_decoSel<0)return;
         d.items.splice(_decoSel,1);_decoSel=-1;setDeco(d);
-        _decoPaintDetail();try{renderRoom();}catch(_){}return;
+        _decoPaintDetail();try{_stDraw();}catch(_){}return;
       }
-      if(t.closest("#decoDone")){closeDeco();return;}
+      if(t.closest("#decoDone")){closeSt();return;}
+    });
+    ["drPasteS","drPasteR"].forEach(id=>{
+      const el=$(id);if(!el)return;
+      el.addEventListener("input",()=>{
+        if(!_drPaste)return;
+        const v=parseInt(el.value,10)||0;
+        if(id==="drPasteS")_drPaste.s=v/100;else _drPaste.r=v;
+        _drRender();
+      });
     });
     ["decoS","decoR","decoH"].forEach(id=>{
       const el=$(id);if(!el)return;
@@ -19506,41 +19534,57 @@ function _decoPlace(id){
         _decoUpd(it=>{if(id==="decoS")it.s=v/100;else if(id==="decoR")it.r=v;else it.h=v;});
       });
     });
-    /* 部屋のアイテムを つかんで動かす */
-    const sc=$("roomScene");
-    if(sc)sc.addEventListener("pointerdown",e=>{
-      if(!_decoOn)return;
-      const g=e.target&&e.target.closest?e.target.closest(".decoItem"):null;
+    /* 内装：アイテムを つかんで動かす */
+    const stg=$("stStage");
+    if(stg)stg.addEventListener("pointerdown",e=>{
+      if(!_stEdit)return;
+      const g=e.target&&e.target.closest?e.target.closest(".stItem"):null;
       if(!g)return;
-      e.stopPropagation();e.preventDefault();
+      e.preventDefault();
       _decoSel=parseInt(g.dataset.di,10);
-      _decoPaintDetail();
-      const geo=roomGeom();
+      _decoPaintDetail();_stDraw();
+      const svg=stg.querySelector("#stSvg");if(!svg)return;
+      const r=svg.getBoundingClientRect();
       let moved=false;
       const move=ev=>{
         moved=true;
-        const x=Math.min(0.98,Math.max(0.02,ev.clientX/geo.W));
-        const y=Math.min(0.98,Math.max(0.02,ev.clientY/geo.H));
+        const x=Math.min(0.98,Math.max(0.02,(ev.clientX-r.left)/Math.max(1,r.width)));
+        const y=Math.min(0.98,Math.max(0.02,(ev.clientY-r.top)/Math.max(1,r.height)));
         const d=getDeco();if(!d.items[_decoSel])return;
         d.items[_decoSel].x=+x.toFixed(3);d.items[_decoSel].y=+y.toFixed(3);
         try{localStorage.setItem(DECO_KEY,JSON.stringify(d));}catch(_){}
-        try{renderRoom();}catch(_){}
+        _stDraw();
       };
       const up=()=>{
         window.removeEventListener("pointermove",move);
         window.removeEventListener("pointerup",up);
         if(moved)setDeco(getDeco());
-        try{renderRoom();}catch(_){}
+        _stDraw();
       };
       window.addEventListener("pointermove",move);
       window.addEventListener("pointerup",up);
-    },true);
+    });
+    const stb=$("stBack");
+    if(stb)stb.addEventListener("click",()=>{try{playClick();}catch(_){}closeSt();});
     /* つくったもの → メニュー（ならべる／かきなおす／すてる） */
     const am=$("artMenu");
     if(am)am.addEventListener("click",e=>{
       const t=e.target;
       if(t.closest("#amClose")||t===am){am.classList.remove("show");return;}
       const id=_menuArt;
+      if(t.closest("#amUse")){
+        const a=id?artById(id):null;if(!a)return;
+        let on=false,msg="";
+        if(a.use==="cos"){on=toggleArtCos(id);msg=on?"きたよ！":"ぬいだよ";}
+        else if(a.use==="stamp"){on=toggleArtStamp(id);msg=on?"スタンプに くわえたよ":"スタンプから はずしたよ";}
+        else if(a.use==="emo"){on=toggleArtEmo(id);msg=on?"絵文字に くわえたよ":"絵文字から はずしたよ";}
+        else{am.classList.remove("show");openStEdit();return;}
+        am.classList.remove("show");
+        try{playPop();}catch(_){}
+        try{toast(msg);}catch(_){}
+        _shpRenderArts();
+        return;
+      }
       if(t.closest("#amSell")){am.classList.remove("show");if(id)openPrice(id);return;}
       if(t.closest("#amEdit")){
         am.classList.remove("show");
@@ -19817,6 +19861,8 @@ function _tvPaint(){
     const p=$("tvProg");if(p)p.hidden=true;
   }
   _tvDraw();
+  try{_tvPushShare();}catch(_){}
+  if(!_tvOthersLoaded)_tvLoadOthers().then(()=>{try{_tvDraw();}catch(_){}}).catch(()=>{});
 }
 /* --- お店いちらん --- */
 function openTvList(){
@@ -19853,6 +19899,8 @@ function openTvShop(uid){
   }
   if(fb){fb.hidden=mine;fb.classList.toggle("on",fav);
     fb.textContent=fav?"♡ お気に入り ちゅう":(favCost()?"♡ お気に入り（"+favCost()+"zz）":"♡ お気に入り（むりょう）");}
+  const ib=$("tvInBtn");
+  if(ib){ib.hidden=!near;ib.textContent=mine?"🛋 じぶんの内装を つくる":"🛋 お店の中を 見る";if(mine)ib.hidden=false;}
   const canBuy=near||fav;
   const items=s.items||{},keys=Object.keys(items);
   $("tvShopItems").innerHTML=keys.length?keys.map(k=>{
@@ -19976,6 +20024,15 @@ function _renderShopNotif(list){
       if(t.closest("#tvOpenList")){try{playClick();}catch(_){}openTvList();return;}
       if(t.closest("#tvReload")){_tvLoaded=false;_tvLoadShops(true).then(()=>{_tvPaint();try{toast("さいしんに したよ");}catch(_){}});return;}
     });
+    const hp=$("tvHideP");
+    if(hp){
+      hp.checked=tvHideP();
+      hp.addEventListener("change",()=>{
+        try{localStorage.setItem(TVHIDE_KEY,hp.checked?"1":"0");syncSoon();}catch(_){}
+        if(hp.checked)_tvRemoveShare();else _tvPushShare();
+        try{_tvDraw();}catch(_){}
+      });
+    }
     const tl=$("tvList");
     if(tl)tl.addEventListener("click",e=>{
       const t=e.target;
@@ -19996,6 +20053,11 @@ function _renderShopNotif(list){
         _tvPaint();
         try{playPop();}catch(_){}
         try{toast("「"+(s.name||"お店")+"」へ 出発！");}catch(_){}
+        return;
+      }
+      if(t.closest("#tvInBtn")){
+        try{playClick();}catch(_){}
+        if(_tvCur===getUid())openStEdit();else openStView(_tvCur);
         return;
       }
       if(t.closest("#tvFavBtn")){
@@ -20044,6 +20106,7 @@ function _tvOverlayHTML(){
   try{cat=catFigureHTML(profileBody(),profileColor(),"sit",[0,0],"normal",
         (typeof getEquippedCostume==="function"?getEquippedCostume():null));}catch(_){cat="";}
   h+='<div class="tvCat" id="tvMyCat">'+cat+'<span class="tvCatNm">'+_esc(p.name||"あなた")+'</span></div>';
+  h+=_tvOthersHTML();
   const o=getOrder();
   if(o)h+='<div class="tvTruck" id="tvTruck">🚚<span class="tvTruckB" id="tvTruckB"></span></div>';
   return h;
@@ -20072,6 +20135,7 @@ function _tvPlaceOverlay(){
   };
   const h=_tvHere();
   put($("tvMyCat"),h.lng,h.lat);
+  try{_tvPlaceOthers();}catch(_){}
   const o=getOrder();
   if(o){
     const p=_tvOrderPos(o);
@@ -20151,6 +20215,305 @@ function _tvDeliver(){
   return true;
 }
 let _tvOrderMode=false;
+/* =====================================================================
+   お店の内装（おへやとは別の 専用がめん）＋ 地図の ほかのプレイヤー
+   ===================================================================== */
+const ST_W=360,ST_H=520,ST_FLOOR=300;
+const ST_WIN={x:28,y:56,w:112,h:140};
+let _stPool=null,_stUid=null,_stEdit=false;
+
+function _decoInner2(id,pool){
+  let a=(pool&&pool[id])||artById(id);
+  if(!a)return null;
+  const cs=artCanvasSize(a.use,a.sub);let inner="";
+  (a.L||[]).forEach(ly=>{if(ly&&ly.on===0)return;(ly&&ly.s||[]).forEach(st=>{inner+=_artStrokePath(st,cs);});});
+  return{inner,cs};
+}
+function _stRoomSVG(d,pool,edit,sel){
+  const W=ST_W,H=ST_H,F=ST_FLOOR,wi=ST_WIN;
+  let s='<svg id="stSvg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+
+    '<defs><linearGradient id="stW" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffe3ee"/><stop offset="100%" stop-color="#fff0f5"/></linearGradient>'+
+    '<linearGradient id="stF" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ecd2ad"/><stop offset="100%" stop-color="#e0c298"/></linearGradient>'+
+    '<linearGradient id="stS" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#a9ddff"/><stop offset="100%" stop-color="#eafff0"/></linearGradient></defs>';
+  /* かべ */
+  s+='<rect x="0" y="0" width="'+W+'" height="'+F+'" fill="url(#stW)"/>';
+  if(d.wall){const g=_decoInner2(d.wall,pool);
+    if(g)s+='<g transform="scale('+(W/g.cs.w).toFixed(4)+','+(F/g.cs.h).toFixed(4)+')">'+g.inner+'</g>';}
+  else s+='<rect x="0" y="'+(F*0.62)+'" width="'+W+'" height="'+(F*0.38)+'" fill="#fbd9e6" opacity="0.75"/>'+
+          '<rect x="0" y="'+(F*0.62-4)+'" width="'+W+'" height="6" rx="2" fill="#f7dbe6"/>';
+  /* ゆか */
+  s+='<rect x="0" y="'+F+'" width="'+W+'" height="'+(H-F)+'" fill="url(#stF)"/>';
+  if(d.floor){const g=_decoInner2(d.floor,pool);
+    if(g)s+='<g transform="translate(0,'+F+') scale('+(W/g.cs.w).toFixed(4)+','+((H-F)/g.cs.h).toFixed(4)+')">'+g.inner+'</g>';}
+  else{s+='<g stroke="#d6b98c" stroke-width="1.6" opacity="0.45">';
+    [0.16,0.36,0.56,0.78,0.95].forEach(f=>{s+='<line x1="'+(W*f)+'" y1="'+(F+4)+'" x2="'+(W*(f-0.4)*1.5+W*0.2)+'" y2="'+H+'"/>';});
+    s+='</g>';}
+  s+='<rect x="0" y="'+F+'" width="'+W+'" height="14" fill="#000000" opacity="0.06"/>';
+  /* まど */
+  s+='<rect x="'+wi.x+'" y="'+wi.y+'" width="'+wi.w+'" height="'+wi.h+'" rx="12" fill="#ffffff"/>';
+  const ix=wi.x+8,iy=wi.y+8,iw=wi.w-16,ih=wi.h-16;
+  if(d.window){const g=_decoInner2(d.window,pool);
+    if(g)s+='<clipPath id="stWc"><rect x="'+ix+'" y="'+iy+'" width="'+iw+'" height="'+ih+'" rx="7"/></clipPath>'+
+      '<g clip-path="url(#stWc)"><rect x="'+ix+'" y="'+iy+'" width="'+iw+'" height="'+ih+'" fill="#eef7fb"/>'+
+      '<g transform="translate('+ix+','+iy+') scale('+(iw/g.cs.w).toFixed(4)+','+(ih/g.cs.h).toFixed(4)+')">'+g.inner+'</g></g>';
+  }else{
+    s+='<rect x="'+ix+'" y="'+iy+'" width="'+iw+'" height="'+ih+'" rx="7" fill="url(#stS)"/>'+
+       '<circle cx="'+(ix+iw-26)+'" cy="'+(iy+26)+'" r="12" fill="#ffe39c"/>'+
+       '<ellipse cx="'+(ix+26)+'" cy="'+(iy+ih-18)+'" rx="26" ry="15" fill="#bfe6a8"/>'+
+       '<ellipse cx="'+(ix+iw-28)+'" cy="'+(iy+ih-13)+'" rx="30" ry="16" fill="#aedb98"/>';
+  }
+  s+='<rect x="'+(wi.x+wi.w/2-3)+'" y="'+iy+'" width="6" height="'+ih+'" fill="#ffffff"/>'+
+     '<rect x="'+ix+'" y="'+(wi.y+wi.h/2-3)+'" width="'+iw+'" height="6" fill="#ffffff"/>'+
+     '<rect x="'+(wi.x-8)+'" y="'+(wi.y+wi.h)+'" width="'+(wi.w+16)+'" height="9" rx="4" fill="#f2d6bf"/>';
+  /* おいたもの */
+  let defs="";
+  (d.items||[]).forEach((it,i)=>{
+    const g=_decoInner2(it.a,pool);if(!g)return;
+    const base=W*0.26*(it.s||1),sc=base/g.cs.w;
+    const cx=W*(it.x==null?0.5:it.x),cy=H*(it.y==null?0.6:it.y);
+    let f="";
+    if(it.h){defs+='<filter id="sth'+i+'"><feColorMatrix type="hueRotate" values="'+it.h+'"/></filter>';f=' filter="url(#sth'+i+')"';}
+    s+='<g class="stItem'+(sel===i?" on":"")+'" data-di="'+i+'" transform="translate('+cx.toFixed(1)+','+cy.toFixed(1)+
+       ') rotate('+(it.r||0)+') scale('+sc.toFixed(4)+') translate('+(-g.cs.w/2).toFixed(1)+','+(-g.cs.h/2).toFixed(1)+')"'+f+'>'+
+       (edit?'<rect x="0" y="0" width="'+g.cs.w+'" height="'+g.cs.h+'" fill="#000" opacity="0.001"/>':"")+
+       g.inner+'</g>';
+  });
+  if(defs)s=s.replace("</defs>",defs+"</defs>");
+  s+='</svg>';
+  return s;
+}
+function _stDraw(){
+  const st=$("stStage");if(!st)return;
+  const d=_stEdit?getDeco():(_stDeco||{items:[]});
+  st.innerHTML=_stRoomSVG(d,_stPool,_stEdit,_decoSel);
+}
+let _stDeco=null;
+/* =====================================================================
+   ④ 買った／描いた アイテムを つかう
+   ===================================================================== */
+/* --- 衣装：描いた絵を そのまま 猫に かさねる（猫と同じ120×124座標なのでピッタリ合う） --- */
+const ARTCOS_KEY="radio_artcos";
+function getArtCos(){try{const o=JSON.parse(localStorage.getItem(ARTCOS_KEY)||"{}");return(o&&typeof o==="object")?o:{};}catch(_){return{};}}
+function setArtCos(o){try{localStorage.setItem(ARTCOS_KEY,JSON.stringify(o));syncSoon();}catch(_){}}
+function artCosOn(id){const o=getArtCos();return Object.keys(o).some(k=>o[k]===id);}
+function toggleArtCos(id){
+  const a=artById(id);if(!a||a.use!=="cos")return false;
+  const o=getArtCos(),slot=a.sub||"body";
+  if(o[slot]===id)delete o[slot];else o[slot]=id;
+  setArtCos(o);
+  try{if(typeof renderCats==="function")renderCats();}catch(_){}
+  try{if(typeof renderRoom==="function"&&roomVisible&&roomVisible())renderRoom();}catch(_){}
+  return o[slot]===id;
+}
+const _ACOS_ORDER=["body","tail","neck","eyes","hat","fx"];
+function _artCosSVG(){
+  let s="";
+  try{
+    const o=getArtCos();
+    _ACOS_ORDER.forEach(slot=>{
+      const id=o[slot];if(!id)return;
+      const a=artById(id);if(!a)return;
+      const cs=artCanvasSize("cos","");
+      (a.L||[]).forEach(ly=>{if(ly&&ly.on===0)return;(ly&&ly.s||[]).forEach(st=>{s+=_artStrokePath(st,cs);});});
+    });
+  }catch(_){}
+  return s;
+}
+/* --- スタンプ：買ったスタンプを ラリーの絵がらに 追加 --- */
+const ARTSTAMP_KEY="radio_artstamp";
+function getArtStamps(){try{const a=JSON.parse(localStorage.getItem(ARTSTAMP_KEY)||"[]");return Array.isArray(a)?a:[];}catch(_){return[];}}
+function toggleArtStamp(id){
+  const a=artById(id);if(!a||a.use!=="stamp")return false;
+  const list=getArtStamps(),i=list.indexOf(id);
+  if(i>=0)list.splice(i,1);else list.push(id);
+  try{localStorage.setItem(ARTSTAMP_KEY,JSON.stringify(list));syncSoon();}catch(_){}
+  return i<0;
+}
+function artStampOn(id){return getArtStamps().indexOf(id)>=0;}
+/* --- 絵文字：ひとことコメントに つかう --- */
+const ARTEMO_KEY="radio_artemo";
+function getArtEmos(){try{const a=JSON.parse(localStorage.getItem(ARTEMO_KEY)||"[]");return Array.isArray(a)?a:[];}catch(_){return[];}}
+function toggleArtEmo(id){
+  const a=artById(id);if(!a||a.use!=="emo")return false;
+  const list=getArtEmos(),i=list.indexOf(id);
+  if(i>=0)list.splice(i,1);else list.push(id);
+  try{localStorage.setItem(ARTEMO_KEY,JSON.stringify(list));syncSoon();}catch(_){}
+  return i<0;
+}
+function artEmoOn(id){return getArtEmos().indexOf(id)>=0;}
+/* --- おえかき：買ったアイテムを そざいとして はりつける --- */
+let _drPaste=null;   /* {id,x,y,s,r} 置いてるとちゅう */
+function _drPasteList(){
+  const l=$("drPickList");if(!l)return;
+  const arts=getArts().filter(a=>a.id!==_drEditId);
+  $("drPickTtl").textContent="どの アイテムを はる？";
+  l.innerHTML=arts.length
+    ?arts.map(a=>'<button class="drUse" type="button" data-paste="'+a.id+'">'+
+      '<span class="drUseIco" style="width:26px;display:inline-block">'+artSVG(a)+'</span>'+
+      '<span><span class="drUseName">'+_esc(a.name||"むめい")+'</span><br>'+
+      '<span class="drUseSub">'+artUseName(a.use)+'</span></span></button>').join("")
+    :'<div class="drUseSub" style="text-align:center;padding:14px">まだ アイテムが ないよ</div>';
+  $("drPick").classList.add("show");
+}
+function _drPasteStart(id){
+  const a=artById(id);if(!a)return;
+  _drPaste={id:id,x:_drCanvasSize.w/2,y:_drCanvasSize.h/2,s:1,r:0};
+  const b=$("drPasteBar");if(b)b.hidden=false;
+  const ps=$("drPasteS"),pr=$("drPasteR");
+  if(ps)ps.value=100;if(pr)pr.value=0;
+  _drRender();
+}
+function _drPasteStrokes(){
+  /* いまの 位置・大きさ・向きで 線に やきつける */
+  if(!_drPaste)return;
+  const a=artById(_drPaste.id);if(!a){_drPaste=null;return;}
+  const src=artCanvasSize(a.use,a.sub);
+  const base=_drCanvasSize.w*0.6*_drPaste.s,sc=base/src.w;
+  const rad=(_drPaste.r||0)*Math.PI/180,co=Math.cos(rad),si=Math.sin(rad);
+  const ly=_drLayers[_drCur];if(!ly)return;
+  _drSnap();
+  (a.L||[]).forEach(l2=>{
+    if(l2&&l2.on===0)return;
+    (l2&&l2.s||[]).forEach(st=>{
+      const pts=_artUnpack(st[2]).map(p=>{
+        const x=(p.x-src.w/2)*sc,y=(p.y-src.h/2)*sc;
+        return{x:_drPaste.x+x*co-y*si,y:_drPaste.y+x*si+y*co};
+      });
+      const wi=Math.max(0,Math.min(ART_W.length-1,st[1]));
+      ly.s.push([st[0],wi,_artPack(pts)]);
+    });
+  });
+  _drPaste=null;
+  const b=$("drPasteBar");if(b)b.hidden=true;
+  _drRender();
+  try{playPop();}catch(_){}
+}
+function _drPastePreview(ctx){
+  if(!_drPaste)return;
+  const a=artById(_drPaste.id);if(!a)return;
+  const src=artCanvasSize(a.use,a.sub);
+  const base=_drCanvasSize.w*0.6*_drPaste.s,sc=base/src.w;
+  const rad=(_drPaste.r||0)*Math.PI/180,co=Math.cos(rad),si=Math.sin(rad);
+  ctx.save();ctx.globalAlpha=0.85;ctx.lineCap="round";ctx.lineJoin="round";
+  (a.L||[]).forEach(l2=>{
+    if(l2&&l2.on===0)return;
+    (l2&&l2.s||[]).forEach(st=>{
+      const pts=_artUnpack(st[2]);if(!pts.length)return;
+      ctx.strokeStyle=ctx.fillStyle=ART_PAL[st[0]]||"#1c1c1c";
+      ctx.lineWidth=(ART_W[st[1]]||ART_W[1])*src.w*sc*_drScale;
+      ctx.beginPath();
+      pts.forEach((p,i)=>{
+        const x0=(p.x-src.w/2)*sc,y0=(p.y-src.h/2)*sc;
+        const X=(_drPaste.x+x0*co-y0*si)*_drScale,Y=(_drPaste.y+x0*si+y0*co)*_drScale;
+        if(i)ctx.lineTo(X,Y);else ctx.moveTo(X,Y);
+      });
+      ctx.stroke();
+    });
+  });
+  ctx.restore();
+}
+/* じぶんの内装をつくる */
+function openStEdit(){
+  _stEdit=true;_stUid=getUid();_stPool=null;_stDeco=null;_decoSel=-1;_decoTab="wall";
+  $("stTtl").textContent="お店の内装";
+  const sc=$("stShop");if(sc){sc.classList.add("show");sc.classList.add("editing");}
+  _decoPaintTabs();_decoPaintList();_decoPaintDetail();
+  _stDraw();
+  try{playClick();}catch(_){}
+}
+/* ほかの人のお店を 見る（現地でだけ） */
+async function openStView(uid){
+  const sc=$("stShop");if(!sc)return;
+  _stEdit=false;_stUid=uid;_stPool={};_stDeco={items:[]};_decoSel=-1;
+  const sh=_tvShopById(uid);
+  $("stTtl").textContent=((sh&&sh.name)||"お店")+" の中";
+  sc.classList.add("show");sc.classList.remove("editing");
+  $("stStage").innerHTML='<div class="tvNote">よみこみ中…</div>';
+  try{
+    const db=await getDB();if(!db)throw 0;
+    const{ref,get}=await import(FB_DB);
+    const sn=await get(ref(db,"deco/"+uid));
+    _stDeco=(sn&&sn.val?sn.val():null)||{items:[]};
+    _stDeco.items=Array.isArray(_stDeco.items)?_stDeco.items:[];
+    const need={};
+    ["wall","floor","window"].forEach(k=>{if(_stDeco[k])need[_stDeco[k]]=1;});
+    _stDeco.items.forEach(it=>{if(it&&it.a)need[it.a]=1;});
+    const ids=Object.keys(need);
+    for(const id of ids){
+      if(artById(id)){_stPool[id]=artById(id);continue;}
+      try{const s2=await get(ref(db,"art/"+uid+"/"+id));const a=s2&&s2.val?s2.val():null;if(a)_stPool[id]=a;}catch(_){}
+    }
+  }catch(_){}
+  _stDraw();
+}
+function closeSt(){const sc=$("stShop");if(sc){sc.classList.remove("show");sc.classList.remove("editing");}}
+
+/* ===== 地図の ほかのプレイヤー ===== */
+const TVHIDE_KEY="radio_tv_hidep";
+function tvHideP(){try{return localStorage.getItem(TVHIDE_KEY)==="1";}catch(_){return false;}}
+let _tvOthers=[],_tvOthersLoaded=false;
+async function _tvPushShare(){
+  try{
+    if(tvHideP())return;
+    const db=await getDB();if(!db)return;
+    const{ref,set}=await import(FB_DB);
+    const h=_tvHere(),p=(typeof getProfile==="function"?getProfile():null)||{};
+    await set(ref(db,"tshare/"+getUid()),{
+      n:(p.isPublic===false?"匿名さん":(p.name||"匿名さん")),
+      b:profileBody(),e:profileColor(),
+      lng:+h.lng.toFixed(4),lat:+h.lat.toFixed(4),at:Date.now()
+    });
+  }catch(_){}
+}
+async function _tvRemoveShare(){
+  try{
+    const db=await getDB();if(!db)return;
+    const{ref,remove}=await import(FB_DB);
+    await remove(ref(db,"tshare/"+getUid()));
+  }catch(_){}
+}
+async function _tvLoadOthers(){
+  if(_tvOthersLoaded)return _tvOthers;
+  _tvOthersLoaded=true;
+  try{
+    const db=await getDB();if(!db)return _tvOthers;
+    const{ref,get}=await import(FB_DB);
+    const sn=await get(ref(db,"tshare"));
+    const v=sn&&sn.val?sn.val():null;const me=getUid(),out=[];
+    if(v)Object.keys(v).forEach(k=>{
+      if(k===me)return;
+      const o=v[k];if(!o||!Number.isFinite(o.lng)||!Number.isFinite(o.lat))return;
+      if(Date.now()-(o.at||0)>3*24*3600*1000)return;   /* 3日いないの人だけ */
+      out.push(o);
+    });
+    _tvOthers=out.slice(0,80);
+  }catch(e){console.warn("others",e);}
+  return _tvOthers;
+}
+function _tvOthersHTML(){
+  if(tvHideP()||!_tvOthers.length)return"";
+  let h="";
+  _tvOthers.forEach((o,i)=>{
+    let cat="";
+    try{cat=catFigureHTML(o.b||"#1c1c1c",o.e||"#8fdcff","sit",[0,0],"normal",null);}catch(_){}
+    h+='<div class="tvCat tvOth" data-oi="'+i+'">'+cat+'<span class="tvCatNm">'+_esc((o.n||"").slice(0,6))+'</span></div>';
+  });
+  return h;
+}
+function _tvPlaceOthers(){
+  if(tvHideP())return;
+  const wrap=$("tvWrap");if(!wrap||!_tvView)return;
+  const svg=wrap.querySelector(".tvMapSvg");if(!svg)return;
+  const r=svg.getBoundingClientRect();if(!r.width)return;
+  const w=_tvView.w,vx=_tvView.cx-w/2,vy=_tvView.cy-w/2;
+  document.querySelectorAll("#tvOverlay .tvOth").forEach(el=>{
+    const o=_tvOthers[parseInt(el.dataset.oi,10)];if(!o)return;
+    const x=(_jpX(o.lng)-vx)/w*r.width,y=(_jpY(o.lat)-vy)/w*r.height;
+    const out=(x<-30||y<-30||x>r.width+30||y>r.height+30);
+    el.style.display=out?"none":"block";
+    if(!out){el.style.left=x.toFixed(1)+"px";el.style.top=y.toFixed(1)+"px";}
+  });
+}
 
 </script>
 <button id="storyTestBtn" type="button" hidden>📖 ストーリー(テスト)</button>
@@ -20363,6 +20726,7 @@ let _tvOrderMode=false;
         <div class="shpEmpty" id="shpSellsEmpty">まだ なにも ならべてないよ。<br>「つくったもの」を タップして ならべよう。</div>
       </div>
       <button id="shpMake" type="button">＋ アイテムをつくる</button>
+      <button id="shpDeco" type="button">🛋 お店の内装をつくる</button>
     </div>
     <div class="shpPage" id="shpPage1" hidden>
       <div id="tvWrap">
@@ -20376,6 +20740,7 @@ let _tvOrderMode=false;
       <div id="tvBar">
         <button class="tvBtn" id="tvOpenList" type="button">🏘 お店いちらん</button>
         <button class="tvBtn" id="tvReload" type="button">🔄 さいしん</button>
+        <label id="tvHideRow"><input type="checkbox" id="tvHideP"/>プレイヤー非表示</label>
       </div>
     </div>
   </div>
@@ -20417,10 +20782,17 @@ let _tvOrderMode=false;
     <div class="drRow" id="drWRow"></div>
     <div class="drRow" id="drLayerRow"></div>
     <div class="drRow">
+      <button class="drBtn" id="drPasteBtn" type="button">🧩 そざい</button>
       <button class="drBtn" id="drTraceBtn" type="button">🖼 下絵</button>
       <button class="drBtn" id="drTraceOff" type="button" hidden>下絵を けす</button>
       <button class="drBtn" id="drCatBtn" type="button" hidden>🐱 ねこ</button>
       <input type="file" id="drTraceIn" accept="image/*" hidden/>
+    </div>
+    <div class="drRow" id="drPasteBar" hidden>
+      <span class="decoLbl">大きさ</span><input type="range" id="drPasteS" min="20" max="220" value="100"/>
+      <span class="decoLbl">むき</span><input type="range" id="drPasteR" min="-180" max="180" value="0"/>
+      <button class="drBtn" id="drPasteOk" type="button">✓ はる</button>
+      <button class="drBtn" id="drPasteNo" type="button">やめる</button>
     </div>
     <div id="drHint">ゆびで なぞって かこう</div>
   </div>
@@ -20437,6 +20809,7 @@ let _tvOrderMode=false;
 <div id="artMenu">
   <div id="artMenuCard">
     <div id="artMenuTtl">どうする？</div>
+    <button class="amBtn" id="amUse" type="button">つかう</button>
     <button class="amBtn pink" id="amSell" type="button">🏷 お店にならべる</button>
     <button class="amBtn" id="amEdit" type="button">✏️ かきなおす</button>
     <button class="amBtn" id="amDel" type="button">🗑 すてる</button>
@@ -20474,10 +20847,40 @@ let _tvOrderMode=false;
         <button class="tvAct tvOrder" id="tvOrderBtn" type="button">🚚 ネット注文</button>
         <button class="tvAct tvFav" id="tvFavBtn" type="button">♡ お気に入り</button>
       </div>
+      <button class="tvAct tvGo" id="tvInBtn" type="button" style="width:100%;margin-top:7px">🛋 お店の中を 見る</button>
     </div>
     <div id="tvShopItems"></div>
   </div></div>
 </div>
 
+<div id="stShop">
+  <div class="tvTop">
+    <button class="tvTopBtn" id="stBack" type="button">‹ もどる</button>
+    <span class="tvTtl" id="stTtl">お店の内装</span>
+  </div>
+  <div id="stMain">
+    <div id="stStage"></div>
+  <div id="decoBar">
+    <div id="decoTabs">
+      <button class="decoTab on" type="button" data-t="wall">かべ</button>
+      <button class="decoTab" type="button" data-t="floor">ゆか</button>
+      <button class="decoTab" type="button" data-t="window">まど</button>
+      <button class="decoTab" type="button" data-t="item">もの</button>
+    </div>
+    <div id="decoList"></div>
+    <div id="decoDetail">
+      <div class="decoRow"><span class="decoLbl">大きさ</span><input type="range" id="decoS" min="30" max="260" value="100"/></div>
+      <div class="decoRow"><span class="decoLbl">かたむき</span><input type="range" id="decoR" min="-180" max="180" value="0"/></div>
+      <div class="decoRow"><span class="decoLbl">いろ</span><input type="range" id="decoH" min="0" max="360" value="0"/></div>
+      <div class="decoRow">
+        <button class="decoBtn" id="decoDown" type="button">↓うしろ</button>
+        <button class="decoBtn" id="decoUp" type="button">↑まえ</button>
+        <button class="decoBtn del" id="decoDel" type="button">🗑</button>
+      </div>
+    </div>
+    <button id="decoDone" type="button">かんりょう</button>
+  </div>
+  </div>
+</div>
 </body>
 </html>
