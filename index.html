@@ -3274,6 +3274,21 @@ button.pmTag{cursor:pointer;}
 .tvNote{font-size:11.5px;color:#94aebc;text-align:center;padding:12px 6px;line-height:1.7;}
 .notifShop{cursor:pointer;}
 
+/* --- 地図のうえの 猫と 車（ズームしても 大きさは かわらない） --- */
+#tvOverlay{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden;}
+.tvCat,.tvTruck{position:absolute;transform:translate(-50%,-50%);will-change:transform;}
+.tvCat{width:30px;}
+.tvCat svg{width:100%;height:auto;display:block;filter:drop-shadow(0 1px 2px rgba(60,90,110,.35));}
+.tvCatNm{position:absolute;left:50%;top:100%;transform:translateX(-50%);font-size:8.5px;font-weight:900;color:#4a7f99;
+  white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
+.tvTruck{font-size:20px;line-height:1;filter:drop-shadow(0 1px 2px rgba(60,90,110,.3));}
+.tvTruckB{position:absolute;left:50%;top:-13px;transform:translateX(-50%);font-size:8.5px;font-weight:900;color:#e08a2f;
+  background:#fff;border-radius:6px;padding:0 4px;white-space:nowrap;box-shadow:0 1px 3px rgba(110,140,160,.3);}
+.tvOrder{background:linear-gradient(180deg,#ffd08a,#f0a63c);color:#fff;box-shadow:0 3px 0 rgba(200,132,44,.4);}
+.tvOrder.on{background:linear-gradient(180deg,#b7d7e6,#7fa8bd);box-shadow:0 3px 0 rgba(96,134,156,.4);}
+#tvOrderNow{background:rgba(255,244,225,.95);border:1.6px dashed #f0cf92;border-radius:14px;padding:9px 12px;
+  margin-top:9px;font-size:12px;color:#b5813c;font-weight:800;text-align:center;line-height:1.6;}
+
 </style>
 </head>
 <body>
@@ -18826,6 +18841,7 @@ function openMyShop(page){
   _shopEnsure().then(()=>{_shpPaintShop();_shopPushCloud();}).catch(()=>{});
   _artPullCloud();
   try{_tvCollect();}catch(_){}
+  try{_tvDeliver();}catch(_){}
   try{_tvCheckArrive(false);}catch(_){}
   try{_tvPaint();}catch(_){}
   _tvLoadShops().then(()=>{try{_tvPaint();}catch(_){}}).catch(()=>{});
@@ -19708,10 +19724,7 @@ function _tvMapSVG(){
          '" paint-order="stroke" style="pointer-events:none">'+_esc(nm)+'</text>';
     }
   });
-  /* じぶんの猫 */
-  const mx=_jpX(h.lng),my=_jpY(h.lat);
-  s+='<circle cx="'+mx.toFixed(2)+'" cy="'+my.toFixed(2)+'" r="'+(w*0.014).toFixed(3)+'" fill="'+
-     (typeof profileBody==="function"?profileBody():"#1c1c1c")+'" stroke="#fff" stroke-width="'+(w*0.005).toFixed(4)+'"/>';
+  /* じぶんの猫と 配送の車は HTMLで かさねる（_tvPlaceOverlay） */
   s+='</svg>';
   return s;
 }
@@ -19720,7 +19733,10 @@ function _tvDraw(){
   const old=wrap.querySelector(".tvMapSvg");
   const html=_tvMapSVG();
   if(old)old.outerHTML=html;else wrap.insertAdjacentHTML("afterbegin",html);
+  const ov=$("tvOverlay");
+  if(ov)ov.innerHTML=_tvOverlayHTML();
   _tvBind();
+  requestAnimationFrame(()=>{try{_tvPlaceOverlay();}catch(_){}});
 }
 function _tvBind(){
   const wrap=$("tvWrap");if(!wrap)return;
@@ -19738,6 +19754,7 @@ function _tvBind(){
     _tvView=_jrnClampView(_tvView);
     const w=_tvView.w;
     svg.setAttribute("viewBox",(_tvView.cx-w/2).toFixed(2)+" "+(_tvView.cy-w/2).toFixed(2)+" "+w.toFixed(2)+" "+w.toFixed(2));
+    try{_tvPlaceOverlay();}catch(_){}
   });
   const end=e=>{
     if(!drag)return;drag=false;
@@ -19751,7 +19768,7 @@ function _tvBind(){
   svg.addEventListener("touchstart",e=>{if(e.touches.length===2){pd=_jrnTD(e);pw=_tvView.w;}},{passive:true});
   svg.addEventListener("touchmove",e=>{
     if(e.touches.length===2&&pd){const d=_jrnTD(e);if(d>0){_tvView.w=pw*(pd/d);_tvView=_jrnClampView(_tvView);
-      const w=_tvView.w;svg.setAttribute("viewBox",(_tvView.cx-w/2).toFixed(2)+" "+(_tvView.cy-w/2).toFixed(2)+" "+w.toFixed(2)+" "+w.toFixed(2));}}
+      const w=_tvView.w;svg.setAttribute("viewBox",(_tvView.cx-w/2).toFixed(2)+" "+(_tvView.cy-w/2).toFixed(2)+" "+w.toFixed(2)+" "+w.toFixed(2));try{_tvPlaceOverlay();}catch(_){}}}
   },{passive:true});
   svg.addEventListener("touchend",()=>{if(pd){pd=0;_tvDraw();}},{passive:true});
   svg.addEventListener("wheel",e=>{e.preventDefault();_tvView.w*=(e.deltaY<0?0.82:1.2);_tvDraw();},{passive:false});
@@ -19771,6 +19788,20 @@ function _tvTapMap(e,svg){
 /* --- 旅ページの中身 --- */
 function _tvPaint(){
   const st=$("tvStatus");if(!st)return;
+  try{_tvDeliver();}catch(_){}
+  try{
+    const o=getOrder(),on=$("tvOrderNow");
+    if(o&&!on){st.insertAdjacentHTML("afterend",'<div id="tvOrderNow"></div>');}
+    const el=$("tvOrderNow");
+    if(el){
+      if(!o)el.remove();
+      else{
+        const rest=Math.max(0,(o.eta||0)-Date.now());
+        el.innerHTML="🚚 「"+_esc(o.name||"アイテム")+"」を はいそう中<br>"+
+          (rest<=0?"もうすぐ とどくよ！":("あと "+Math.max(1,Math.round(rest/3600000))+"時間 で とどくよ"));
+      }
+    }
+  }catch(_){}
   const t=getTrip(),h=_tvHere();
   if(t){
     const sh=_tvShopById(t.shop);
@@ -19806,13 +19837,20 @@ function openTvList(){
 let _tvCur=null;
 function openTvShop(uid){
   const s=_tvShopById(uid);if(!s)return;
+  if(_tvCur!==uid)_tvOrderMode=false;
   _tvCur=uid;
   const near=isVisitable(uid),mine=(uid===getUid()),fav=isFav(uid);
   $("tvShopName").textContent=(s.name||"お店")+(_tvNew(s)?" 🔰":"");
   $("tvShopSub").textContent=((JP_PREFNAME&&JP_PREFNAME[s.pref])||"")+" ・ "+Math.round(_tvKmTo(s))+"km"+
     (near?" ・ いま 買えるよ":mine?" ・ じぶんのお店":"");
-  const go=$("tvGoBtn"),fb=$("tvFavBtn");
+  const go=$("tvGoBtn"),fb=$("tvFavBtn"),ob=$("tvOrderBtn");
   if(go){go.hidden=mine;go.textContent=near?"🚩 もういちど 行く":"🚩 ここへ 行く";}
+  const _ord=getOrder();
+  if(ob){
+    ob.hidden=mine;
+    ob.classList.toggle("on",_tvOrderMode);
+    ob.textContent=_ord?"🚚 はいそう中":(_tvOrderMode?"やめる":"🚚 ネット注文（送料"+_tvFee(_tvKmTo(s))+"zz）");
+  }
   if(fb){fb.hidden=mine;fb.classList.toggle("on",fav);
     fb.textContent=fav?"♡ お気に入り ちゅう":(favCost()?"♡ お気に入り（"+favCost()+"zz）":"♡ お気に入り（むりょう）");}
   const canBuy=near||fav;
@@ -19823,13 +19861,19 @@ function openTvShop(uid){
       '<span class="tvItemBox" data-art="'+k+'"></span>'+
       '<span class="tvRowMid"><span class="tvItemName">'+_esc(it.name||"むめい")+'</span>'+
       '<span class="tvItemSub">'+artUseName(it.use)+" ・ "+zzFmt(it.price)+"</span></span>"+
-      '<button class="tvBuy" type="button" data-buy="'+k+'" data-price="'+(it.price||0)+'"'+
-        ((have||mine||!canBuy)?" disabled":"")+">"+(have?"もってる":mine?"じぶんの":canBuy?"かう":"行かなきゃ")+"</button>"+
+      (_tvOrderMode
+        ?'<button class="tvBuy" type="button" data-order="'+k+'" data-price="'+(it.price||0)+'"'+
+          ((have||mine||_ord)?" disabled":"")+">"+(have?"もってる":_ord?"はいそう中":"🚚 "+((it.price||0)+_tvFee(_tvKmTo(s)))+"zz")+"</button>"
+        :'<button class="tvBuy" type="button" data-buy="'+k+'" data-price="'+(it.price||0)+'"'+
+          ((have||mine||!canBuy)?" disabled":"")+">"+(have?"もってる":mine?"じぶんの":canBuy?"かう":"行かなきゃ")+"</button>")+
     "</div>";
   }).join(""):'<div class="tvNote">まだ なにも ならべてないみたい。</div>';
-  if(!canBuy&&keys.length)
+  if(_tvOrderMode)
     $("tvShopItems").insertAdjacentHTML("beforeend",
-      '<div class="tvNote">買うには 一度 じっさいに 行く ひつようが あるよ。<br>着いたら 1週間は ここから 買えるようになる。</div>');
+      '<div class="tvNote">🚚 ネット注文は 行かなくても あした とどくよ。<br>送料 '+_tvFee(_tvKmTo(s))+'zz（前ばらい）・ひとつずつ。</div>');
+  else if(!canBuy&&keys.length)
+    $("tvShopItems").insertAdjacentHTML("beforeend",
+      '<div class="tvNote">買うには 一度 じっさいに 行く ひつようが あるよ。<br>着いたら 1週間は ここから 買えるようになる。<br>いそぐなら 🚚 ネット注文！</div>');
   $("tvShop").classList.add("show");
   _tvFillArts(s);
 }
@@ -19973,11 +20017,140 @@ function _renderShopNotif(list){
         openTvShop(uid);
         return;
       }
+      if(t.closest("#tvOrderBtn")){
+        if(getOrder()){try{toast("いま はいそう中だよ。ひとつずつ ね");}catch(_){}return;}
+        _tvOrderMode=!_tvOrderMode;try{playClick();}catch(_){}openTvShop(_tvCur);return;
+      }
+      const od=t.closest("[data-order]");
+      if(od&&!od.disabled){_tvDoOrder(od.dataset.order,parseInt(od.dataset.price,10)||0);return;}
       const b=t.closest("[data-buy]");
       if(b&&!b.disabled){_tvBuy(b.dataset.buy,parseInt(b.dataset.price,10)||0);return;}
     });
   }catch(e){console.warn("travel init",e);}
 })();
+/* =====================================================================
+   地図のうえの 猫（HTMLかさね）＋ ネット注文（つぎの日に とどく）
+   ===================================================================== */
+const ORDER_KEY="radio_orders";
+function getOrder(){return _tvJson(ORDER_KEY,null);}
+function setOrder(o){if(o)_tvSet(ORDER_KEY,o);else{try{localStorage.removeItem(ORDER_KEY);syncSoon();}catch(_){}}}
+function _tvFee(km){return 50+Math.round(Math.max(0,km)*0.35);}   /* 遠いほど高い（前払い） */
+
+/* --- 画面のうえに 猫と 車を 置く（ズームで 大きさが 変わらないように） --- */
+function _tvOverlayHTML(){
+  let h="";
+  const p=(typeof getProfile==="function"?getProfile():null)||{};
+  let cat="";
+  try{cat=catFigureHTML(profileBody(),profileColor(),"sit",[0,0],"normal",
+        (typeof getEquippedCostume==="function"?getEquippedCostume():null));}catch(_){cat="";}
+  h+='<div class="tvCat" id="tvMyCat">'+cat+'<span class="tvCatNm">'+_esc(p.name||"あなた")+'</span></div>';
+  const o=getOrder();
+  if(o)h+='<div class="tvTruck" id="tvTruck">🚚<span class="tvTruckB" id="tvTruckB"></span></div>';
+  return h;
+}
+function _tvOrderPos(o){
+  /* 注文したお店 → じぶんの所へ、時間にあわせて 近づいてくる */
+  const t0=o.at||0,t1=o.eta||(t0+86400000);
+  const f=Math.max(0,Math.min(1,(Date.now()-t0)/Math.max(1,t1-t0)));
+  const pts=o.path&&o.path.length>1?o.path:null;
+  if(!pts)return{lng:o.lng,lat:o.lat,f:f};
+  const seg=(pts.length-1)*f,i=Math.min(pts.length-2,Math.floor(seg)),t=seg-i;
+  return{lng:pts[i][0]+(pts[i+1][0]-pts[i][0])*t,lat:pts[i][1]+(pts[i+1][1]-pts[i][1])*t,f:f};
+}
+function _tvPlaceOverlay(){
+  const wrap=$("tvWrap");if(!wrap||!_tvView)return;
+  const svg=wrap.querySelector(".tvMapSvg"),ov=$("tvOverlay");
+  if(!svg||!ov)return;
+  const r=svg.getBoundingClientRect();if(!r.width)return;
+  const w=_tvView.w,vx=_tvView.cx-w/2,vy=_tvView.cy-w/2;
+  const put=(el,lng,lat)=>{
+    if(!el)return;
+    const x=(_jpX(lng)-vx)/w*r.width,y=(_jpY(lat)-vy)/w*r.height;
+    const out=(x<-40||y<-40||x>r.width+40||y>r.height+40);
+    el.style.display=out?"none":"block";
+    if(!out){el.style.left=x.toFixed(1)+"px";el.style.top=y.toFixed(1)+"px";}
+  };
+  const h=_tvHere();
+  put($("tvMyCat"),h.lng,h.lat);
+  const o=getOrder();
+  if(o){
+    const p=_tvOrderPos(o);
+    put($("tvTruck"),p.lng,p.lat);
+    const b=$("tvTruckB");
+    if(b){
+      const rest=Math.max(0,(o.eta||0)-Date.now());
+      b.textContent=rest<=0?"とうちゃく！":("あと"+Math.max(1,Math.round(rest/3600000))+"時間");
+    }
+  }
+}
+/* --- 注文する --- */
+function _tvOrderKm(s){return _tvKmTo(s);}
+async function _tvDoOrder(artId,price){
+  const s=_tvShopById(_tvCur);if(!s)return;
+  if(getOrder()){try{toast("いま はいそう中だよ。ひとつずつ ね");}catch(_){}return;}
+  if(artById(artId)){try{toast("もう もってるよ");}catch(_){}return;}
+  const km=_tvOrderKm(s),fee=_tvFee(km),tot=price+fee;
+  if(getZZ()<tot){try{toast("お金が たりないよ（ぜんぶで "+tot+"zz）");}catch(_){}return;}
+  if(!confirm("ネット注文する？\n商品 "+price+"zz ＋ 送料 "+fee+"zz ＝ "+tot+"zz\nあしたには とどくよ"))return;
+  /* 品物は 注文したときに 受けとっておく（前払いなので 必ず とどく） */
+  let a=_tvArtCache[artId];
+  try{
+    if(!a){
+      const db=await getDB();if(!db)throw 0;
+      const{ref,get}=await import(FB_DB);
+      const sn=await get(ref(db,"art/"+s.uid+"/"+artId));
+      a=sn&&sn.val?sn.val():null;
+    }
+  }catch(_){}
+  if(!a){try{toast("よみこめなかったよ");}catch(_){}return;}
+  if(!spendZZ(tot))return;
+  /* 車が通る道（お店 → じぶん） */
+  let path=null;
+  try{
+    const me=myTown(),p=_jvPath(s.pref,me)||[];
+    const raw=[];
+    for(let i=0;i+1<p.length;i++){
+      const seg=_jvLegPts(p[i],p[i+1],i);
+      if(seg)for(let j=0;j<seg.length;j++)raw.push([+seg[j][0].toFixed(3),+seg[j][1].toFixed(3)]);
+    }
+    const h=_tvHere();raw.push([+h.lng.toFixed(3),+h.lat.toFixed(3)]);
+    /* 保存が重くならないよう 120点までに まびく */
+    const step=Math.max(1,Math.ceil(raw.length/120)),out=[];
+    for(let j=0;j<raw.length;j+=step)out.push(raw[j]);
+    if(out.length&&out[out.length-1]!==raw[raw.length-1])out.push(raw[raw.length-1]);
+    if(out.length>1)path=out;
+  }catch(_){}
+  const now=Date.now();
+  setOrder({shop:s.uid,shopName:s.name||"お店",art:artId,a:a,name:a.name||"アイテム",
+            price:price,fee:fee,at:now,eta:now+86400000,lng:s.lng,lat:s.lat,path:path});
+  try{
+    const db=await getDB();
+    if(db){const{ref,push,set}=await import(FB_DB);
+      const rr=push(ref(db,"sales/"+s.uid));
+      await set(rr,{art:artId,price:price,buyer:getUid(),at:now,net:1});}
+  }catch(_){}
+  try{playPop();}catch(_){}
+  try{toast("注文したよ！ あした とどくよ 🚚");}catch(_){}
+  _tvOrderMode=false;
+  openTvShop(_tvCur);
+  try{_tvPaint();}catch(_){}
+}
+/* --- とどく --- */
+function _tvDeliver(){
+  const o=getOrder();if(!o)return false;
+  if(Date.now()<(o.eta||0))return false;
+  try{
+    if(o.a&&!artById(o.a.id||o.art)){
+      const arts=getArts();arts.push(o.a);setArts(arts);
+    }
+  }catch(_){}
+  setOrder(null);
+  try{playPop();}catch(_){}
+  setTimeout(()=>{try{toast("🚚 「"+(o.name||"アイテム")+"」が とどいたよ！");}catch(_){}},700);
+  try{_shpRenderArts();}catch(_){}
+  return true;
+}
+let _tvOrderMode=false;
 
 </script>
 <button id="storyTestBtn" type="button" hidden>📖 ストーリー(テスト)</button>
@@ -20193,6 +20366,7 @@ function _renderShopNotif(list){
     </div>
     <div class="shpPage" id="shpPage1" hidden>
       <div id="tvWrap">
+        <div id="tvOverlay"></div>
         <button class="tvZ" id="tvZin" type="button">＋</button>
         <button class="tvZ" id="tvZout" type="button">−</button>
         <button class="tvZ" id="tvHere" type="button">📍</button>
@@ -20297,6 +20471,7 @@ function _renderShopNotif(list){
       <div id="tvShopSub"></div>
       <div id="tvShopBtns">
         <button class="tvAct tvGo" id="tvGoBtn" type="button">🚩 ここへ 行く</button>
+        <button class="tvAct tvOrder" id="tvOrderBtn" type="button">🚚 ネット注文</button>
         <button class="tvAct tvFav" id="tvFavBtn" type="button">♡ お気に入り</button>
       </div>
     </div>
