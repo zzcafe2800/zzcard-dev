@@ -1516,6 +1516,7 @@ body.exercising #randomModeBtn{animation:none !important;}
 #outingBig{position:absolute;left:0;right:0;top:calc(64px + env(safe-area-inset-top));display:flex;flex-direction:column;align-items:center;gap:2px;z-index:20;pointer-events:none;text-align:center;}
 #outingBig[hidden]{display:none;}
 #catRoom.awayMode #roomBag,#catRoom.awayMode #roomCam,#catRoom.awayMode #roomShop,#catRoom.awayMode #roomEdit{display:none !important;}
+#catRoom.awayMode #roomDeco,#catRoom.editing #roomDeco{display:none !important;}
 #bagGuide{position:absolute;inset:0;z-index:150;background:rgba(22,15,10,.6);display:none;}
 #bagGuide.on{display:block;animation:stFadeIn .4s ease both;}
 #catRoom.guideBag #roomBag{z-index:160 !important;box-shadow:0 0 0 6px rgba(255,255,255,.25),0 0 34px 10px rgba(191,230,255,.9);border-radius:50%;animation:bagPulse 1.3s ease-in-out infinite;}
@@ -3073,6 +3074,206 @@ button.pmTag{cursor:pointer;}
 .jvMaintMsg{font-size:13px;font-weight:700;color:#8a6b48;line-height:1.9;}
 .jvMaintMsg b{color:#e8663a;font-size:15px;}
 .jvMaintSub{margin-top:14px;font-size:11px;font-weight:700;color:#bda17f;}
+/* ===================== おみせ＋おえかき（大型アップデート） ===================== */
+#shopScreen{position:fixed;inset:0;z-index:3200;display:none;flex-direction:column;
+  background:linear-gradient(180deg,#eaf4fb 0%,#f6f1ea 55%,#fdeede 100%);overflow:hidden;}
+#shopScreen.show{display:flex;}
+#shpTop{display:flex;align-items:center;gap:9px;padding:calc(11px + env(safe-area-inset-top)) 14px 6px;}
+#shpClose{border:none;background:rgba(143,190,220,.18);color:#5c93ad;font-size:14px;font-weight:800;border-radius:999px;padding:7px 13px;cursor:pointer;}
+#shpTitle{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:17px;font-weight:900;color:#5c8aa3;letter-spacing:.05em;}
+#shpZZ{margin-left:auto;font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14px;font-weight:900;color:#c8863a;
+  background:linear-gradient(180deg,#fff6e0,#ffeac4);border:1.6px solid #f0cf92;border-radius:999px;padding:5px 13px;box-shadow:0 2px 0 rgba(214,168,96,.35);}
+#shpTabs{display:flex;gap:7px;justify-content:center;padding:2px 14px 8px;}
+.shpTab{border:none;background:rgba(255,255,255,.62);color:#7fa3b8;font-family:"Yomogi","Kosugi Maru",sans-serif;
+  font-size:13px;font-weight:900;border-radius:999px;padding:7px 20px;cursor:pointer;transition:.18s;}
+.shpTab.on{background:#5b9cb8;color:#fff;box-shadow:0 3px 0 rgba(74,131,155,.4);}
+#shpBody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 14px calc(26px + env(safe-area-inset-bottom));}
+.shpPage{max-width:460px;margin:0 auto;}
+.shpPage[hidden]{display:none;}
+.shpCard{background:rgba(255,255,255,.82);border-radius:20px;padding:14px 15px;margin-bottom:12px;box-shadow:0 3px 12px rgba(120,150,170,.13);}
+.shpCardTtl{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:13px;font-weight:900;color:#5c8aa3;margin-bottom:8px;}
+.shpName{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:19px;font-weight:900;color:#4a7f99;}
+.shpPlace{font-size:12px;color:#8aa7b6;margin-top:3px;}
+.shpMini{border:none;background:rgba(143,190,220,.16);color:#5c93ad;font-size:12px;font-weight:800;border-radius:999px;padding:6px 13px;cursor:pointer;margin-top:9px;}
+#shpMake{width:100%;border:none;background:linear-gradient(180deg,#ffa3c4,#e0588f);color:#fff;
+  font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:15px;font-weight:900;border-radius:18px;padding:14px;cursor:pointer;
+  box-shadow:0 4px 0 rgba(178,66,110,.45);letter-spacing:.04em;}
+#shpMake:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(178,66,110,.45);}
+#shpArts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:4px;}
+.shpArt{background:rgba(255,255,255,.9);border:1.6px solid #e3eef4;border-radius:15px;padding:7px 5px 6px;cursor:pointer;text-align:center;}
+.shpArt:active{transform:scale(.97);}
+.shpArtBox{width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+  background:repeating-conic-gradient(#f4f7f9 0 25%,#fff 0 50%) 0 0/14px 14px;border-radius:10px;overflow:hidden;}
+.shpArtBox svg{width:100%;height:100%;}
+.shpArtName{font-size:10.5px;color:#6d8fa3;font-weight:800;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shpArtUse{font-size:9.5px;color:#a9c0cd;}
+.shpEmpty{font-size:12.5px;color:#94aebc;text-align:center;padding:18px 6px;line-height:1.7;}
+.shpSoon{font-size:12.5px;color:#94aebc;text-align:center;padding:26px 10px;line-height:1.8;}
+
+/* --- 用途えらび --- */
+#drPick{position:fixed;inset:0;z-index:3260;display:none;align-items:center;justify-content:center;background:rgba(40,60,72,.42);padding:18px;}
+#drPick.show{display:flex;}
+#drPickCard{background:#fff;border-radius:22px;padding:18px 16px 15px;width:100%;max-width:340px;max-height:84vh;overflow-y:auto;box-shadow:0 10px 34px rgba(50,80,100,.28);}
+#drPickTtl{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:15px;font-weight:900;color:#5c8aa3;text-align:center;margin-bottom:12px;}
+.drUse{display:flex;align-items:center;gap:11px;width:100%;border:1.6px solid #e6eff4;background:#fbfdfe;border-radius:15px;padding:11px 13px;margin-bottom:8px;cursor:pointer;text-align:left;}
+.drUse:active{background:#eef7fb;}
+.drUseIco{font-size:21px;}
+.drUseName{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14px;font-weight:900;color:#4a7f99;}
+.drUseSub{font-size:11px;color:#9ab6c5;margin-top:1px;}
+#drPickClose{width:100%;border:none;background:rgba(143,190,220,.16);color:#5c93ad;font-size:13px;font-weight:800;border-radius:999px;padding:9px;cursor:pointer;margin-top:4px;}
+
+/* --- おえかき --- */
+#drawScreen{position:fixed;inset:0;z-index:3280;display:none;flex-direction:column;background:linear-gradient(180deg,#f2f7fa 0%,#eaf1f5 100%);overflow:hidden;}
+#drawScreen.show{display:flex;}
+#drTop{display:flex;align-items:center;gap:9px;padding:calc(9px + env(safe-area-inset-top)) 13px 5px;}
+#drClose{border:none;background:rgba(143,190,220,.18);color:#5c93ad;font-size:14px;font-weight:800;border-radius:999px;padding:6px 12px;cursor:pointer;}
+#drTitle{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14.5px;font-weight:900;color:#5c8aa3;}
+#drSave{margin-left:auto;border:none;background:linear-gradient(180deg,#8fd4a8,#4fa877);color:#fff;font-size:13px;font-weight:900;border-radius:999px;padding:8px 17px;cursor:pointer;box-shadow:0 3px 0 rgba(58,131,92,.4);}
+#drSave:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(58,131,92,.4);}
+#drStageWrap{display:flex;align-items:center;justify-content:center;padding:6px 0 4px;}
+#drStage{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(110,140,160,.18);
+  background:repeating-conic-gradient(#eef3f6 0 25%,#fff 0 50%) 0 0/16px 16px;touch-action:none;}
+#drUnder,#drCatBg{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;}
+#drUnder img{width:100%;height:100%;object-fit:contain;opacity:.3;}
+#drCatBg svg{width:100%;height:100%;opacity:.22;}
+#drCanvas{position:relative;display:block;touch-action:none;cursor:crosshair;}
+#drTools{padding:2px 12px calc(12px + env(safe-area-inset-bottom));overflow-y:auto;}
+.drRow{display:flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:7px;}
+.drBtn{border:1.6px solid #dceaf1;background:#fff;color:#5f8ba3;font-size:12px;font-weight:800;border-radius:13px;padding:8px 11px;cursor:pointer;min-width:44px;}
+.drBtn.on{background:#5b9cb8;border-color:#5b9cb8;color:#fff;}
+.drBtn:active{transform:scale(.95);}
+.drBtn[disabled]{opacity:.38;}
+#drPal{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;max-width:340px;margin:0 auto 8px;}
+.drCol{aspect-ratio:1/1;border-radius:9px;border:2.4px solid rgba(255,255,255,.9);cursor:pointer;box-shadow:0 1px 3px rgba(90,120,140,.22);}
+.drCol.on{border-color:#e0588f;transform:scale(1.1);}
+.drW{display:flex;align-items:center;justify-content:center;width:38px;height:34px;border:1.6px solid #dceaf1;background:#fff;border-radius:12px;cursor:pointer;}
+.drW.on{border-color:#5b9cb8;background:#eaf6fb;}
+.drW i{display:block;background:#5c7d8f;border-radius:99px;}
+#drLayerRow{gap:5px;}
+.drLy{border:1.6px solid #dceaf1;background:#fff;color:#6d90a5;font-size:11.5px;font-weight:800;border-radius:11px;padding:6px 10px;cursor:pointer;}
+.drLy.on{background:#ffe4ef;border-color:#e0588f;color:#c14a79;}
+.drLy.off{opacity:.42;text-decoration:line-through;}
+#drHint{font-size:11px;color:#9ab6c5;text-align:center;margin-top:2px;}
+#drNameWrap{position:fixed;inset:0;z-index:3300;display:none;align-items:center;justify-content:center;background:rgba(40,60,72,.42);padding:20px;}
+#drNameWrap.show{display:flex;}
+#drNameCard{background:#fff;border-radius:20px;padding:18px 16px 14px;width:100%;max-width:300px;text-align:center;}
+#drNameTtl{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14px;font-weight:900;color:#5c8aa3;margin-bottom:10px;}
+#drNameIn{width:100%;border:1.8px solid #dceaf1;border-radius:13px;padding:10px 12px;font-size:15px;font-family:inherit;text-align:center;box-sizing:border-box;}
+#drNameGo{width:100%;border:none;background:linear-gradient(180deg,#8fd4a8,#4fa877);color:#fff;font-size:14px;font-weight:900;border-radius:14px;padding:11px;cursor:pointer;margin-top:11px;}
+#drNameCancel{border:none;background:none;color:#9ab6c5;font-size:12px;font-weight:800;cursor:pointer;margin-top:9px;}
+@media (max-width:400px){
+  #drPal{grid-template-columns:repeat(8,1fr);gap:4px;}
+  .drBtn{padding:7px 9px;font-size:11.5px;min-width:40px;}
+}
+.jvShopGo{display:block;margin:12px auto 0;border:none;background:linear-gradient(180deg,#ffa3c4,#e0588f);color:#fff;
+  font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14px;font-weight:900;border-radius:16px;padding:12px 26px;cursor:pointer;
+  box-shadow:0 4px 0 rgba(178,66,110,.45);letter-spacing:.04em;}
+.jvShopGo:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(178,66,110,.45);}
+
+/* ===== 出品（お店にならべる） ===== */
+.shpSell{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.9);border:1.6px solid #e3eef4;border-radius:14px;padding:8px 10px;margin-bottom:7px;}
+.shpSellBox{width:44px;height:44px;flex:0 0 44px;background:repeating-conic-gradient(#f4f7f9 0 25%,#fff 0 50%) 0 0/12px 12px;border-radius:9px;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.shpSellBox svg{width:100%;height:100%;}
+.shpSellMid{flex:1;min-width:0;}
+.shpSellName{font-size:12.5px;font-weight:900;color:#4a7f99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shpSellSub{font-size:10.5px;color:#a9c0cd;}
+.shpSellPrice{font-size:13px;font-weight:900;color:#c8863a;white-space:nowrap;}
+.shpSellBtn{border:none;background:rgba(143,190,220,.16);color:#5c93ad;font-size:11px;font-weight:800;border-radius:999px;padding:6px 10px;cursor:pointer;}
+.shpSlot{font-size:11.5px;color:#94aebc;text-align:center;margin:4px 0 8px;}
+#shpSlotBuy{border:none;background:rgba(255,200,120,.24);color:#b5813c;font-size:11.5px;font-weight:800;border-radius:999px;padding:6px 13px;cursor:pointer;margin-left:6px;}
+/* アイテムのメニュー／値段つけ */
+#artMenu,#priceWrap{position:fixed;inset:0;z-index:3310;display:none;align-items:center;justify-content:center;background:rgba(40,60,72,.42);padding:20px;}
+#artMenu.show,#priceWrap.show{display:flex;}
+#artMenuCard,#priceCard{background:#fff;border-radius:20px;padding:16px 15px 12px;width:100%;max-width:310px;text-align:center;}
+#artMenuTtl,#priceTtl{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14px;font-weight:900;color:#5c8aa3;margin-bottom:10px;}
+.amBtn{display:block;width:100%;border:1.6px solid #e6eff4;background:#fbfdfe;color:#4a7f99;font-size:13.5px;font-weight:900;border-radius:14px;padding:11px;cursor:pointer;margin-bottom:7px;}
+.amBtn:active{background:#eef7fb;}
+.amBtn.pink{border:none;background:linear-gradient(180deg,#ffa3c4,#e0588f);color:#fff;box-shadow:0 3px 0 rgba(178,66,110,.4);}
+.amBtn.gray{border:none;background:none;color:#9ab6c5;font-size:12px;box-shadow:none;}
+#priceIn{width:100%;border:1.8px solid #dceaf1;border-radius:13px;padding:10px 12px;font-size:17px;font-family:inherit;text-align:center;box-sizing:border-box;font-weight:900;color:#c8863a;}
+#priceAvg{font-size:11.5px;color:#94aebc;margin:8px 0 2px;line-height:1.6;}
+/* ===== 内装モード ===== */
+#catRoom.decoing #roomBag,#catRoom.decoing #roomCam,#catRoom.decoing #roomShop,#catRoom.decoing #roomEdit,
+#catRoom.decoing #affBar,#catRoom.decoing #roomStatus,#catRoom.decoing #outingBar,#catRoom.decoing #roomDoor{display:none !important;}
+#catRoom.decoing #roomDeco{background:#ffd0e2;}
+#roomDeco{position:absolute;top:calc(50% + 90px);right:14px;left:auto;bottom:auto;z-index:6;width:50px;height:50px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.86);box-shadow:0 3px 10px rgba(120,150,170,.22);cursor:pointer;font-size:21px;line-height:1;
+  display:flex;align-items:center;justify-content:center;}
+#decoBar{position:absolute;top:0;right:0;bottom:0;width:126px;z-index:150;display:none;flex-direction:column;
+  background:rgba(255,255,255,.93);box-shadow:-3px 0 14px rgba(110,140,160,.18);padding:calc(8px + env(safe-area-inset-top)) 8px calc(8px + env(safe-area-inset-bottom));}
+#catRoom.decoing #decoBar{display:flex;}
+#decoTabs{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px;}
+.decoTab{flex:1 1 46%;border:none;background:rgba(143,190,220,.14);color:#6d90a5;font-size:10.5px;font-weight:900;border-radius:9px;padding:6px 2px;cursor:pointer;}
+.decoTab.on{background:#5b9cb8;color:#fff;}
+#decoList{flex:1;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:5px;align-content:start;}
+.decoThumb{background:#fff;border:1.6px solid #e3eef4;border-radius:10px;padding:3px;cursor:pointer;aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;background-image:repeating-conic-gradient(#f4f7f9 0 25%,#fff 0 50%);background-size:12px 12px;}
+.decoThumb.on{border-color:#e0588f;}
+.decoThumb svg{width:100%;height:100%;}
+.decoNone{grid-column:1/-1;font-size:10.5px;color:#9ab6c5;text-align:center;padding:10px 4px;line-height:1.6;}
+.decoOff{grid-column:1/-1;border:1.6px dashed #cfe0ea;background:#fbfdfe;color:#7fa3b8;font-size:11px;font-weight:800;border-radius:10px;padding:7px;cursor:pointer;}
+#decoDetail{border-top:1.4px solid #eaf2f6;padding-top:6px;margin-top:6px;display:none;}
+#catRoom.decoing #decoDetail.on{display:block;}
+.decoRow{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+.decoLbl{font-size:10px;color:#8aa7b6;font-weight:800;width:34px;flex:0 0 34px;}
+.decoRow input[type=range]{flex:1;min-width:0;accent-color:#5b9cb8;}
+.decoBtn{border:none;background:rgba(143,190,220,.16);color:#5c93ad;font-size:11px;font-weight:800;border-radius:8px;padding:5px 7px;cursor:pointer;}
+.decoBtn.del{background:rgba(255,150,170,.2);color:#d2557a;}
+#decoDone{width:100%;border:none;background:linear-gradient(180deg,#8fd4a8,#4fa877);color:#fff;font-size:12.5px;font-weight:900;
+  border-radius:11px;padding:9px;cursor:pointer;margin-top:6px;}
+.decoItem{cursor:grab;}
+.decoSel{outline:none;}
+@media (max-width:380px){#decoBar{width:112px;}}
+
+/* ===== ⑥ 旅（日本地図でお店めぐり） ===== */
+#tvWrap{position:relative;border-radius:18px;overflow:hidden;background:#dff0f7;box-shadow:0 3px 12px rgba(120,150,170,.14);}
+#tvWrap svg{display:block;width:100%;height:auto;touch-action:none;cursor:grab;}
+.tvZ{position:absolute;right:8px;width:32px;height:32px;border:none;border-radius:50%;background:rgba(255,255,255,.9);
+  color:#5c93ad;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 2px 6px rgba(110,140,160,.25);z-index:3;line-height:1;}
+#tvZin{top:8px;}#tvZout{top:46px;}#tvHere{top:84px;font-size:14px;}
+#tvStatus{background:rgba(255,255,255,.86);border-radius:14px;padding:9px 12px;margin-top:9px;font-size:12.5px;color:#5c8aa3;font-weight:800;line-height:1.6;text-align:center;}
+#tvBar{display:flex;gap:7px;margin-top:9px;}
+.tvBtn{flex:1;border:none;background:rgba(255,255,255,.86);color:#5c93ad;font-family:"Yomogi","Kosugi Maru",sans-serif;
+  font-size:13px;font-weight:900;border-radius:14px;padding:11px;cursor:pointer;box-shadow:0 2px 8px rgba(120,150,170,.12);}
+.tvBtn.on{background:#5b9cb8;color:#fff;}
+#tvProg{height:7px;border-radius:99px;background:rgba(143,190,220,.22);overflow:hidden;margin-top:7px;}
+#tvProgIn{height:100%;background:linear-gradient(90deg,#ffb36b,#ff7a2f);border-radius:99px;width:0;}
+/* お店一覧・お店の中 */
+#tvList,#tvShop{position:fixed;inset:0;z-index:3240;display:none;flex-direction:column;background:linear-gradient(180deg,#eaf4fb,#fdf3ec);}
+#tvList.show,#tvShop.show{display:flex;}
+.tvTop{display:flex;align-items:center;gap:9px;padding:calc(11px + env(safe-area-inset-top)) 14px 6px;}
+.tvTopBtn{border:none;background:rgba(143,190,220,.18);color:#5c93ad;font-size:14px;font-weight:800;border-radius:999px;padding:7px 13px;cursor:pointer;}
+.tvTtl{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:16px;font-weight:900;color:#5c8aa3;}
+.tvBody{flex:1;overflow-y:auto;padding:4px 14px calc(24px + env(safe-area-inset-bottom));}
+.tvInner{max-width:460px;margin:0 auto;}
+.tvRow{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.88);border-radius:15px;padding:10px 12px;margin-bottom:7px;cursor:pointer;}
+.tvRow:active{transform:scale(.99);}
+.tvRowName{font-size:13.5px;font-weight:900;color:#4a7f99;}
+.tvRowName.near{color:#3f9a63;}
+.tvRowSub{font-size:11px;color:#a0b9c6;margin-top:2px;}
+.tvRowMid{flex:1;min-width:0;}
+.tvRowKm{font-size:11.5px;font-weight:900;color:#8aa7b6;white-space:nowrap;}
+.tvBadge{font-size:10px;font-weight:900;color:#e08a2f;background:#fff2d8;border-radius:6px;padding:1px 5px;margin-left:4px;}
+#tvShopHead{background:rgba(255,255,255,.9);border-radius:18px;padding:13px 14px;margin-bottom:10px;text-align:center;}
+#tvShopName{font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:19px;font-weight:900;color:#4a7f99;}
+#tvShopSub{font-size:11.5px;color:#9ab6c5;margin-top:3px;}
+#tvShopBtns{display:flex;gap:7px;margin-top:10px;}
+.tvAct{flex:1;border:none;border-radius:13px;padding:10px;font-size:12.5px;font-weight:900;cursor:pointer;}
+.tvGo{background:linear-gradient(180deg,#8fd4a8,#4fa877);color:#fff;box-shadow:0 3px 0 rgba(58,131,92,.38);}
+.tvFav{background:rgba(255,160,190,.22);color:#d2557a;}
+.tvFav.on{background:linear-gradient(180deg,#ffa3c4,#e0588f);color:#fff;}
+.tvItem{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.88);border-radius:14px;padding:9px 11px;margin-bottom:7px;}
+.tvItemBox{width:48px;height:48px;flex:0 0 48px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  background:repeating-conic-gradient(#f4f7f9 0 25%,#fff 0 50%) 0 0/12px 12px;}
+.tvItemBox svg{width:100%;height:100%;}
+.tvItemName{font-size:12.5px;font-weight:900;color:#4a7f99;}
+.tvItemSub{font-size:10.5px;color:#a9c0cd;}
+.tvBuy{border:none;background:linear-gradient(180deg,#ffd08a,#f0a63c);color:#fff;font-size:12px;font-weight:900;
+  border-radius:999px;padding:8px 13px;cursor:pointer;white-space:nowrap;box-shadow:0 2px 0 rgba(200,132,44,.4);}
+.tvBuy[disabled]{background:#e6eef2;color:#a9c0cd;box-shadow:none;}
+.tvNote{font-size:11.5px;color:#94aebc;text-align:center;padding:12px 6px;line-height:1.7;}
+.notifShop{cursor:pointer;}
+
 </style>
 </head>
 <body>
@@ -3474,6 +3675,27 @@ button.pmTag{cursor:pointer;}
   <button id="roomBag" type="button" aria-label="プロフィール・衣装"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M11 13 a5 5 0 0 1 10 0" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round"/><rect x="6.5" y="13" width="19" height="15" rx="3.5" fill="none" stroke="#5c93ad" stroke-width="2.4"/><path d="M6.5 19 H25.5" stroke="#5c93ad" stroke-width="2.2"/></svg><span id="roomBagBadge" class="coinBadge" hidden></span></button>
   <button id="roomCam" type="button" aria-label="カメラ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M11 7 L13 4 L19 4 L21 7 L27 7 Q29 7 29 9 L29 24 Q29 26 27 26 L5 26 Q3 26 3 24 L3 9 Q3 7 5 7 Z" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linejoin="round"/><circle cx="16" cy="16" r="6" fill="none" stroke="#5c93ad" stroke-width="2.4"/></svg></button>
   <button id="roomShop" type="button" aria-label="ショップ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 H8 L10.6 20.5 H24.4 L26.6 10 H10.3" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="25" r="2.2" fill="#5c93ad"/><circle cx="22.5" cy="25" r="2.2" fill="#5c93ad"/></svg></button>
+  <button id="roomDeco" type="button" aria-label="内装">🛋</button>
+  <div id="decoBar">
+    <div id="decoTabs">
+      <button class="decoTab on" type="button" data-t="wall">かべ</button>
+      <button class="decoTab" type="button" data-t="floor">ゆか</button>
+      <button class="decoTab" type="button" data-t="window">まど</button>
+      <button class="decoTab" type="button" data-t="item">もの</button>
+    </div>
+    <div id="decoList"></div>
+    <div id="decoDetail">
+      <div class="decoRow"><span class="decoLbl">大きさ</span><input type="range" id="decoS" min="30" max="260" value="100"/></div>
+      <div class="decoRow"><span class="decoLbl">かたむき</span><input type="range" id="decoR" min="-180" max="180" value="0"/></div>
+      <div class="decoRow"><span class="decoLbl">いろ</span><input type="range" id="decoH" min="0" max="360" value="0"/></div>
+      <div class="decoRow">
+        <button class="decoBtn" id="decoDown" type="button">↓うしろ</button>
+        <button class="decoBtn" id="decoUp" type="button">↑まえ</button>
+        <button class="decoBtn del" id="decoDel" type="button">🗑</button>
+      </div>
+    </div>
+    <button id="decoDone" type="button">かんりょう</button>
+  </div>
   <button id="roomDoor" type="button" aria-label="いってらっしゃい" hidden>いってらっしゃい</button>
   <div id="editBar">
     <div id="editTray"></div>
@@ -4752,7 +4974,7 @@ function getUid(){
   return u;
 }
 /* ===== 連動（PC⇄スマホ）：ローカル記録をクラウドに自動同期。復元IDでuidを揃えた端末どうしが同じ状態になる ===== */
-const SYNC_EXCLUDE=["radio_uid","radio_stamp_cards","radio_auto_card","radio_unlock_all","radio_sync_meta","radio_syncbig_meta","radio_glogin","radio_gredirect"];
+const SYNC_EXCLUDE=["radio_uid","radio_art","radio_stamp_cards","radio_auto_card","radio_unlock_all","radio_sync_meta","radio_syncbig_meta","radio_glogin","radio_gredirect"];
 const SYNC_META_KEY="radio_sync_meta";
 function _syncCollect(){const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k.indexOf("radio_")!==0)continue;if(SYNC_EXCLUDE.indexOf(k)>=0)continue;const v=localStorage.getItem(k);if(v!=null&&v.length<200000)o[k]=v;}return o;}
 function _syncHash(str){let h=0;for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;}return h.toString(36);}
@@ -7137,6 +7359,7 @@ function openNotif(){
     });
   }
   $("notifPanel").classList.add("visible");
+  try{_renderShopNotif(list);}catch(_){}
   try{_renderPartyInviteNotif(list);}catch(_){}
   try{_renderPartyApplyNotif(list);}catch(_){}
   /* 全部既読に（通知一覧は消えず残る） */
@@ -8643,6 +8866,8 @@ function markTodayDone(){
   try{_pushPartyClimb();}catch(_){}
   try{recordCheckin();}catch(_){}
   const st=stampForDate(today);
+  try{_zzEarnToday();}catch(_){}   /* ★体操の報酬（早起きスコア連動のzz） */
+  try{_tvAdvance();}catch(_){}     /* ★旅が すすむ（その日のスコアぶん） */
   publishProfile();   /* 連続日数を一覧に反映 */
   try{syncSoon();}catch(_){}   /* 体操済み・起床ログを即クラウドへ */
   return{added:true,newStamp:!before.has(st),stamp:st};
@@ -10332,6 +10557,7 @@ function roomSceneSVG(part){
 <rect x="0" y="${floorY-2}" width="${W}" height="16" fill="#f2d6bf"/>
 <rect x="0" y="${floorY}" width="${W}" height="22" fill="#000000" opacity="0.06"/>
 <g stroke="#d6b98c" stroke-width="2" opacity="0.45">${[0.16,0.36,0.56,0.78,0.95].map(f=>`<line x1="${(W*f).toFixed(0)}" y1="${floorY+4}" x2="${(W*(f-0.5)*1.5+W*0.5).toFixed(0)}" y2="${H}"/>`).join("")}</g>
+${_decoWallFloorSVG(W,H,floorY)}
 <polygon class="rmBeam" style="--bo:${beamOp}" points="${winX+14},${winY+winH-6} ${winX+winW-14},${winY+winH-6} ${winX+winW+60},${Math.round(floorY+band*0.5)} ${winX-40},${Math.round(floorY+band*0.5)}" fill="${beamFill}"/>
 <ellipse class="rmBeam" style="--bo:${(beamOp*0.7).toFixed(3)}" cx="${winX+winW/2}" cy="${Math.round(floorY+band*0.16)}" rx="${Math.round(winW*0.62)}" ry="${Math.round(band*0.1)}" fill="${beamFill}"/>
 <g>
@@ -10343,6 +10569,7 @@ ${celes}
 <ellipse cx="${winX+44}" cy="${winY+winH-40}" rx="34" ry="20" fill="${hillCol}"/><ellipse cx="${winX+winW-50}" cy="${winY+winH-32}" rx="40" ry="22" fill="${hillCol2}"/>
 ${showClouds?`<g fill="#ffffff" opacity="0.95"><ellipse cx="${winX+54}" cy="${winY+54}" rx="22" ry="9"/><ellipse cx="${winX+72}" cy="${winY+48}" rx="15" ry="8"/></g>`:""}
 <g stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity=".32"><line x1="${winX+winW*0.22}" y1="${winY+winH*0.62}" x2="${winX+winW*0.46}" y2="${winY+winH*0.18}"/><line x1="${winX+winW*0.34}" y1="${winY+winH*0.72}" x2="${winX+winW*0.52}" y2="${winY+winH*0.4}"/></g>
+${_decoWindowSVG(winX,winY,winW,winH)}
 <rect x="${winX+winW/2-4}" y="${winY+9}" width="8" height="${winH-18}" fill="#ffffff"/><rect x="${winX+9}" y="${winY+winH/2-4}" width="${winW-18}" height="8" fill="#ffffff"/>
 <path d="M${winX-2} ${winY} q-12 ${winH*0.3} 0 ${winH*0.55} q-14 ${winH*0.25} 2 ${winH*0.45} l10 0 l0 ${-winH} Z" fill="#ffc2d6"/>
 <g stroke="#f0a8c2" stroke-width="2" fill="none" opacity=".7"><path d="M${winX+1} ${winY+6} q-7 ${winH*0.28} -1 ${winH*0.5}"/><path d="M${winX+5} ${winY+6} q-4 ${winH*0.3} 0 ${winH*0.52}"/></g>
@@ -10435,7 +10662,7 @@ return c;})()}</g>
 ${tint}
 ${drawBedObj(bedX,bedY,bedS)}
 </svg>`;
-  const _actors=`${placedItemsSVG()}
+  const _actors=`${_decoItemsSVG(W,H,floorY)}${placedItemsSVG()}
 ${ballSVG(getEquippedBall(),ballX,ballY,ballR)}
 ${cat}
 <g class="rmExtra">${extra}</g>`;
@@ -14309,6 +14536,7 @@ const JV_MAINT_HTML='<div class="jvMaint">'
   +'<div class="jvMaintTtl">日本一周は いま 整備中</div>'
   +'<div class="jvMaintMsg">もっと 楽しくなるように<br>作りなおしています。<br><b>2〜3日後</b> に また あそべるよ！</div>'
   +'<div class="jvMaintSub">🐾 ねこは ちょっと おやすみちゅう</div>'
+  +'<button class="jvShopGo" type="button">🏠 おみせを ひらく</button>'
   +'</div></div>';
 function _renderJourney(el,days,members,jdata,host){
   if(JV_MAINTENANCE){if(el)el.innerHTML=JV_MAINT_HTML;return;}   /* ★整備中：どこから呼ばれても止める */
@@ -18359,6 +18587,1398 @@ try{
     if(e.target&&e.target.id==="storyPicker")pk.classList.remove("show");
   });
 }catch(_){}
+/* =====================================================================
+   おみせ＋おえかき 大型アップデート ①通貨zz ②おえかき
+   ===================================================================== */
+
+/* ===== ① ゲーム内通貨 zz（円とおなじ感覚。はじめ500zz） ===== */
+const ZZ_KEY="radio_zz",ZZ_PAID_KEY="radio_zz_paid",ZZ_START=500;
+function getZZ(){
+  try{const v=localStorage.getItem(ZZ_KEY);
+    if(v==null){localStorage.setItem(ZZ_KEY,String(ZZ_START));return ZZ_START;}
+    const n=parseInt(v,10);return Number.isFinite(n)?n:ZZ_START;}catch(_){return ZZ_START;}
+}
+function setZZ(n){
+  const v=Math.max(0,Math.round(n||0));
+  try{localStorage.setItem(ZZ_KEY,String(v));}catch(_){}
+  try{syncSoon();}catch(_){}
+  try{_zzPaint();}catch(_){}
+  return v;
+}
+function addZZ(n){return setZZ(getZZ()+(n||0));}
+function spendZZ(n){const z=getZZ();if(z<n)return false;setZZ(z-n);return true;}
+function zzFmt(n){try{return (n||0).toLocaleString("ja-JP")+" zz";}catch(_){return (n||0)+" zz";}}
+function _zzPaint(){try{const e=$("shpZZ");if(e)e.textContent=zzFmt(getZZ());}catch(_){}}
+/* 体操の報酬：早起きスコア連動（20〜110zz／1日1回） */
+function _zzEarnToday(){
+  try{
+    const dk=jstKey();
+    if(localStorage.getItem(ZZ_PAID_KEY)===dk)return 0;
+    let sc=0;try{sc=_dayScore(dk);}catch(_){}
+    const pay=Math.max(10,20+Math.round(Math.max(0,sc)/10));
+    addZZ(pay);
+    try{localStorage.setItem(ZZ_PAID_KEY,dk);}catch(_){}
+    setTimeout(()=>{try{toast("＋"+pay+"zz もらったよ！");}catch(_){}},1400);
+    return pay;
+  }catch(_){return 0;}
+}
+
+/* ===== ② おえかき：データのかたち =====
+   アイテム = {id,uid,name,use,sub,L:[{on,s:[stroke,…]},…],at}
+   stroke   = [色番号, 太さ番号, "点をつめた文字列"]
+   点は「1つ前との差」を可変長でつめる＝1本の線が数百バイトで収まる      */
+const ART_KEY="radio_art";
+const ART_PAL=["#1c1c1c","#7a7a7a","#ffffff","#e8d9c5",
+               "#e0588f","#ffa8c8","#e0485c","#ff8a3d",
+               "#f4c73b","#ffe07a","#7bc47f","#3f8f5a",
+               "#5b9cb8","#8fdcff","#3f5aa8","#8f7fd6"];
+const ART_W=[0.012,0.026,0.05,0.095];   /* キャンバス幅にたいする太さ */
+const ART_USES=[
+  {k:"cos",  n:"衣装",           s:"ねこが きられる",         ico:"👕"},
+  {k:"emo",  n:"絵文字",         s:"コメントや 気分に つかう", ico:"😊"},
+  {k:"stamp",n:"スタンプ",       s:"ラリーの スタンプ（青）",  ico:"🔵"},
+  {k:"furn", n:"お部屋のアイテム",s:"お店に かざれる",         ico:"🪑"},
+  {k:"pat",  n:"お部屋の模様",   s:"かべ・ゆか・まど",         ico:"🧱"}
+];
+const COS_PARTS=[["hat","ぼうし"],["neck","くび"],["body","からだ"],["tail","しっぽ"],["eyes","め"],["fx","エフェクト"]];
+const PAT_PARTS=[["wall","かべ"],["floor","ゆか"],["window","まど"]];
+function artUseName(u){const f=ART_USES.find(x=>x.k===u);return f?f.n:"アイテム";}
+function artSubName(use,sub){
+  if(use==="cos"){const f=COS_PARTS.find(x=>x[0]===sub);return f?f[1]:"";}
+  if(use==="pat"){const f=PAT_PARTS.find(x=>x[0]===sub);return f?f[1]:"";}
+  return "";
+}
+/* 用途ごとのキャンバス。衣装は「ねこと同じ座標(120×124)」なので描いたとおりに着られる */
+function artCanvasSize(use,sub){
+  if(use==="cos")return{w:120,h:124};          /* ねこと同じ座標 */
+  if(use==="pat"){                              /* お部屋の形に近い比率にしてある */
+    if(sub==="floor")return{w:160,h:145};       /* ゆか */
+    if(sub==="window")return{w:110,h:172};      /* まど */
+    return{w:130,h:160};                        /* かべ */
+  }
+  return{w:120,h:120};
+}
+/* --- 点のつめこみ（符号つき可変長・64文字） --- */
+const _AB="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+function _apk(nums){
+  let s="";
+  for(let i=0;i<nums.length;i++){
+    let z=nums[i]<0?(-nums[i]*2-1):(nums[i]*2);
+    do{let d=z&31;z=Math.floor(z/32);s+=_AB[d+(z?32:0)];}while(z);
+  }
+  return s;
+}
+function _aupk(str){
+  const out=[];let z=0,sh=1;
+  for(let i=0;i<str.length;i++){
+    const v=_AB.indexOf(str[i]);if(v<0)continue;
+    z+=(v&31)*sh;
+    if(v&32){sh*=32;}else{out.push(z&1?-((z+1)/2):(z/2));z=0;sh=1;}
+  }
+  return out;
+}
+function _artPack(pts){   /* pts=[{x,y},…] 実寸 → 差分×10 */
+  const a=[];let px=0,py=0;
+  for(let i=0;i<pts.length;i++){
+    const x=Math.round(pts[i].x*10),y=Math.round(pts[i].y*10);
+    a.push(x-px,y-py);px=x;py=y;
+  }
+  return _apk(a);
+}
+function _artUnpack(str){
+  const d=_aupk(str),out=[];let x=0,y=0;
+  for(let i=0;i+1<d.length;i+=2){x+=d[i];y+=d[i+1];out.push({x:x/10,y:y/10});}
+  return out;
+}
+/* --- 線をへらす（見た目そのまま・容量だけ落とす） --- */
+function _artRdp(pts,eps){
+  if(pts.length<3)return pts.slice();
+  const keep=new Array(pts.length).fill(false);keep[0]=keep[pts.length-1]=true;
+  const st=[[0,pts.length-1]];
+  while(st.length){
+    const[a,b]=st.pop();if(b-a<2)continue;
+    const A=pts[a],B=pts[b];let dx=B.x-A.x,dy=B.y-A.y;const L=Math.hypot(dx,dy)||1;dx/=L;dy/=L;
+    let bi=-1,bd=eps;
+    for(let i=a+1;i<b;i++){
+      const vx=pts[i].x-A.x,vy=pts[i].y-A.y;
+      const d=Math.abs(vx*dy-vy*dx);
+      if(d>bd){bd=d;bi=i;}
+    }
+    if(bi>0){keep[bi]=true;st.push([a,bi],[bi,b]);}
+  }
+  return pts.filter((p,i)=>keep[i]);
+}
+
+/* ===== 絵をかたちにする（SVG／canvas 両方） ===== */
+function _artStrokePath(st,cs){
+  const pts=_artUnpack(st[2]);if(!pts.length)return"";
+  const col=ART_PAL[st[0]]||"#1c1c1c",lw=(ART_W[st[1]]||ART_W[1])*cs.w;
+  if(pts.length===1)return`<circle cx="${pts[0].x.toFixed(1)}" cy="${pts[0].y.toFixed(1)}" r="${(lw/2).toFixed(2)}" fill="${col}"/>`;
+  let d="";for(let i=0;i<pts.length;i++)d+=(i?"L":"M")+pts[i].x.toFixed(1)+" "+pts[i].y.toFixed(1)+" ";
+  return`<path d="${d.trim()}" fill="none" stroke="${col}" stroke-width="${lw.toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+}
+const _artSvgCache={};
+function artSVG(a,cls){
+  if(!a)return"";
+  const key=a.id+"|"+(a.rev||0);
+  let inner=_artSvgCache[key];
+  if(inner==null){
+    const cs=artCanvasSize(a.use,a.sub);inner="";
+    (a.L||[]).forEach(ly=>{if(ly&&ly.on===0)return;(ly&&ly.s||[]).forEach(st=>{inner+=_artStrokePath(st,cs);});});
+    _artSvgCache[key]=inner;
+  }
+  const cs=artCanvasSize(a.use,a.sub);
+  return`<svg class="${cls||""}" viewBox="0 0 ${cs.w} ${cs.h}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+function _artDrawLayers(ctx,layers,cs,scale){
+  ctx.lineCap="round";ctx.lineJoin="round";
+  (layers||[]).forEach(ly=>{
+    if(!ly||ly.on===0)return;
+    (ly.s||[]).forEach(st=>{
+      const pts=_artUnpack(st[2]);if(!pts.length)return;
+      ctx.strokeStyle=ctx.fillStyle=ART_PAL[st[0]]||"#1c1c1c";
+      const lw=(ART_W[st[1]]||ART_W[1])*cs.w*scale;
+      ctx.lineWidth=lw;
+      if(pts.length===1){ctx.beginPath();ctx.arc(pts[0].x*scale,pts[0].y*scale,lw/2,0,7);ctx.fill();return;}
+      ctx.beginPath();ctx.moveTo(pts[0].x*scale,pts[0].y*scale);
+      for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x*scale,pts[i].y*scale);
+      ctx.stroke();
+    });
+  });
+}
+
+/* ===== もちもの（自分がつくったもの） ===== */
+function getArts(){try{const a=JSON.parse(localStorage.getItem(ART_KEY)||"[]");return Array.isArray(a)?a:[];}catch(_){return[];}}
+function setArts(a){try{localStorage.setItem(ART_KEY,JSON.stringify(a||[]));}catch(e){console.warn("art save local",e);}}
+function artById(id){return getArts().find(x=>x.id===id)||null;}
+async function _artPushCloud(it){
+  try{
+    const db=await getDB();if(!db)return;
+    const{ref,set}=await import(FB_DB);
+    await set(ref(db,"art/"+getUid()+"/"+it.id),it);
+  }catch(e){console.warn("art push",e);}
+}
+let _artPulled=false;
+async function _artPullCloud(){
+  if(_artPulled)return;_artPulled=true;
+  try{
+    const db=await getDB();if(!db)return;
+    const{ref,get}=await import(FB_DB);
+    const snap=await get(ref(db,"art/"+getUid()));
+    const v=snap&&snap.val?snap.val():null;if(!v)return;
+    const mine=getArts(),have={};mine.forEach(x=>{have[x.id]=1;});
+    let add=0;
+    Object.keys(v).forEach(k=>{if(!have[k]&&v[k]&&v[k].id){mine.push(v[k]);add++;}});
+    if(add){mine.sort((a,b)=>(b.at||0)-(a.at||0));setArts(mine);try{_shpRenderArts();}catch(_){}}
+  }catch(e){console.warn("art pull",e);}
+}
+
+/* ===== じぶんのお店（いまは名前と場所だけ。売り買いは次のフェーズ） ===== */
+const SHOP_KEY="radio_shop";
+function getShop(){try{return JSON.parse(localStorage.getItem(SHOP_KEY)||"null");}catch(_){return null;}}
+function setShop(s){try{localStorage.setItem(SHOP_KEY,JSON.stringify(s));syncSoon();}catch(_){}}
+async function _shopEnsure(){
+  let s=getShop();
+  if(s&&Number.isFinite(s.pref))return s;
+  const p=(typeof getProfile==="function"?getProfile():null)||{};
+  let pref=Math.floor(Math.random()*47);
+  /* 県ごとになるべく均等：いちばん店が少ない県をえらぶ */
+  try{
+    const db=await getDB();
+    if(db){
+      const{ref,get,set}=await import(FB_DB);
+      const snap=await get(ref(db,"shopcnt"));
+      const cnt=(snap&&snap.val?snap.val():null)||{};
+      let best=[],bn=1e9;
+      for(let i=0;i<47;i++){const n=cnt[i]||0;if(n<bn){bn=n;best=[i];}else if(n===bn)best.push(i);}
+      pref=best[Math.floor(Math.random()*best.length)];
+      await set(ref(db,"shopcnt/"+pref),bn+1);
+    }
+  }catch(e){console.warn("shop place",e);}
+  const t=(typeof JP_TOWNS!=="undefined"&&JP_TOWNS[pref])?JP_TOWNS[pref]:["東京",139.69,35.68];
+  s={name:(p.name?p.name+"のお店":"なまえ なし"),pref:pref,
+     lng:t[1]+(Math.random()-.5)*0.5,lat:t[2]+(Math.random()-.5)*0.35,at:Date.now()};
+  setShop(s);
+  return s;
+}
+function _shpPaintShop(){
+  const s=getShop();
+  const nm=$("shpMyName"),pl=$("shpMyPlace");
+  if(nm)nm.textContent=s&&s.name?s.name:"なまえ なし";
+  if(pl){
+    let t="ばしょ：さがしてる…";
+    if(s&&Number.isFinite(s.pref)&&typeof JP_PREFNAME!=="undefined"&&JP_PREFNAME[s.pref])
+      t="ばしょ："+JP_PREFNAME[s.pref]+" のあたり";
+    pl.textContent=t;
+  }
+}
+
+/* ===== おみせ画面 ===== */
+let _shpPage=0;
+function openMyShop(page){
+  const sc=$("shopScreen");if(!sc)return;
+  sc.classList.add("show");
+  _zzPaint();
+  _shpPaintShop();
+  _shpRenderArts();
+  try{_shpRenderSells();}catch(_){}
+  _shpGo(Number.isFinite(page)?page:_shpPage);
+  _shopEnsure().then(()=>{_shpPaintShop();_shopPushCloud();}).catch(()=>{});
+  _artPullCloud();
+  try{_tvCollect();}catch(_){}
+  try{_tvCheckArrive(false);}catch(_){}
+  try{_tvPaint();}catch(_){}
+  _tvLoadShops().then(()=>{try{_tvPaint();}catch(_){}}).catch(()=>{});
+  try{playClick();}catch(_){}
+}
+function closeMyShop(){const sc=$("shopScreen");if(sc)sc.classList.remove("show");}
+function _shpGo(p){
+  _shpPage=p?1:0;
+  if(_shpPage===1)setTimeout(()=>{try{_tvPaint();}catch(_){}},10);
+  ["shpPage0","shpPage1"].forEach((id,i)=>{const e=$(id);if(e)e.hidden=(i!==_shpPage);});
+  ["shpTab0","shpTab1"].forEach((id,i)=>{const e=$(id);if(e)e.classList.toggle("on",i===_shpPage);});
+}
+function _shpRenderArts(){
+  const box=$("shpArts"),em=$("shpArtsEmpty"),cn=$("shpArtCount");
+  if(!box)return;
+  const arts=getArts().slice().sort((a,b)=>(b.at||0)-(a.at||0));
+  if(cn)cn.textContent=arts.length?"（"+arts.length+"）":"";
+  if(em)em.hidden=arts.length>0;
+  box.innerHTML=arts.map(a=>
+    '<button class="shpArt" type="button" data-art="'+a.id+'">'+
+      '<span class="shpArtBox">'+artSVG(a)+'</span>'+
+      '<span class="shpArtName">'+_esc(a.name||"むめい")+'</span>'+
+      '<span class="shpArtUse">'+artUseName(a.use)+(artSubName(a.use,a.sub)?"・"+artSubName(a.use,a.sub):"")+'</span>'+
+    '</button>').join("");
+}
+function _esc(s){return String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ===== 用途えらび ===== */
+function openDrawPick(){
+  const p=$("drPick"),l=$("drPickList");if(!p||!l)return;
+  l.innerHTML=ART_USES.map(u=>
+    '<button class="drUse" type="button" data-use="'+u.k+'">'+
+      '<span class="drUseIco">'+u.ico+'</span>'+
+      '<span><span class="drUseName">'+u.n+'</span><br><span class="drUseSub">'+u.s+'</span></span>'+
+    '</button>').join("");
+  $("drPickTtl").textContent="なにを つくる？";
+  p.classList.add("show");
+}
+function _drPickSub(use){
+  const l=$("drPickList");if(!l)return;
+  const parts=(use==="cos")?COS_PARTS:PAT_PARTS;
+  $("drPickTtl").textContent=(use==="cos")?"どこに つける？":"どこの もよう？";
+  l.innerHTML=parts.map(p=>
+    '<button class="drUse" type="button" data-use="'+use+'" data-sub="'+p[0]+'">'+
+      '<span class="drUseIco">'+(use==="cos"?"👕":"🧱")+'</span>'+
+      '<span><span class="drUseName">'+p[1]+'</span></span>'+
+    '</button>').join("");
+}
+
+/* ===== おえかきエディタ ===== */
+let _drUse="emo",_drSub="",_drLayers=[{on:1,s:[]}],_drCur=0,_drCol=0,_drWi=1,_drMode="pen",
+    _drUndo=[],_drRedo=[],_drPts=null,_drLine=null,_drCanvasSize={w:120,h:120},_drScale=1,_drEditId=null;
+function openDraw(use,sub,id){
+  _drUse=use||"emo";_drSub=sub||"";_drEditId=id||null;
+  _drCanvasSize=artCanvasSize(_drUse,_drSub);
+  _drMode="pen";_drCol=(_drUse==="stamp")?12:0;_drWi=1;_drUndo=[];_drRedo=[];_drPts=null;_drLine=null;
+  const ex=id?artById(id):null;
+  _drLayers=ex?JSON.parse(JSON.stringify(ex.L||[{on:1,s:[]}])):[{on:1,s:[]}];
+  _drCur=_drLayers.length-1;
+  const t=$("drTitle");
+  if(t)t.textContent="おえかき・"+artUseName(_drUse)+(artSubName(_drUse,_drSub)?"（"+artSubName(_drUse,_drSub)+"）":"");
+  $("drawScreen").classList.add("show");
+  _drSizeStage();
+  _drPaintPal();_drPaintW();_drPaintLayers();_drPaintMode();
+  _drSetUnder(null);
+  _drCatBg(_drUse==="cos");
+  const cb=$("drCatBtn");if(cb)cb.hidden=(_drUse!=="cos");
+  const hint=$("drHint");
+  if(hint)hint.textContent=(_drUse==="stamp")?"スタンプは 青いろ だけだよ":"ゆびで なぞって かこう";
+  _drRender();
+}
+function closeDraw(){$("drawScreen").classList.remove("show");_drSetUnder(null);}
+function _drSizeStage(){
+  const cs=_drCanvasSize,stage=$("drStage"),cv=$("drCanvas");if(!stage||!cv)return;
+  let w=Math.min((window.innerWidth||360)-30,360);
+  let h=w*cs.h/cs.w;
+  const maxH=Math.max(180,(window.innerHeight||640)*0.40);
+  if(h>maxH){h=maxH;w=h*cs.w/cs.h;}
+  const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  stage.style.width=w+"px";stage.style.height=h+"px";
+  cv.style.width=w+"px";cv.style.height=h+"px";
+  cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  _drScale=w/cs.w;_drDpr=dpr;
+}
+let _drDpr=1;
+function _drRender(){
+  const cv=$("drCanvas");if(!cv)return;
+  const ctx=cv.getContext("2d");
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.scale(_drDpr,_drDpr);
+  _artDrawLayers(ctx,_drLayers,_drCanvasSize,_drScale);
+  /* かきかけの線 */
+  if(_drPts&&_drPts.length){
+    ctx.lineCap="round";ctx.lineJoin="round";
+    ctx.strokeStyle=ctx.fillStyle=ART_PAL[_drCol];
+    ctx.lineWidth=ART_W[_drWi]*_drCanvasSize.w*_drScale;
+    if(_drPts.length===1){ctx.beginPath();ctx.arc(_drPts[0].x*_drScale,_drPts[0].y*_drScale,ctx.lineWidth/2,0,7);ctx.fill();}
+    else{ctx.beginPath();ctx.moveTo(_drPts[0].x*_drScale,_drPts[0].y*_drScale);
+      for(let i=1;i<_drPts.length;i++)ctx.lineTo(_drPts[i].x*_drScale,_drPts[i].y*_drScale);ctx.stroke();}
+  }
+  if(_drLine&&_drLine.length){
+    ctx.lineCap="round";ctx.lineJoin="round";
+    ctx.strokeStyle=ART_PAL[_drCol];ctx.lineWidth=ART_W[_drWi]*_drCanvasSize.w*_drScale;
+    ctx.beginPath();ctx.moveTo(_drLine[0].x*_drScale,_drLine[0].y*_drScale);
+    for(let i=1;i<_drLine.length;i++)ctx.lineTo(_drLine[i].x*_drScale,_drLine[i].y*_drScale);
+    ctx.stroke();
+    ctx.fillStyle="#e0588f";
+    _drLine.forEach(p=>{ctx.beginPath();ctx.arc(p.x*_drScale,p.y*_drScale,3,0,7);ctx.fill();});
+  }
+}
+function _drSnap(){try{_drUndo.push(JSON.stringify(_drLayers));if(_drUndo.length>25)_drUndo.shift();_drRedo.length=0;}catch(_){}_drPaintMode();}
+function _drPos(e){
+  const cv=$("drCanvas"),r=cv.getBoundingClientRect();
+  return{x:(e.clientX-r.left)/_drScale,y:(e.clientY-r.top)/_drScale};
+}
+function _drAddStroke(pts){
+  if(!pts||!pts.length)return;
+  const eps=_drCanvasSize.w*0.0025;   /* 見た目そのままで点をへらす */
+  const sim=_artRdp(pts,eps);
+  const ly=_drLayers[_drCur];if(!ly)return;
+  ly.s.push([_drCol,_drWi,_artPack(sim)]);
+}
+function _drErase(p){
+  const r=Math.max(_drCanvasSize.w*0.045,ART_W[_drWi]*_drCanvasSize.w);
+  let hit=false;
+  const ly=_drLayers[_drCur];if(!ly)return false;
+  for(let i=ly.s.length-1;i>=0;i--){
+    const pts=_artUnpack(ly.s[i][2]);
+    for(let j=0;j<pts.length;j++){
+      if(Math.hypot(pts[j].x-p.x,pts[j].y-p.y)<r){ly.s.splice(i,1);hit=true;break;}
+    }
+  }
+  return hit;
+}
+function _drPaintPal(){
+  const p=$("drPal");if(!p)return;
+  const only=(_drUse==="stamp");
+  p.innerHTML=ART_PAL.map((c,i)=>
+    '<span class="drCol'+(i===_drCol?" on":"")+'" data-c="'+i+'" style="background:'+c+
+    (only&&i!==12?";opacity:.18;pointer-events:none":"")+'"></span>').join("");
+}
+function _drPaintW(){
+  const r=$("drWRow");if(!r)return;
+  r.innerHTML=ART_W.map((w,i)=>{
+    const px=Math.max(3,Math.round(w*46));
+    return'<span class="drW'+(i===_drWi?" on":"")+'" data-w="'+i+'"><i style="width:'+px+'px;height:'+px+'px"></i></span>';
+  }).join("");
+}
+function _drPaintLayers(){
+  const r=$("drLayerRow");if(!r)return;
+  let h="";
+  _drLayers.forEach((ly,i)=>{
+    h+='<button class="drLy'+(i===_drCur?" on":"")+(ly.on===0?" off":"")+'" type="button" data-ly="'+i+'">'+(i+1)+'</button>';
+  });
+  h+='<button class="drLy" type="button" id="drLyAdd">＋</button>';
+  h+='<button class="drLy" type="button" id="drLyEye">👁</button>';
+  h+='<button class="drLy" type="button" id="drLyUp">↑</button>';
+  h+='<button class="drLy" type="button" id="drLyDel">🗑</button>';
+  r.innerHTML=h;
+}
+function _drPaintMode(){
+  [["drMPen","pen"],["drMLine","line"],["drMEra","era"]].forEach(([id,m])=>{
+    const e=$(id);if(e)e.classList.toggle("on",_drMode===m);
+  });
+  const u=$("drUndo"),rd=$("drRedo"),le=$("drLineEnd");
+  if(u)u.disabled=!_drUndo.length;
+  if(rd)rd.disabled=!_drRedo.length;
+  if(le)le.hidden=!(_drMode==="line"&&_drLine&&_drLine.length>0);
+}
+function _drSetUnder(src){
+  const u=$("drUnder"),off=$("drTraceOff");if(!u)return;
+  u.innerHTML=src?'<img src="'+src+'" alt=""/>':"";
+  if(off)off.hidden=!src;
+}
+function _drCatBg(on){
+  const c=$("drCatBg");if(!c)return;
+  if(!on){c.innerHTML="";return;}
+  try{c.innerHTML=catFigureHTML(profileBody(),profileColor(),"sit",[0,0],"normal",null);}catch(_){c.innerHTML="";}
+}
+/* 保存 */
+function _drDoSave(name){
+  const arts=getArts();
+  let it=_drEditId?arts.find(x=>x.id===_drEditId):null;
+  if(it){
+    it.name=name;it.L=JSON.parse(JSON.stringify(_drLayers));it.rev=(it.rev||0)+1;it.at=Date.now();
+  }else{
+    it={id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+        uid:getUid(),name:name,use:_drUse,sub:_drSub,
+        L:JSON.parse(JSON.stringify(_drLayers)),rev:0,at:Date.now()};
+    arts.push(it);
+  }
+  setArts(arts);
+  _artPushCloud(it);
+  try{_shpRenderArts();}catch(_){}
+  try{_shpRenderSells();}catch(_){}
+  try{playPop();}catch(_){}
+  try{toast("「"+name+"」を つくったよ！");}catch(_){}
+  closeDraw();
+}
+function _drStrokeCount(){let n=0;_drLayers.forEach(l=>{n+=(l.s||[]).length;});return n;}
+
+/* ===== くばり（イベント） ===== */
+(function(){
+  try{
+    /* おみせ */
+    const sc=$("shopScreen");
+    if(sc)sc.addEventListener("click",e=>{
+      const t=e.target;if(!t)return;
+      if(t.closest("#shpClose")){try{playClick();}catch(_){}closeMyShop();return;}
+      const tab=t.closest(".shpTab");
+      if(tab){try{playClick();}catch(_){}_shpGo(parseInt(tab.dataset.p,10));return;}
+      if(t.closest("#shpMake")){try{playClick();}catch(_){}openDrawPick();return;}
+      if(t.closest("#shpRename")){
+        const s=getShop()||{};
+        const v=prompt("お店の なまえ",s.name||"");
+        if(v!=null&&v.trim()){s.name=v.trim().slice(0,14);setShop(s);_shpPaintShop();}
+        return;
+      }
+      const art=t.closest(".shpArt");
+      if(art){
+        _menuArt=art.dataset.art;
+        const a=artById(_menuArt);
+        if(a){try{playClick();}catch(_){}
+          $("artMenuTtl").textContent="「"+(a.name||"むめい")+"」どうする？";
+          $("artMenu").classList.add("show");}
+        return;
+      }
+      if(t.closest("#shpSlotBuy")){
+        const c=slotCost();
+        if(!confirm("出品わくを 1つ ふやす？（"+c+"zz）"))return;
+        if(!spendZZ(c)){try{toast("お金が たりないよ");}catch(_){}return;}
+        try{localStorage.setItem(SLOT_KEY,String(shopExtraSlots()+1));syncSoon();}catch(_){}
+        _shpRenderSells();try{playPop();}catch(_){}
+        return;
+      }
+      const rp=t.closest("[data-repr]");
+      if(rp){openPrice(rp.dataset.repr);return;}
+      const us=t.closest("[data-unsell]");
+      if(us){
+        const map=getSells();delete map[us.dataset.unsell];setSells(map);_shpRenderSells();
+        try{toast("お店から さげたよ");}catch(_){}
+        return;
+      }
+    });
+    /* 用途えらび */
+    const pk=$("drPick");
+    if(pk)pk.addEventListener("click",e=>{
+      const t=e.target;if(!t)return;
+      if(t.closest("#drPickClose")||t===pk){pk.classList.remove("show");return;}
+      const b=t.closest(".drUse");if(!b)return;
+      try{playClick();}catch(_){}
+      const use=b.dataset.use,sub=b.dataset.sub;
+      if((use==="cos"||use==="pat")&&!sub){_drPickSub(use);return;}
+      pk.classList.remove("show");
+      openDraw(use,sub||"");
+    });
+    /* おえかき：ボタン類 */
+    const ds=$("drawScreen");
+    if(ds)ds.addEventListener("click",e=>{
+      const t=e.target;if(!t)return;
+      if(t.closest("#drClose")){
+        if(_drStrokeCount()&&!confirm("ほぞんしないで とじる？"))return;
+        try{playClick();}catch(_){}closeDraw();return;
+      }
+      if(t.closest("#drSave")){
+        if(!_drStrokeCount()){try{toast("まだ なにも描いてないよ");}catch(_){}return;}
+        const w=$("drNameWrap"),i=$("drNameIn");
+        if(i)i.value=(_drEditId&&artById(_drEditId)?artById(_drEditId).name:"")||"";
+        if(w)w.classList.add("show");
+        return;
+      }
+      const m=t.closest("[data-m]");
+      if(m){_drMode=m.dataset.m;if(_drMode!=="line"){_drLine=null;}_drPaintMode();_drRender();return;}
+      if(t.closest("#drUndo")){
+        if(_drUndo.length){_drRedo.push(JSON.stringify(_drLayers));_drLayers=JSON.parse(_drUndo.pop());
+          if(_drCur>=_drLayers.length)_drCur=_drLayers.length-1;_drPaintLayers();_drPaintMode();_drRender();}
+        return;
+      }
+      if(t.closest("#drRedo")){
+        if(_drRedo.length){_drUndo.push(JSON.stringify(_drLayers));_drLayers=JSON.parse(_drRedo.pop());
+          if(_drCur>=_drLayers.length)_drCur=_drLayers.length-1;_drPaintLayers();_drPaintMode();_drRender();}
+        return;
+      }
+      if(t.closest("#drLineEnd")){
+        if(_drLine&&_drLine.length>1){_drSnap();_drAddStroke(_drLine);}
+        _drLine=null;_drPaintMode();_drRender();return;
+      }
+      const c=t.closest(".drCol");
+      if(c){_drCol=parseInt(c.dataset.c,10);_drPaintPal();return;}
+      const w2=t.closest(".drW");
+      if(w2){_drWi=parseInt(w2.dataset.w,10);_drPaintW();return;}
+      if(t.closest("#drLyAdd")){
+        if(_drLayers.length>=6){try{toast("レイヤーは 6まいまで");}catch(_){}return;}
+        _drSnap();_drLayers.push({on:1,s:[]});_drCur=_drLayers.length-1;_drPaintLayers();_drRender();return;
+      }
+      if(t.closest("#drLyEye")){
+        const ly=_drLayers[_drCur];if(ly){ly.on=(ly.on===0)?1:0;_drPaintLayers();_drRender();}return;
+      }
+      if(t.closest("#drLyUp")){
+        if(_drCur<_drLayers.length-1){_drSnap();
+          const a=_drLayers[_drCur];_drLayers[_drCur]=_drLayers[_drCur+1];_drLayers[_drCur+1]=a;_drCur++;
+          _drPaintLayers();_drRender();}
+        return;
+      }
+      if(t.closest("#drLyDel")){
+        if(_drLayers.length<=1){_drSnap();_drLayers=[{on:1,s:[]}];_drCur=0;_drPaintLayers();_drRender();return;}
+        _drSnap();_drLayers.splice(_drCur,1);if(_drCur>=_drLayers.length)_drCur=_drLayers.length-1;
+        _drPaintLayers();_drRender();return;
+      }
+      const ly2=t.closest("[data-ly]");
+      if(ly2){_drCur=parseInt(ly2.dataset.ly,10);_drPaintLayers();return;}
+      if(t.closest("#drTraceBtn")){const f=$("drTraceIn");if(f)f.click();return;}
+      if(t.closest("#drTraceOff")){_drSetUnder(null);return;}
+      if(t.closest("#drCatBtn")){
+        const c2=$("drCatBg");if(c2)_drCatBg(!c2.innerHTML);return;
+      }
+    });
+    /* 下絵よみこみ */
+    const tf=$("drTraceIn");
+    if(tf)tf.addEventListener("change",e=>{
+      const f=e.target.files&&e.target.files[0];if(!f)return;
+      const rd=new FileReader();
+      rd.onload=()=>{_drSetUnder(rd.result);};
+      rd.readAsDataURL(f);
+      e.target.value="";
+    });
+    /* なまえをつけて保存 */
+    const nw=$("drNameWrap");
+    if(nw)nw.addEventListener("click",e=>{
+      const t=e.target;
+      if(t.closest("#drNameCancel")||t===nw){nw.classList.remove("show");return;}
+      if(t.closest("#drNameGo")){
+        const i=$("drNameIn");let v=(i&&i.value||"").trim();
+        if(!v)v=artUseName(_drUse);
+        nw.classList.remove("show");
+        _drDoSave(v.slice(0,12));
+      }
+    });
+    /* おえかき：ゆびの動き */
+    const cv=$("drCanvas");
+    if(cv){
+      let drawing=false;
+      cv.addEventListener("pointerdown",e=>{
+        e.preventDefault();
+        const p=_drPos(e);
+        if(_drMode==="line"){
+          if(_drLine&&_drLine.length){
+            const last=_drLine[_drLine.length-1];
+            if(Math.hypot(last.x-p.x,last.y-p.y)<_drCanvasSize.w*0.035){
+              if(_drLine.length>1){_drSnap();_drAddStroke(_drLine);}
+              _drLine=null;_drPaintMode();_drRender();return;
+            }
+            _drLine.push(p);
+          }else{_drLine=[p];}
+          _drPaintMode();_drRender();return;
+        }
+        drawing=true;
+        try{cv.setPointerCapture(e.pointerId);}catch(_){}
+        if(_drMode==="era"){_drSnap();_drErase(p);_drRender();return;}
+        _drPts=[p];_drRender();
+      });
+      cv.addEventListener("pointermove",e=>{
+        if(!drawing)return;
+        e.preventDefault();
+        const p=_drPos(e);
+        if(_drMode==="era"){_drErase(p);_drRender();return;}
+        if(!_drPts)return;
+        const last=_drPts[_drPts.length-1];
+        if(Math.hypot(last.x-p.x,last.y-p.y)<_drCanvasSize.w*0.003)return;
+        _drPts.push(p);_drRender();
+      });
+      const end=()=>{
+        if(!drawing)return;drawing=false;
+        if(_drMode!=="era"&&_drPts&&_drPts.length){_drSnap();_drAddStroke(_drPts);}
+        _drPts=null;_drRender();_drPaintMode();
+      };
+      cv.addEventListener("pointerup",end);
+      cv.addEventListener("pointercancel",end);
+      cv.addEventListener("pointerleave",e=>{if(drawing&&_drMode!=="era")end();});
+    }
+    /* 整備中カード内の「おみせをひらく」 */
+    document.addEventListener("click",e=>{
+      const b=e.target&&e.target.closest?e.target.closest(".jvShopGo"):null;
+      if(b){try{playClick();}catch(_){}openMyShop(0);}
+    });
+    window.addEventListener("resize",()=>{
+      try{if($("drawScreen").classList.contains("show")){_drSizeStage();_drRender();}}catch(_){}
+    });
+  }catch(e){console.warn("shop/draw init",e);}
+})();
+let _menuArt=null;
+/* =====================================================================
+   ③出品（お店にならべる） ＋ ⑤内装モード
+   ===================================================================== */
+
+/* ===== 出品 ===== */
+const SLOT_KEY="radio_slots";               /* お金で買った追加わく */
+function shopExtraSlots(){try{return parseInt(localStorage.getItem(SLOT_KEY)||"0",10)||0;}catch(_){return 0;}}
+function shopStaffCount(){return 1;}   /* 店員＝パーティのメンバー。パーティ店は次のフェーズ（いまはソロ＝1人＝2わく） */
+function shopSlots(){return shopStaffCount()*2+shopExtraSlots();}
+function slotCost(){const n=shopExtraSlots();return 300+n*250;}   /* ゆるやかに上がる */
+function getSells(){const s=getShop()||{};return s.items&&typeof s.items==="object"?s.items:{};}
+function setSells(map){const s=getShop()||{};s.items=map;setShop(s);_shopPushCloud();}
+async function _shopPushCloud(){
+  try{
+    const s=getShop();if(!s)return;
+    const db=await getDB();if(!db)return;
+    const{ref,set}=await import(FB_DB);
+    const p=(typeof getProfile==="function"?getProfile():null)||{};
+    await set(ref(db,"shops/"+getUid()),{
+      uid:getUid(),name:s.name||"なまえ なし",owner:p.name||"匿名さん",
+      pref:s.pref,lng:s.lng,lat:s.lat,at:s.at||Date.now(),
+      seen:Date.now(),slots:shopSlots(),items:s.items||{}
+    });
+  }catch(e){console.warn("shop push",e);}
+}
+/* カテゴリーごとの平均相場 */
+const _priceAvgCache={};
+async function priceAvg(use){
+  if(_priceAvgCache[use]!=null)return _priceAvgCache[use];
+  try{
+    const db=await getDB();if(!db)return null;
+    const{ref,get}=await import(FB_DB);
+    const sn=await get(ref(db,"pstat/"+use));
+    const v=sn&&sn.val?sn.val():null;
+    if(v&&v.n>0){_priceAvgCache[use]=Math.round(v.sum/v.n);return _priceAvgCache[use];}
+  }catch(_){}
+  return null;
+}
+async function _priceStatAdd(use,price){
+  try{
+    const db=await getDB();if(!db)return;
+    const{ref,get,set}=await import(FB_DB);
+    const sn=await get(ref(db,"pstat/"+use));
+    const v=(sn&&sn.val?sn.val():null)||{n:0,sum:0};
+    await set(ref(db,"pstat/"+use),{n:(v.n||0)+1,sum:(v.sum||0)+price});
+    delete _priceAvgCache[use];
+  }catch(_){}
+}
+function _shpRenderSells(){
+  const box=$("shpSells"),em=$("shpSellsEmpty"),sl=$("shpSlotTxt");
+  if(!box)return;
+  const map=getSells(),keys=Object.keys(map);
+  if(sl)sl.innerHTML="出品わく "+keys.length+" / "+shopSlots()+
+    '<button id="shpSlotBuy" type="button">＋わくを買う（'+slotCost()+"zz）</button>";
+  if(em)em.hidden=keys.length>0;
+  box.innerHTML=keys.map(k=>{
+    const it=map[k],a=artById(k);
+    return'<div class="shpSell">'+
+      '<span class="shpSellBox">'+(a?artSVG(a):"")+'</span>'+
+      '<span class="shpSellMid"><span class="shpSellName">'+_esc(it.name||"むめい")+'</span>'+
+      '<span class="shpSellSub">'+artUseName(it.use)+'</span></span>'+
+      '<span class="shpSellPrice">'+zzFmt(it.price)+'</span>'+
+      '<button class="shpSellBtn" data-repr="'+k+'" type="button">値だん</button>'+
+      '<button class="shpSellBtn" data-unsell="'+k+'" type="button">やめる</button>'+
+    '</div>';
+  }).join("");
+}
+let _priceArt=null;
+function openPrice(id){
+  const a=artById(id);if(!a)return;
+  _priceArt=id;
+  const cur=getSells()[id];
+  $("priceTtl").textContent="「"+(a.name||"むめい")+"」いくらで うる？";
+  const i=$("priceIn");if(i)i.value=cur?cur.price:"";
+  const av=$("priceAvg");if(av)av.textContent="いま しらべてるよ…";
+  priceAvg(a.use).then(v=>{
+    if(!av)return;
+    av.textContent=(v!=null)?(artUseName(a.use)+"の いまの そうば：やく "+zzFmt(v))
+                            :(artUseName(a.use)+"の そうばは まだ ないよ");
+  }).catch(()=>{if(av)av.textContent="";});
+  $("priceWrap").classList.add("show");
+}
+function _doSell(){
+  const id=_priceArt;if(!id)return;
+  const a=artById(id);if(!a)return;
+  let p=parseInt(($("priceIn")&&$("priceIn").value)||"0",10);
+  if(!Number.isFinite(p)||p<1){try{toast("値だんを いれてね");}catch(_){}return;}
+  if(p>999999)p=999999;
+  const map=getSells(),isNew=!map[id];
+  if(isNew&&Object.keys(map).length>=shopSlots()){
+    try{toast("出品わくが いっぱいだよ");}catch(_){}return;
+  }
+  map[id]={price:p,use:a.use,sub:a.sub||"",name:a.name||"むめい",rev:a.rev||0,at:Date.now()};
+  setSells(map);
+  if(isNew)_priceStatAdd(a.use,p);
+  $("priceWrap").classList.remove("show");
+  _shpRenderSells();
+  try{playPop();}catch(_){}
+  try{toast(isNew?"お店に ならべたよ！":"値だんを かえたよ");}catch(_){}
+}
+
+/* ===== ⑤ 内装（お店の中を かざる） ===== */
+const DECO_KEY="radio_deco";
+function getDeco(){
+  try{const d=JSON.parse(localStorage.getItem(DECO_KEY)||"null");
+    if(d&&typeof d==="object"){d.items=Array.isArray(d.items)?d.items:[];return d;}}catch(_){}
+  return{wall:null,floor:null,window:null,items:[]};
+}
+function setDeco(d){
+  try{localStorage.setItem(DECO_KEY,JSON.stringify(d));syncSoon();}catch(_){}
+  _decoPushCloud(d);
+}
+async function _decoPushCloud(d){
+  try{
+    const db=await getDB();if(!db)return;
+    const{ref,set}=await import(FB_DB);
+    await set(ref(db,"deco/"+getUid()),d);
+  }catch(e){console.warn("deco push",e);}
+}
+function _decoInner(id){
+  const a=id?artById(id):null;if(!a)return null;
+  const cs=artCanvasSize(a.use,a.sub);let inner="";
+  (a.L||[]).forEach(ly=>{if(ly&&ly.on===0)return;(ly&&ly.s||[]).forEach(st=>{inner+=_artStrokePath(st,cs);});});
+  return{inner,cs};
+}
+/* かべ・ゆか（背景レイヤーに一面どーん） */
+function _decoWallFloorSVG(W,H,floorY){
+  let s="";
+  try{
+    const d=getDeco();
+    if(d.wall){const g=_decoInner(d.wall);
+      if(g)s+=`<g transform="scale(${(W/g.cs.w).toFixed(4)},${(floorY/g.cs.h).toFixed(4)})">${g.inner}</g>`;}
+    if(d.floor){const g=_decoInner(d.floor);
+      if(g)s+=`<g transform="translate(0,${floorY}) scale(${(W/g.cs.w).toFixed(4)},${((H-floorY)/g.cs.h).toFixed(4)})">${g.inner}</g>`;}
+  }catch(_){}
+  return s;
+}
+/* まど（外の景色のかわり） */
+function _decoWindowSVG(winX,winY,winW,winH){
+  try{
+    const d=getDeco();if(!d.window)return"";
+    const g=_decoInner(d.window);if(!g)return"";
+    const cid="dcw"+Math.floor(Math.random()*100000);
+    return`<clipPath id="${cid}"><rect x="${winX+9}" y="${winY+9}" width="${winW-18}" height="${winH-18}" rx="8"/></clipPath>`+
+      `<g clip-path="url(#${cid})"><rect x="${winX+9}" y="${winY+9}" width="${winW-18}" height="${winH-18}" fill="#ffffff" opacity="0.55"/>`+
+      `<g transform="translate(${winX+9},${winY+9}) scale(${((winW-18)/g.cs.w).toFixed(4)},${((winH-18)/g.cs.h).toFixed(4)})">${g.inner}</g></g>`;
+  }catch(_){return"";}
+}
+/* おいたアイテム（猫より うしろ） */
+function _decoItemsSVG(W,H,floorY){
+  let s="",defs="";
+  try{
+    const d=getDeco();
+    (d.items||[]).forEach((it,i)=>{
+      const g=_decoInner(it.a);if(!g)return;
+      const base=W*0.20*(it.s||1),sc=base/g.cs.w;
+      const cx=W*(it.x==null?0.5:it.x),cy=H*(it.y==null?0.6:it.y);
+      let f="";
+      if(it.h){defs+=`<filter id="dch${i}"><feColorMatrix type="hueRotate" values="${it.h}"/></filter>`;f=` filter="url(#dch${i})"`;}
+      s+=`<g class="decoItem${(_decoSel===i&&_decoOn)?" decoSel":""}" data-di="${i}" transform="translate(${cx.toFixed(1)},${cy.toFixed(1)}) rotate(${(it.r||0)}) scale(${sc.toFixed(4)}) translate(${(-g.cs.w/2).toFixed(1)},${(-g.cs.h/2).toFixed(1)})"${f}>`+
+        (_decoOn?`<rect x="0" y="0" width="${g.cs.w}" height="${g.cs.h}" fill="#000" opacity="0.001"/>`:"")+
+        g.inner+`</g>`;
+    });
+  }catch(_){}
+  return(defs?`<defs>${defs}</defs>`:"")+s;
+}
+
+/* --- 内装モードのUI --- */
+let _decoOn=false,_decoTab="wall",_decoSel=-1;
+function openDeco(){
+  _decoOn=true;_decoSel=-1;
+  const r=$("catRoom");if(r)r.classList.add("decoing");
+  _decoPaintTabs();_decoPaintList();_decoPaintDetail();
+  try{renderBackdrop();renderRoom();}catch(_){}
+  try{playClick();}catch(_){}
+}
+function closeDeco(){
+  _decoOn=false;_decoSel=-1;
+  const r=$("catRoom");if(r)r.classList.remove("decoing");
+  try{renderBackdrop();renderRoom();}catch(_){}
+}
+function _decoPaintTabs(){
+  document.querySelectorAll("#decoTabs .decoTab").forEach(b=>b.classList.toggle("on",b.dataset.t===_decoTab));
+}
+function _decoPaintList(){
+  const box=$("decoList");if(!box)return;
+  const d=getDeco();
+  if(_decoTab==="item"){
+    const arts=getArts().filter(a=>a.use==="furn");
+    box.innerHTML=arts.length
+      ?arts.map(a=>'<button class="decoThumb" type="button" data-put="'+a.id+'">'+artSVG(a)+'</button>').join("")
+      :'<div class="decoNone">お部屋のアイテムを<br>まだ 描いてないよ</div>';
+    return;
+  }
+  const arts=getArts().filter(a=>a.use==="pat"&&a.sub===_decoTab);
+  let h='<button class="decoOff" type="button" data-clear="'+_decoTab+'">もとに もどす</button>';
+  h+=arts.length
+    ?arts.map(a=>'<button class="decoThumb'+(d[_decoTab]===a.id?" on":"")+'" type="button" data-pat="'+a.id+'">'+artSVG(a)+'</button>').join("")
+    :'<div class="decoNone">この もようを<br>まだ 描いてないよ</div>';
+  box.innerHTML=h;
+}
+function _decoPaintDetail(){
+  const p=$("decoDetail");if(!p)return;
+  const d=getDeco(),it=(_decoSel>=0)?d.items[_decoSel]:null;
+  p.classList.toggle("on",!!it);
+  if(!it)return;
+  const S=$("decoS"),R=$("decoR"),Hh=$("decoH");
+  if(S)S.value=Math.round((it.s||1)*100);
+  if(R)R.value=it.r||0;
+  if(Hh)Hh.value=it.h||0;
+}
+function _decoUpd(fn){
+  const d=getDeco();
+  if(_decoSel<0||!d.items[_decoSel])return;
+  fn(d.items[_decoSel],d);
+  setDeco(d);
+  try{renderRoom();}catch(_){}
+}
+function _decoPlace(id){
+  const d=getDeco();
+  if(d.items.length>=20){try{toast("アイテムは 20こまで");}catch(_){}return;}
+  d.items.push({a:id,x:0.5,y:0.62,s:1,r:0,h:0});
+  setDeco(d);_decoSel=d.items.length-1;
+  _decoPaintDetail();
+  try{renderRoom();}catch(_){}
+  try{playPop();}catch(_){}
+}
+
+/* ===== くばり（イベント） ===== */
+(function(){
+  try{
+    /* 内装ボタン・バー */
+    const rd=$("roomDeco");
+    if(rd)rd.addEventListener("click",e=>{e.stopPropagation();if(_decoOn)closeDeco();else openDeco();});
+    const bar=$("decoBar");
+    if(bar)bar.addEventListener("click",e=>{
+      const t=e.target;if(!t)return;
+      e.stopPropagation();
+      const tab=t.closest(".decoTab");
+      if(tab){_decoTab=tab.dataset.t;_decoSel=-1;_decoPaintTabs();_decoPaintList();_decoPaintDetail();try{renderRoom();}catch(_){}return;}
+      const pat=t.closest("[data-pat]");
+      if(pat){const d=getDeco();d[_decoTab]=pat.dataset.pat;setDeco(d);_decoPaintList();
+        try{renderBackdrop();}catch(_){}try{playClick();}catch(_){}return;}
+      const cl=t.closest("[data-clear]");
+      if(cl){const d=getDeco();d[cl.dataset.clear]=null;setDeco(d);_decoPaintList();
+        try{renderBackdrop();}catch(_){}return;}
+      const put=t.closest("[data-put]");
+      if(put){_decoPlace(put.dataset.put);return;}
+      if(t.closest("#decoUp")){
+        const d=getDeco();if(_decoSel<0||_decoSel>=d.items.length-1)return;
+        const a=d.items[_decoSel];d.items[_decoSel]=d.items[_decoSel+1];d.items[_decoSel+1]=a;_decoSel++;
+        setDeco(d);try{renderRoom();}catch(_){}return;
+      }
+      if(t.closest("#decoDown")){
+        const d=getDeco();if(_decoSel<=0)return;
+        const a=d.items[_decoSel];d.items[_decoSel]=d.items[_decoSel-1];d.items[_decoSel-1]=a;_decoSel--;
+        setDeco(d);try{renderRoom();}catch(_){}return;
+      }
+      if(t.closest("#decoDel")){
+        const d=getDeco();if(_decoSel<0)return;
+        d.items.splice(_decoSel,1);_decoSel=-1;setDeco(d);
+        _decoPaintDetail();try{renderRoom();}catch(_){}return;
+      }
+      if(t.closest("#decoDone")){closeDeco();return;}
+    });
+    ["decoS","decoR","decoH"].forEach(id=>{
+      const el=$(id);if(!el)return;
+      el.addEventListener("input",()=>{
+        const v=parseInt(el.value,10)||0;
+        _decoUpd(it=>{if(id==="decoS")it.s=v/100;else if(id==="decoR")it.r=v;else it.h=v;});
+      });
+    });
+    /* 部屋のアイテムを つかんで動かす */
+    const sc=$("roomScene");
+    if(sc)sc.addEventListener("pointerdown",e=>{
+      if(!_decoOn)return;
+      const g=e.target&&e.target.closest?e.target.closest(".decoItem"):null;
+      if(!g)return;
+      e.stopPropagation();e.preventDefault();
+      _decoSel=parseInt(g.dataset.di,10);
+      _decoPaintDetail();
+      const geo=roomGeom();
+      let moved=false;
+      const move=ev=>{
+        moved=true;
+        const x=Math.min(0.98,Math.max(0.02,ev.clientX/geo.W));
+        const y=Math.min(0.98,Math.max(0.02,ev.clientY/geo.H));
+        const d=getDeco();if(!d.items[_decoSel])return;
+        d.items[_decoSel].x=+x.toFixed(3);d.items[_decoSel].y=+y.toFixed(3);
+        try{localStorage.setItem(DECO_KEY,JSON.stringify(d));}catch(_){}
+        try{renderRoom();}catch(_){}
+      };
+      const up=()=>{
+        window.removeEventListener("pointermove",move);
+        window.removeEventListener("pointerup",up);
+        if(moved)setDeco(getDeco());
+        try{renderRoom();}catch(_){}
+      };
+      window.addEventListener("pointermove",move);
+      window.addEventListener("pointerup",up);
+    },true);
+    /* つくったもの → メニュー（ならべる／かきなおす／すてる） */
+    const am=$("artMenu");
+    if(am)am.addEventListener("click",e=>{
+      const t=e.target;
+      if(t.closest("#amClose")||t===am){am.classList.remove("show");return;}
+      const id=_menuArt;
+      if(t.closest("#amSell")){am.classList.remove("show");if(id)openPrice(id);return;}
+      if(t.closest("#amEdit")){
+        am.classList.remove("show");
+        const a=id?artById(id):null;if(a)openDraw(a.use,a.sub,a.id);
+        return;
+      }
+      if(t.closest("#amDel")){
+        am.classList.remove("show");
+        if(!id)return;
+        if(!confirm("この アイテムを すてる？"))return;
+        setArts(getArts().filter(x=>x.id!==id));
+        const map=getSells();if(map[id]){delete map[id];setSells(map);}
+        _shpRenderArts();_shpRenderSells();
+        try{toast("すてたよ");}catch(_){}
+        return;
+      }
+    });
+    const pw=$("priceWrap");
+    if(pw)pw.addEventListener("click",e=>{
+      const t=e.target;
+      if(t.closest("#priceCancel")||t===pw){pw.classList.remove("show");return;}
+      if(t.closest("#priceGo")){_doSell();return;}
+    });
+  }catch(e){console.warn("sell/deco init",e);}
+})();
+/* =====================================================================
+   ⑥ 旅：日本地図でお店をめぐる
+   ===================================================================== */
+const TRIP_KEY="radio_trip",VISIT_KEY="radio_visits",FAV_KEY="radio_favs",
+      TOWN_KEY="radio_town",FAVSEEN_KEY="radio_fav_seen";
+const TV_WEEK=7*24*3600*1000,TV_HOURS=12;
+
+/* --- はじまりの地はランダム --- */
+function myTown(){
+  let t=parseInt(localStorage.getItem(TOWN_KEY)||"",10);
+  if(!Number.isFinite(t)||t<0||t>=JP_TOWNS.length){
+    t=Math.floor(Math.random()*JP_TOWNS.length);
+    try{localStorage.setItem(TOWN_KEY,String(t));syncSoon();}catch(_){}
+  }
+  return t;
+}
+function _tvJson(k,d){try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?d:v;}catch(_){return d;}}
+function _tvSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));syncSoon();}catch(_){}}
+function getTrip(){return _tvJson(TRIP_KEY,null);}
+function setTrip(t){if(t)_tvSet(TRIP_KEY,t);else{try{localStorage.removeItem(TRIP_KEY);syncSoon();}catch(_){}}}
+function getVisits(){return _tvJson(VISIT_KEY,{})||{};}
+function isVisitable(uid){const v=getVisits()[uid];return !!v&&(Date.now()-v)<TV_WEEK;}
+function getFavs(){const a=_tvJson(FAV_KEY,[]);return Array.isArray(a)?a:[];}
+function favCost(){const n=getFavs().length;return n<3?0:200+(n-3)*200;}   /* 3件は無料・あとはゆるやかに */
+function isFav(uid){return getFavs().indexOf(uid)>=0;}
+
+/* --- 進みかた：その日のスコアで速さがきまる --- */
+function _tvDayKm(sc){const sp=4+14*Math.min(1,Math.max(0,sc||0)/700);return sp*TV_HOURS;}
+function _tvAdvance(){
+  try{
+    const t=getTrip();if(!t)return;
+    t.km=(t.km||0)+_tvDayKm(_dayScore(jstKey()));
+    setTrip(t);_tvCheckArrive(true);
+  }catch(_){}
+}
+function _tvRouteTo(town){
+  const from=myTown();
+  const path=_jvPath(from,town)||[from];
+  let km=0;for(let i=0;i+1<path.length;i++)km+=_jvLegKm(path[i],path[i+1],i);
+  return{route:path,total:km};
+}
+function _tvCheckArrive(quiet){
+  const t=getTrip();if(!t)return false;
+  if((t.km||0)<t.total-0.01)return false;
+  /* 着いた */
+  const v=getVisits();v[t.shop]=Date.now();_tvSet(VISIT_KEY,v);
+  try{localStorage.setItem(TOWN_KEY,String(t.town));syncSoon();}catch(_){}
+  setTrip(null);
+  const sh=_tvShopById(t.shop);
+  try{playPop();}catch(_){}
+  try{toast("「"+((sh&&sh.name)||"お店")+"」に ついた！");}catch(_){}
+  if(!quiet)setTimeout(()=>{openTvShop(t.shop);},600);
+  else _tvArrived=t.shop;
+  return true;
+}
+let _tvArrived=null;
+/* --- いまの居場所 --- */
+function _tvHere(){
+  const t=getTrip();
+  if(!t||!t.route||t.route.length<2){
+    const i=myTown();return{lng:JP_TOWNS[i][1],lat:JP_TOWNS[i][2],town:i,moving:false};
+  }
+  let acc=0;
+  for(let i=0;i+1<t.route.length;i++){
+    const k=_jvLegKm(t.route[i],t.route[i+1],i);
+    if(acc+k>=t.km||i===t.route.length-2){
+      const pts=_jvLegPts(t.route[i],t.route[i+1],i);
+      if(pts&&pts.length){
+        const w=_jvWalk(pts,Math.max(0,Math.min(k,t.km-acc)));
+        return{lng:w.lng,lat:w.lat,leg:i,legDone:t.km-acc,moving:true};
+      }
+      break;
+    }
+    acc+=k;
+  }
+  const i0=t.route[0];return{lng:JP_TOWNS[i0][1],lat:JP_TOWNS[i0][2],moving:true,leg:0,legDone:0};
+}
+
+/* --- お店をよみこむ --- */
+let _tvShops=[],_tvLoaded=false;
+function _tvShopById(uid){return _tvShops.find(s=>s.uid===uid)||null;}
+async function _tvLoadShops(force){
+  if(_tvLoaded&&!force)return _tvShops;
+  try{
+    const db=await getDB();if(!db)return _tvShops;
+    const{ref,get}=await import(FB_DB);
+    const sn=await get(ref(db,"shops"));
+    const v=sn&&sn.val?sn.val():null;
+    const out=[];
+    if(v)Object.keys(v).forEach(k=>{
+      const s=v[k];if(!s||!s.uid)return;
+      if(!Number.isFinite(s.lng)||!Number.isFinite(s.lat))return;
+      s.items=s.items||{};
+      s.nItem=Object.keys(s.items).length;
+      out.push(s);
+    });
+    _tvShops=out;_tvLoaded=true;
+    try{_tvFavCheck();}catch(_){}
+  }catch(e){console.warn("shops load",e);}
+  return _tvShops;
+}
+function _tvActive(s){return (Date.now()-(s.seen||s.at||0))<TV_WEEK;}   /* 1週間さぼると地図から消える */
+function _tvNew(s){return (Date.now()-(s.at||0))<TV_WEEK;}             /* 初心者マーク */
+function _tvKmTo(s){
+  const h=_tvHere();
+  return _jvKm([h.lng,h.lat],[s.lng,s.lat]);
+}
+
+/* --- 地図 --- */
+let _tvView=null;
+function _tvMapSVG(){
+  const h=_tvHere();
+  const cx=_jpX(h.lng),cy=_jpY(h.lat);
+  if(!_tvView)_tvView={cx:cx,cy:cy,w:_jpW*0.42};
+  _tvView=_jrnClampView(_tvView);
+  const w=_tvView.w,vx=_tvView.cx-w/2,vy=_tvView.cy-w/2;
+  let s='<svg class="tvMapSvg" viewBox="'+vx.toFixed(2)+' '+vy.toFixed(2)+' '+w.toFixed(2)+' '+w.toFixed(2)+
+        '" xmlns="http://www.w3.org/2000/svg"><rect x="'+vx.toFixed(2)+'" y="'+vy.toFixed(2)+'" width="'+w.toFixed(2)+
+        '" height="'+w.toFixed(2)+'" fill="#dceffa"/>';
+  s+='<path d="'+_jrnLandPaths()+'" fill="#f4f1e4" stroke="#f4f1e4" stroke-width="'+(w*0.0035).toFixed(4)+'"/>';
+  s+=_jvBgPaths(vx,vy,w);
+  /* 目的地までの道 */
+  const t=getTrip();
+  if(t&&t.route&&t.route.length>1){
+    let all="",done="",acc=0;
+    for(let i=0;i+1<t.route.length;i++){
+      const seg=_jvLegPts(t.route[i],t.route[i+1],i);if(!seg)continue;
+      const k=_jvLegKm(t.route[i],t.route[i+1],i);
+      let d="M";for(let j=0;j<seg.length;j++)d+=(j?"L":"")+_jpX(seg[j][0]).toFixed(3)+" "+_jpY(seg[j][1]).toFixed(3)+" ";
+      all+=d;
+      if(acc<t.km){
+        const upto=(acc+k<=t.km)?seg.length:(_jvWalk(seg,t.km-acc).idx+1);
+        let d2="M";for(let j=0;j<Math.max(2,upto);j++)if(seg[j])d2+=(j?"L":"")+_jpX(seg[j][0]).toFixed(3)+" "+_jpY(seg[j][1]).toFixed(3)+" ";
+        done+=d2;
+      }
+      acc+=k;
+    }
+    s+='<path d="'+all+'" fill="none" stroke="#9fc3d6" stroke-width="'+(w*0.005).toFixed(4)+
+       '" stroke-dasharray="'+(w*0.012).toFixed(4)+' '+(w*0.012).toFixed(4)+'" stroke-linecap="round" opacity="0.9"/>';
+    if(done)s+='<path d="'+done+'" fill="none" stroke="#ff7a2f" stroke-width="'+(w*0.0075).toFixed(4)+'" stroke-linecap="round" opacity="0.95"/>';
+  }
+  /* お店 */
+  const showName=(w<_jpW*0.5);
+  _tvShops.forEach(sh=>{
+    if(!_tvActive(sh))return;
+    const x=_jpX(sh.lng),y=_jpY(sh.lat);
+    if(x<vx-w*0.1||x>vx+w*1.1||y<vy-w*0.1||y>vy+w*1.1)return;
+    const mine=(sh.uid===getUid()),near=isVisitable(sh.uid);
+    const r=w*(mine?0.010:0.008);
+    s+='<circle cx="'+x.toFixed(2)+'" cy="'+y.toFixed(2)+'" r="'+r.toFixed(3)+'" fill="'+
+       (mine?"#5b9cb8":near?"#3f9a63":"#e0588f")+'" stroke="#fff" stroke-width="'+(w*0.003).toFixed(4)+'"/>';
+    if(showName){
+      const nm=(sh.name||"お店").slice(0,8)+(_tvNew(sh)?"🔰":"");
+      s+='<text x="'+x.toFixed(2)+'" y="'+(y-r*2.1).toFixed(2)+'" text-anchor="middle" font-size="'+(w*0.021).toFixed(3)+
+         '" font-weight="900" fill="'+(near?"#2f7d4d":"#5c7d8f")+'" stroke="#ffffff" stroke-width="'+(w*0.006).toFixed(4)+
+         '" paint-order="stroke" style="pointer-events:none">'+_esc(nm)+'</text>';
+    }
+  });
+  /* じぶんの猫 */
+  const mx=_jpX(h.lng),my=_jpY(h.lat);
+  s+='<circle cx="'+mx.toFixed(2)+'" cy="'+my.toFixed(2)+'" r="'+(w*0.014).toFixed(3)+'" fill="'+
+     (typeof profileBody==="function"?profileBody():"#1c1c1c")+'" stroke="#fff" stroke-width="'+(w*0.005).toFixed(4)+'"/>';
+  s+='</svg>';
+  return s;
+}
+function _tvDraw(){
+  const wrap=$("tvWrap");if(!wrap)return;
+  const old=wrap.querySelector(".tvMapSvg");
+  const html=_tvMapSVG();
+  if(old)old.outerHTML=html;else wrap.insertAdjacentHTML("afterbegin",html);
+  _tvBind();
+}
+function _tvBind(){
+  const wrap=$("tvWrap");if(!wrap)return;
+  const svg=wrap.querySelector(".tvMapSvg");if(!svg)return;
+  let drag=false,px=0,py=0,sx=0,sy=0,moved=false;
+  svg.addEventListener("pointerdown",e=>{
+    drag=true;moved=false;px=e.clientX;py=e.clientY;sx=_tvView.cx;sy=_tvView.cy;
+    try{svg.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  svg.addEventListener("pointermove",e=>{
+    if(!drag)return;
+    const r=svg.getBoundingClientRect(),k=_tvView.w/Math.max(1,r.width);
+    if(Math.abs(e.clientX-px)+Math.abs(e.clientY-py)>4)moved=true;
+    _tvView.cx=sx-(e.clientX-px)*k;_tvView.cy=sy-(e.clientY-py)*k;
+    _tvView=_jrnClampView(_tvView);
+    const w=_tvView.w;
+    svg.setAttribute("viewBox",(_tvView.cx-w/2).toFixed(2)+" "+(_tvView.cy-w/2).toFixed(2)+" "+w.toFixed(2)+" "+w.toFixed(2));
+  });
+  const end=e=>{
+    if(!drag)return;drag=false;
+    try{svg.releasePointerCapture(e.pointerId);}catch(_){}
+    if(moved)_tvDraw();
+    else _tvTapMap(e,svg);
+  };
+  svg.addEventListener("pointerup",end);
+  svg.addEventListener("pointercancel",()=>{drag=false;});
+  let pd=0,pw=0;
+  svg.addEventListener("touchstart",e=>{if(e.touches.length===2){pd=_jrnTD(e);pw=_tvView.w;}},{passive:true});
+  svg.addEventListener("touchmove",e=>{
+    if(e.touches.length===2&&pd){const d=_jrnTD(e);if(d>0){_tvView.w=pw*(pd/d);_tvView=_jrnClampView(_tvView);
+      const w=_tvView.w;svg.setAttribute("viewBox",(_tvView.cx-w/2).toFixed(2)+" "+(_tvView.cy-w/2).toFixed(2)+" "+w.toFixed(2)+" "+w.toFixed(2));}}
+  },{passive:true});
+  svg.addEventListener("touchend",()=>{if(pd){pd=0;_tvDraw();}},{passive:true});
+  svg.addEventListener("wheel",e=>{e.preventDefault();_tvView.w*=(e.deltaY<0?0.82:1.2);_tvDraw();},{passive:false});
+}
+function _tvTapMap(e,svg){
+  const r=svg.getBoundingClientRect(),w=_tvView.w;
+  const gx=(_tvView.cx-w/2)+(e.clientX-r.left)/r.width*w;
+  const gy=(_tvView.cy-w/2)+(e.clientY-r.top)/r.height*w;
+  let best=null,bd=w*0.045;
+  _tvShops.forEach(sh=>{
+    if(!_tvActive(sh))return;
+    const d=Math.hypot(_jpX(sh.lng)-gx,_jpY(sh.lat)-gy);
+    if(d<bd){bd=d;best=sh;}
+  });
+  if(best){try{playClick();}catch(_){}openTvShop(best.uid);}
+}
+/* --- 旅ページの中身 --- */
+function _tvPaint(){
+  const st=$("tvStatus");if(!st)return;
+  const t=getTrip(),h=_tvHere();
+  if(t){
+    const sh=_tvShopById(t.shop);
+    const rest=Math.max(0,t.total-(t.km||0));
+    const days=Math.max(1,Math.ceil(rest/Math.max(48,_tvDayKm(_dayScore(jstKey())))));
+    st.innerHTML="🚩 「"+_esc((sh&&sh.name)||"お店")+"」へ むかってるよ<br>のこり "+Math.round(rest)+
+      "km ・ あと "+days+"日 くらい";
+    const p=$("tvProg");if(p)p.hidden=false;
+    const pi=$("tvProgIn");if(pi)pi.style.width=Math.min(100,Math.round((t.km||0)/Math.max(1,t.total)*100))+"%";
+  }else{
+    const i=myTown();
+    st.innerHTML="🐾 いま "+((JP_PREFNAME&&JP_PREFNAME[i])||JP_TOWNS[i][0])+" のあたり<br><span style=\"font-size:11px;color:#9ab6c5\">地図の●を タップすると お店が 見られるよ</span>";
+    const p=$("tvProg");if(p)p.hidden=true;
+  }
+  _tvDraw();
+}
+/* --- お店いちらん --- */
+function openTvList(){
+  const el=$("tvListInner");if(!el)return;
+  const rows=_tvShops.slice().sort((a,b)=>_tvKmTo(a)-_tvKmTo(b));
+  el.innerHTML=rows.length?rows.map(s=>{
+    const near=isVisitable(s.uid),mine=(s.uid===getUid());
+    return'<div class="tvRow" data-shop="'+s.uid+'">'+
+      '<span class="tvRowMid"><span class="tvRowName'+(near?" near":"")+'">'+_esc(s.name||"お店")+
+      (_tvNew(s)?'<span class="tvBadge">🔰</span>':"")+(mine?'<span class="tvBadge">じぶん</span>':"")+
+      (isFav(s.uid)?'<span class="tvBadge">♡</span>':"")+(!_tvActive(s)?'<span class="tvBadge">おやすみ</span>':"")+
+      '</span><span class="tvRowSub">'+((JP_PREFNAME&&JP_PREFNAME[s.pref])||"")+" ・ "+(s.nItem||0)+"こ うってる</span></span>"+
+      '<span class="tvRowKm">'+Math.round(_tvKmTo(s))+"km</span></div>";
+  }).join(""):'<div class="tvNote">まだ お店が ないみたい。</div>';
+  $("tvList").classList.add("show");
+}
+/* --- お店の中 --- */
+let _tvCur=null;
+function openTvShop(uid){
+  const s=_tvShopById(uid);if(!s)return;
+  _tvCur=uid;
+  const near=isVisitable(uid),mine=(uid===getUid()),fav=isFav(uid);
+  $("tvShopName").textContent=(s.name||"お店")+(_tvNew(s)?" 🔰":"");
+  $("tvShopSub").textContent=((JP_PREFNAME&&JP_PREFNAME[s.pref])||"")+" ・ "+Math.round(_tvKmTo(s))+"km"+
+    (near?" ・ いま 買えるよ":mine?" ・ じぶんのお店":"");
+  const go=$("tvGoBtn"),fb=$("tvFavBtn");
+  if(go){go.hidden=mine;go.textContent=near?"🚩 もういちど 行く":"🚩 ここへ 行く";}
+  if(fb){fb.hidden=mine;fb.classList.toggle("on",fav);
+    fb.textContent=fav?"♡ お気に入り ちゅう":(favCost()?"♡ お気に入り（"+favCost()+"zz）":"♡ お気に入り（むりょう）");}
+  const canBuy=near||fav;
+  const items=s.items||{},keys=Object.keys(items);
+  $("tvShopItems").innerHTML=keys.length?keys.map(k=>{
+    const it=items[k],have=!!artById(k);
+    return'<div class="tvItem">'+
+      '<span class="tvItemBox" data-art="'+k+'"></span>'+
+      '<span class="tvRowMid"><span class="tvItemName">'+_esc(it.name||"むめい")+'</span>'+
+      '<span class="tvItemSub">'+artUseName(it.use)+" ・ "+zzFmt(it.price)+"</span></span>"+
+      '<button class="tvBuy" type="button" data-buy="'+k+'" data-price="'+(it.price||0)+'"'+
+        ((have||mine||!canBuy)?" disabled":"")+">"+(have?"もってる":mine?"じぶんの":canBuy?"かう":"行かなきゃ")+"</button>"+
+    "</div>";
+  }).join(""):'<div class="tvNote">まだ なにも ならべてないみたい。</div>';
+  if(!canBuy&&keys.length)
+    $("tvShopItems").insertAdjacentHTML("beforeend",
+      '<div class="tvNote">買うには 一度 じっさいに 行く ひつようが あるよ。<br>着いたら 1週間は ここから 買えるようになる。</div>');
+  $("tvShop").classList.add("show");
+  _tvFillArts(s);
+}
+async function _tvFillArts(s){
+  const boxes=document.querySelectorAll("#tvShopItems .tvItemBox[data-art]");
+  if(!boxes.length)return;
+  for(const b of boxes){
+    const id=b.dataset.art;
+    const mine=artById(id);
+    if(mine){b.innerHTML=artSVG(mine);continue;}
+    try{
+      const db=await getDB();if(!db)break;
+      const{ref,get}=await import(FB_DB);
+      const sn=await get(ref(db,"art/"+s.uid+"/"+id));
+      const a=sn&&sn.val?sn.val():null;
+      if(a){_tvArtCache[id]=a;b.innerHTML=artSVG(a);}
+    }catch(_){}
+  }
+}
+const _tvArtCache={};
+async function _tvBuy(artId,price){
+  const s=_tvShopById(_tvCur);if(!s)return;
+  if(artById(artId)){try{toast("もう もってるよ");}catch(_){}return;}
+  if(getZZ()<price){try{toast("お金が たりないよ");}catch(_){}return;}
+  let a=_tvArtCache[artId];
+  try{
+    if(!a){
+      const db=await getDB();if(!db)throw 0;
+      const{ref,get}=await import(FB_DB);
+      const sn=await get(ref(db,"art/"+s.uid+"/"+artId));
+      a=sn&&sn.val?sn.val():null;
+    }
+  }catch(_){}
+  if(!a){try{toast("よみこめなかったよ");}catch(_){}return;}
+  if(!spendZZ(price))return;
+  const arts=getArts();arts.push(a);setArts(arts);
+  try{
+    const db=await getDB();
+    if(db){const{ref,push,set}=await import(FB_DB);
+      const r=push(ref(db,"sales/"+s.uid));
+      await set(r,{art:artId,price:price,buyer:getUid(),at:Date.now()});}
+  }catch(_){}
+  try{playPop();}catch(_){}
+  try{toast("「"+(a.name||"アイテム")+"」を かったよ！");}catch(_){}
+  openTvShop(_tvCur);
+  try{_shpRenderArts();}catch(_){}
+}
+/* --- 売れたお金をうけとる --- */
+async function _tvCollect(){
+  try{
+    const db=await getDB();if(!db)return;
+    const{ref,get,remove}=await import(FB_DB);
+    const sn=await get(ref(db,"sales/"+getUid()));
+    const v=sn&&sn.val?sn.val():null;if(!v)return;
+    let sum=0,n=0;
+    Object.keys(v).forEach(k=>{sum+=(v[k]&&v[k].price)||0;n++;});
+    if(sum>0){
+      addZZ(sum);
+      await remove(ref(db,"sales/"+getUid()));
+      setTimeout(()=>{try{toast("うれたよ！ ＋"+sum+"zz（"+n+"こ）");}catch(_){}},900);
+    }
+  }catch(e){console.warn("collect",e);}
+}
+/* --- お気に入りの新着を 通知ベルに --- */
+function _tvFavCheck(){
+  const seen=_tvJson(FAVSEEN_KEY,{})||{};
+  _tvNewFav=[];
+  getFavs().forEach(uid=>{
+    const s=_tvShopById(uid);if(!s)return;
+    let last=0;
+    Object.keys(s.items||{}).forEach(k=>{const t=(s.items[k]&&s.items[k].at)||0;if(t>last)last=t;});
+    if(last&&last>(seen[uid]||0))_tvNewFav.push({uid:uid,name:s.name||"お店"});
+  });
+}
+let _tvNewFav=[];
+function _renderShopNotif(list){
+  if(!list||!_tvNewFav.length)return;
+  _tvNewFav.forEach(f=>{
+    const d=document.createElement("div");
+    d.className="notifRow unread notifShop";
+    d.textContent="🏷 "+f.name+"に あたらしい アイテム";
+    d.addEventListener("click",()=>{
+      const seen=_tvJson(FAVSEEN_KEY,{})||{};seen[f.uid]=Date.now();_tvSet(FAVSEEN_KEY,seen);
+      try{$("notifPanel").classList.remove("visible");}catch(_){}
+      openMyShop(1);setTimeout(()=>openTvShop(f.uid),200);
+    });
+    list.insertBefore(d,list.firstChild);
+  });
+}
+
+/* ===== くばり ===== */
+(function(){
+  try{
+    const sc=$("shopScreen");
+    if(sc)sc.addEventListener("click",e=>{
+      const t=e.target;if(!t)return;
+      if(t.closest("#tvZin")){_tvView.w*=0.7;_tvDraw();return;}
+      if(t.closest("#tvZout")){_tvView.w*=1.4;_tvDraw();return;}
+      if(t.closest("#tvHere")){_tvView=null;_tvDraw();return;}
+      if(t.closest("#tvOpenList")){try{playClick();}catch(_){}openTvList();return;}
+      if(t.closest("#tvReload")){_tvLoaded=false;_tvLoadShops(true).then(()=>{_tvPaint();try{toast("さいしんに したよ");}catch(_){}});return;}
+    });
+    const tl=$("tvList");
+    if(tl)tl.addEventListener("click",e=>{
+      const t=e.target;
+      if(t.closest("#tvListBack")){tl.classList.remove("show");return;}
+      const r=t.closest("[data-shop]");
+      if(r){try{playClick();}catch(_){}openTvShop(r.dataset.shop);return;}
+    });
+    const ts=$("tvShop");
+    if(ts)ts.addEventListener("click",e=>{
+      const t=e.target;
+      if(t.closest("#tvShopBack")){ts.classList.remove("show");return;}
+      if(t.closest("#tvGoBtn")){
+        const s=_tvShopById(_tvCur);if(!s)return;
+        const r=_tvRouteTo(s.pref);
+        setTrip({shop:s.uid,town:s.pref,route:r.route,total:Math.max(1,r.total),km:0,at:Date.now()});
+        ts.classList.remove("show");
+        try{$("tvList").classList.remove("show");}catch(_){}
+        _tvPaint();
+        try{playPop();}catch(_){}
+        try{toast("「"+(s.name||"お店")+"」へ 出発！");}catch(_){}
+        return;
+      }
+      if(t.closest("#tvFavBtn")){
+        const uid=_tvCur;if(!uid)return;
+        const favs=getFavs();
+        if(favs.indexOf(uid)>=0){
+          _tvSet(FAV_KEY,favs.filter(x=>x!==uid));
+          try{toast("お気に入りを やめたよ");}catch(_){}
+        }else{
+          const c=favCost();
+          if(c>0){
+            if(!confirm("お気に入りに する？（"+c+"zz）"))return;
+            if(!spendZZ(c)){try{toast("お金が たりないよ");}catch(_){}return;}
+          }
+          favs.push(uid);_tvSet(FAV_KEY,favs);
+          try{playPop();}catch(_){}
+          try{toast("お気に入りに したよ！ いつでも 買えるよ");}catch(_){}
+        }
+        openTvShop(uid);
+        return;
+      }
+      const b=t.closest("[data-buy]");
+      if(b&&!b.disabled){_tvBuy(b.dataset.buy,parseInt(b.dataset.price,10)||0);return;}
+    });
+  }catch(e){console.warn("travel init",e);}
+})();
+
 </script>
 <button id="storyTestBtn" type="button" hidden>📖 ストーリー(テスト)</button>
 <div id="storyPicker">
@@ -18539,5 +20159,150 @@ try{
     <div id="sbkFoot"><button id="sbkSave" class="tsDl" type="button">このカードを保存</button></div>
   </div>
 </div>
+<!-- ===================== おみせ（全画面・2ページ） ===================== -->
+<div id="shopScreen">
+  <div id="shpTop">
+    <button id="shpClose" type="button">✕</button>
+    <span id="shpTitle">おみせ</span>
+    <span id="shpZZ">0 zz</span>
+  </div>
+  <div id="shpTabs">
+    <button class="shpTab on" id="shpTab0" type="button" data-p="0">🏠 おみせ</button>
+    <button class="shpTab" id="shpTab1" type="button" data-p="1">🗾 たび</button>
+  </div>
+  <div id="shpBody">
+    <div class="shpPage" id="shpPage0">
+      <div class="shpCard">
+        <div class="shpCardTtl">じぶんのお店</div>
+        <div class="shpName" id="shpMyName">なまえ なし</div>
+        <div class="shpPlace" id="shpMyPlace">ばしょ：－</div>
+        <button class="shpMini" id="shpRename" type="button">なまえを かえる</button>
+      </div>
+      <div class="shpCard">
+        <div class="shpCardTtl">つくったもの <span id="shpArtCount"></span></div>
+        <div id="shpArts"></div>
+        <div class="shpEmpty" id="shpArtsEmpty">まだ なにも つくってないよ。<br>下のボタンから 描いてみよう！</div>
+      </div>
+      <div class="shpCard">
+        <div class="shpCardTtl">うってるもの</div>
+        <div class="shpSlot" id="shpSlotTxt"></div>
+        <div id="shpSells"></div>
+        <div class="shpEmpty" id="shpSellsEmpty">まだ なにも ならべてないよ。<br>「つくったもの」を タップして ならべよう。</div>
+      </div>
+      <button id="shpMake" type="button">＋ アイテムをつくる</button>
+    </div>
+    <div class="shpPage" id="shpPage1" hidden>
+      <div id="tvWrap">
+        <button class="tvZ" id="tvZin" type="button">＋</button>
+        <button class="tvZ" id="tvZout" type="button">−</button>
+        <button class="tvZ" id="tvHere" type="button">📍</button>
+      </div>
+      <div id="tvProg" hidden><div id="tvProgIn"></div></div>
+      <div id="tvStatus">よみこみ中…</div>
+      <div id="tvBar">
+        <button class="tvBtn" id="tvOpenList" type="button">🏘 お店いちらん</button>
+        <button class="tvBtn" id="tvReload" type="button">🔄 さいしん</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 用途えらび ===================== -->
+<div id="drPick">
+  <div id="drPickCard">
+    <div id="drPickTtl">なにを つくる？</div>
+    <div id="drPickList"></div>
+    <button id="drPickClose" type="button">やめる</button>
+  </div>
+</div>
+
+<!-- ===================== おえかき ===================== -->
+<div id="drawScreen">
+  <div id="drTop">
+    <button id="drClose" type="button">✕</button>
+    <span id="drTitle">おえかき</span>
+    <button id="drSave" type="button">ほぞん</button>
+  </div>
+  <div id="drStageWrap">
+    <div id="drStage">
+      <div id="drUnder"></div>
+      <div id="drCatBg"></div>
+      <canvas id="drCanvas"></canvas>
+    </div>
+  </div>
+  <div id="drTools">
+    <div class="drRow" id="drModeRow">
+      <button class="drBtn on" id="drMPen" type="button" data-m="pen">✏️ ペン</button>
+      <button class="drBtn" id="drMLine" type="button" data-m="line">📐 つなぐ</button>
+      <button class="drBtn" id="drMEra" type="button" data-m="era">🧽 けす</button>
+      <button class="drBtn" id="drLineEnd" type="button" hidden>✓ おわり</button>
+      <button class="drBtn" id="drUndo" type="button">↩</button>
+      <button class="drBtn" id="drRedo" type="button">↪</button>
+    </div>
+    <div id="drPal"></div>
+    <div class="drRow" id="drWRow"></div>
+    <div class="drRow" id="drLayerRow"></div>
+    <div class="drRow">
+      <button class="drBtn" id="drTraceBtn" type="button">🖼 下絵</button>
+      <button class="drBtn" id="drTraceOff" type="button" hidden>下絵を けす</button>
+      <button class="drBtn" id="drCatBtn" type="button" hidden>🐱 ねこ</button>
+      <input type="file" id="drTraceIn" accept="image/*" hidden/>
+    </div>
+    <div id="drHint">ゆびで なぞって かこう</div>
+  </div>
+</div>
+<div id="drNameWrap">
+  <div id="drNameCard">
+    <div id="drNameTtl">なまえを つけよう</div>
+    <input id="drNameIn" type="text" maxlength="12" placeholder="れい：あおいぼうし"/>
+    <button id="drNameGo" type="button">これで ほぞん</button>
+    <button id="drNameCancel" type="button">もどる</button>
+  </div>
+</div>
+
+<div id="artMenu">
+  <div id="artMenuCard">
+    <div id="artMenuTtl">どうする？</div>
+    <button class="amBtn pink" id="amSell" type="button">🏷 お店にならべる</button>
+    <button class="amBtn" id="amEdit" type="button">✏️ かきなおす</button>
+    <button class="amBtn" id="amDel" type="button">🗑 すてる</button>
+    <button class="amBtn gray" id="amClose" type="button">やめる</button>
+  </div>
+</div>
+<div id="priceWrap">
+  <div id="priceCard">
+    <div id="priceTtl">いくらで うる？</div>
+    <input id="priceIn" type="number" inputmode="numeric" min="1" max="999999" placeholder="100"/>
+    <div id="priceAvg"></div>
+    <button class="amBtn pink" id="priceGo" type="button">これで ならべる</button>
+    <button class="amBtn gray" id="priceCancel" type="button">やめる</button>
+  </div>
+</div>
+
+<div id="tvList">
+  <div class="tvTop">
+    <button class="tvTopBtn" id="tvListBack" type="button">‹ もどる</button>
+    <span class="tvTtl">お店いちらん</span>
+  </div>
+  <div class="tvBody"><div class="tvInner" id="tvListInner"></div></div>
+</div>
+<div id="tvShop">
+  <div class="tvTop">
+    <button class="tvTopBtn" id="tvShopBack" type="button">‹ もどる</button>
+    <span class="tvTtl">おみせ</span>
+  </div>
+  <div class="tvBody"><div class="tvInner">
+    <div id="tvShopHead">
+      <div id="tvShopName">－</div>
+      <div id="tvShopSub"></div>
+      <div id="tvShopBtns">
+        <button class="tvAct tvGo" id="tvGoBtn" type="button">🚩 ここへ 行く</button>
+        <button class="tvAct tvFav" id="tvFavBtn" type="button">♡ お気に入り</button>
+      </div>
+    </div>
+    <div id="tvShopItems"></div>
+  </div></div>
+</div>
+
 </body>
 </html>
