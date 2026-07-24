@@ -3642,8 +3642,8 @@ button.pmTag{cursor:pointer;}
   display:flex;align-items:center;justify-content:center;pointer-events:none;}
 .strIcon svg{width:100%;height:100%;display:block;}
 /* 屋根の 上に すわる お店の 猫 */
-.strRoofCat{position:absolute;left:50%;top:-19%;transform:translateX(-50%);
-  width:30%;height:31%;pointer-events:none;z-index:2;
+.strRoofCat{position:absolute;left:50%;top:-11%;transform:translateX(-50%);
+  width:21%;height:22%;pointer-events:none;z-index:2;
   filter:drop-shadow(0 3px 4px rgba(60,50,40,.42));}
 .strRoofCat svg{width:100%;height:100%;display:block;}
 .strBar,.strBarTx{z-index:3;}
@@ -22955,11 +22955,15 @@ var ROOM_COL={
   win:"#cfe6f2",winL:"#eef8ff",winF:"#8a6a4c",
   cur:"#d98fa0",curD:"#bd7285",
   cnt:"#a9784f",cntD:"#8a5f3c",cntL:"#c39468",
-  glow:"#ffe7bd"
+  glow:"#ffe7bd",
+  rug:"#f0cdda",rugD:"#e3b3c6",rugL:"#f8e0ea",
+  rod:"#6d5138",lampS:"#5a4636",lampB:"#ffdf9e",
+  plantP:"#c07a4f",plantL:"#7cab66",plantLD:"#5f8a4f",
+  frame:"#7a5c3e"
 };
+var GARMENT=["#e6b1c6","#b7cfe8","#cadfc0","#d7c4e8","#eed9bd","#c9b39a"];
 function _shopRoomSVG(W,H){
   const C=ROOM_COL;
-  /* おくの かべ：高さから きめる（よこはばで ゆがませない） */
   const bh=Math.round(H*0.52);
   const bw=Math.round(Math.min(W*0.62,bh*2.35));
   const bx=Math.round((W-bw)/2),by=Math.round(H*0.10);
@@ -22969,14 +22973,11 @@ function _shopRoomSVG(W,H){
   /* 天じょう */
   g+='<path d="M'+P([[0,0],[W,0],[b2,by],[bx,by]])+' Z" fill="'+C.ceil+'"/>';
   g+='<path d="M'+P([[0,0],[W,0],[b2,by],[bx,by]])+' Z" fill="url(#rmCeil)"/>';
-  /* 天じょうの はり（おくへ すぼまる） */
   for(let i=1;i<=4;i++){
-    const f=i/5;
-    const x0=W*f,x1=bx+bw*f;
+    const f=i/5;const x0=W*f,x1=bx+bw*f;
     g+='<path d="M'+x0.toFixed(1)+' 0 L'+x1.toFixed(1)+' '+by.toFixed(1)+'" stroke="'+C.beam+'" stroke-width="'+(H*0.018).toFixed(1)+'" opacity=".85"/>';
     g+='<path d="M'+(x0+1).toFixed(1)+' 0 L'+(x1+0.6).toFixed(1)+' '+by.toFixed(1)+'" stroke="#fff" stroke-width="'+(H*0.005).toFixed(1)+'" opacity=".16"/>';
   }
-  /* よこの はり（手前に 1本） */
   g+='<rect x="0" y="'+(H*0.045).toFixed(1)+'" width="'+W+'" height="'+(H*0.034).toFixed(1)+'" fill="'+C.beam+'"/>';
   g+='<rect x="0" y="'+(H*0.045).toFixed(1)+'" width="'+W+'" height="'+(H*0.010).toFixed(1)+'" fill="#fff" opacity=".14"/>';
   g+='<rect x="0" y="'+(H*0.079).toFixed(1)+'" width="'+W+'" height="'+(H*0.012).toFixed(1)+'" fill="#000" opacity=".18"/>';
@@ -22985,59 +22986,115 @@ function _shopRoomSVG(W,H){
   g+='<path d="M'+P([[W,0],[b2,by],[b2,by2],[W,H]])+' Z" fill="'+C.sideD+'"/>';
   g+='<path d="M'+P([[0,0],[bx,by],[bx,by2],[0,H]])+' Z" fill="url(#rmSideL)"/>';
   g+='<path d="M'+P([[W,0],[b2,by],[b2,by2],[W,H]])+' Z" fill="url(#rmSideR)"/>';
-  /* ゆか（おくへ すぼまる 板） */
+  /* ゆか */
   g+='<path d="M'+P([[0,H],[W,H],[b2,by2],[bx,by2]])+' Z" fill="'+C.floor+'"/>';
-  for(let i=1;i<=7;i++){
-    const f=i/8;
-    g+='<path d="M'+(W*f).toFixed(1)+' '+H+' L'+(bx+bw*f).toFixed(1)+' '+by2.toFixed(1)+'" stroke="'+C.floorD+'" stroke-width="1.2" opacity=".55"/>';
-  }
-  for(let i=1;i<=3;i++){
-    const t=i/4,y=by2+(H-by2)*t*t;
-    g+='<path d="M'+(bx-(bx)*t*t).toFixed(1)+' '+y.toFixed(1)+' L'+(b2+(W-b2)*t*t).toFixed(1)+' '+y.toFixed(1)+'" stroke="'+C.floorD+'" stroke-width="1" opacity=".35"/>';
-  }
+  for(let i=1;i<=7;i++){const f=i/8;g+='<path d="M'+(W*f).toFixed(1)+' '+H+' L'+(bx+bw*f).toFixed(1)+' '+by2.toFixed(1)+'" stroke="'+C.floorD+'" stroke-width="1.2" opacity=".55"/>';}
+  for(let i=1;i<=3;i++){const t=i/4,y=by2+(H-by2)*t*t;g+='<path d="M'+(bx-(bx)*t*t).toFixed(1)+' '+y.toFixed(1)+' L'+(b2+(W-b2)*t*t).toFixed(1)+' '+y.toFixed(1)+'" stroke="'+C.floorD+'" stroke-width="1" opacity=".35"/>';}
   g+='<path d="M'+P([[0,H],[W,H],[b2,by2],[bx,by2]])+' Z" fill="url(#rmFloor)"/>';
   /* おくの かべ */
   g+='<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" fill="'+C.wall+'"/>';
   g+='<rect x="'+bx+'" y="'+by+'" width="'+bw+'" height="'+bh+'" fill="url(#rmWall)"/>';
-  /* こしいた */
   const wy=by+bh*0.62;
   g+='<rect x="'+bx+'" y="'+wy.toFixed(1)+'" width="'+bw+'" height="'+(bh*0.38).toFixed(1)+'" fill="'+C.wain+'"/>';
   g+='<rect x="'+bx+'" y="'+wy.toFixed(1)+'" width="'+bw+'" height="'+(bh*0.045).toFixed(1)+'" fill="'+C.wainD+'"/>';
   g+='<rect x="'+bx+'" y="'+(wy+bh*0.045).toFixed(1)+'" width="'+bw+'" height="'+(bh*0.018).toFixed(1)+'" fill="#fff" opacity=".22"/>';
-  for(let i=1;i<8;i++){
-    const x=bx+bw*i/8;
-    g+='<rect x="'+x.toFixed(1)+'" y="'+(wy+bh*0.06).toFixed(1)+'" width="1.2" height="'+(bh*0.32).toFixed(1)+'" fill="'+C.wainD+'" opacity=".5"/>';
-  }
-  /* まど＋カーテン（おくの かべの 左がわ） */
-  const ww=bw*0.30,wh=bh*0.40,wx=bx+bw*0.09,wyy=by+bh*0.13;
+  for(let i=1;i<8;i++){const x=bx+bw*i/8;g+='<rect x="'+x.toFixed(1)+'" y="'+(wy+bh*0.06).toFixed(1)+'" width="1.2" height="'+(bh*0.32).toFixed(1)+'" fill="'+C.wainD+'" opacity=".5"/>';}
+  /* まど＋カーテン（左） */
+  const ww=bw*0.26,wh=bh*0.36,wx=bx+bw*0.07,wyy=by+bh*0.12;
   g+='<rect x="'+(wx-bw*0.012).toFixed(1)+'" y="'+(wyy-bh*0.02).toFixed(1)+'" width="'+(ww+bw*0.024).toFixed(1)+'" height="'+(wh+bh*0.04).toFixed(1)+'" fill="'+C.winF+'"/>';
   g+='<rect x="'+wx.toFixed(1)+'" y="'+wyy.toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+wh.toFixed(1)+'" fill="url(#rmWin)"/>';
   g+='<rect x="'+wx.toFixed(1)+'" y="'+wyy.toFixed(1)+'" width="'+ww.toFixed(1)+'" height="'+(wh*0.30).toFixed(1)+'" fill="#fff" opacity=".30"/>';
   g+='<rect x="'+(wx+ww/2-1).toFixed(1)+'" y="'+wyy.toFixed(1)+'" width="2.4" height="'+wh.toFixed(1)+'" fill="'+C.winF+'"/>';
   g+='<rect x="'+wx.toFixed(1)+'" y="'+(wyy+wh/2-1).toFixed(1)+'" width="'+ww.toFixed(1)+'" height="2.4" fill="'+C.winF+'"/>';
-  /* カーテン（左右に 1まいずつ・すそが 波） */
-  const cw=ww*0.34;
-  [[wx-cw*0.55,1],[wx+ww-cw*0.45,-1]].forEach(([cx,dir])=>{
+  const cw=ww*0.32;
+  [[wx-cw*0.5,1],[wx+ww-cw*0.5,-1]].forEach(([cx,dir])=>{
     let d="M"+cx.toFixed(1)+" "+(wyy-bh*0.03).toFixed(1)+" h"+cw.toFixed(1)+" v"+(wh*0.95).toFixed(1);
     for(let i=0;i<3;i++)d+=" q"+(-cw/6).toFixed(1)+" "+(bh*0.03).toFixed(1)+" "+(-cw/3).toFixed(1)+" 0";
-    d+=" Z";
-    g+='<path d="'+d+'" fill="'+C.cur+'"/>';
-    g+='<path d="'+d+'" fill="url(#rmCur)"/>';
+    d+=" Z";g+='<path d="'+d+'" fill="'+C.cur+'"/>';g+='<path d="'+d+'" fill="url(#rmCur)"/>';
   });
   g+='<rect x="'+(wx-cw*0.7).toFixed(1)+'" y="'+(wyy-bh*0.055).toFixed(1)+'" width="'+(ww+cw*1.4).toFixed(1)+'" height="'+(bh*0.028).toFixed(1)+'" rx="'+(bh*0.014).toFixed(1)+'" fill="'+C.beamD+'"/>';
-  /* カウンター（おくの かべの 手前・中央より 右） */
-  const ch=bh*0.34,cx0=bx+bw*0.30,cw0=bw*0.66,cy0=by2-ch*0.55;
+
+  /* ===== ★ここから コージーな 什器（クオリティUP）===== */
+  /* 洋服ラック（おくかべ 右がわ・服が かかる） */
+  const rkx=bx+bw*0.42, rkw=bw*0.50, rky=by+bh*0.15;
+  g+='<rect x="'+rkx.toFixed(1)+'" y="'+rky.toFixed(1)+'" width="'+rkw.toFixed(1)+'" height="'+(bh*0.022).toFixed(1)+'" rx="'+(bh*0.011).toFixed(1)+'" fill="'+C.rod+'"/>';
+  g+='<rect x="'+rkx.toFixed(1)+'" y="'+rky.toFixed(1)+'" width="'+rkw.toFixed(1)+'" height="'+(bh*0.007).toFixed(1)+'" rx="'+(bh*0.004).toFixed(1)+'" fill="#fff" opacity=".22"/>';
+  const nG=5, gw=rkw/nG;
+  for(let i=0;i<nG;i++){
+    const gx=rkx+gw*(i+0.5), col=GARMENT[i%GARMENT.length];
+    const gtop=rky+bh*0.02, glen=bh*0.30+((i%2)?bh*0.03:0), gwid=gw*0.74;
+    /* ハンガーの かぎ */
+    g+='<path d="M'+gx.toFixed(1)+' '+(rky-bh*0.01).toFixed(1)+' q'+(gw*0.10).toFixed(1)+' '+(-bh*0.015).toFixed(1)+' 0 '+(-bh*0.028).toFixed(1)+'" stroke="#5a4636" stroke-width="1.1" fill="none"/>';
+    /* 服（肩から すそへ・少し 台形）*/
+    const sh=gwid*0.5;
+    g+='<path d="M'+(gx-sh).toFixed(1)+' '+gtop.toFixed(1)+
+        ' Q'+gx.toFixed(1)+' '+(gtop-bh*0.012).toFixed(1)+' '+(gx+sh).toFixed(1)+' '+gtop.toFixed(1)+
+        ' L'+(gx+gwid*0.62).toFixed(1)+' '+(gtop+glen).toFixed(1)+
+        ' Q'+gx.toFixed(1)+' '+(gtop+glen+bh*0.02).toFixed(1)+' '+(gx-gwid*0.62).toFixed(1)+' '+(gtop+glen).toFixed(1)+
+        ' Z" fill="'+col+'"/>';
+    g+='<path d="M'+(gx-sh*0.5).toFixed(1)+' '+(gtop+bh*0.01).toFixed(1)+' L'+(gx-gwid*0.4).toFixed(1)+' '+(gtop+glen*0.9).toFixed(1)+'" stroke="#000" stroke-width=".8" opacity=".08"/>';
+    g+='<path d="M'+(gx+sh*0.4).toFixed(1)+' '+gtop.toFixed(1)+' Q'+(gx+gwid*0.2).toFixed(1)+' '+(gtop+glen*0.5).toFixed(1)+' '+(gx+gwid*0.5).toFixed(1)+' '+(gtop+glen*0.92).toFixed(1)+'" stroke="#fff" stroke-width="1.1" opacity=".14" fill="none"/>';
+  }
+
+  /* まどの下の たな＋たたんだ服 */
+  const shx=bx+bw*0.05, shw=bw*0.30, shy=by+bh*0.56;
+  g+='<rect x="'+shx.toFixed(1)+'" y="'+shy.toFixed(1)+'" width="'+shw.toFixed(1)+'" height="'+(bh*0.028).toFixed(1)+'" rx="'+(bh*0.008).toFixed(1)+'" fill="'+C.beam+'"/>';
+  g+='<rect x="'+shx.toFixed(1)+'" y="'+shy.toFixed(1)+'" width="'+shw.toFixed(1)+'" height="'+(bh*0.008).toFixed(1)+'" fill="#fff" opacity=".18"/>';
+  for(let i=0;i<3;i++){
+    const fx=shx+shw*0.06+ (shw*0.30)*i, fw=shw*0.26, fhh=bh*0.05, fy=shy-fhh;
+    g+='<rect x="'+fx.toFixed(1)+'" y="'+fy.toFixed(1)+'" width="'+fw.toFixed(1)+'" height="'+fhh.toFixed(1)+'" rx="2" fill="'+GARMENT[(i+2)%GARMENT.length]+'"/>';
+    g+='<rect x="'+fx.toFixed(1)+'" y="'+fy.toFixed(1)+'" width="'+fw.toFixed(1)+'" height="'+(fhh*0.34).toFixed(1)+'" rx="2" fill="#fff" opacity=".16"/>';
+    g+='<rect x="'+fx.toFixed(1)+'" y="'+(fy+fhh*0.5).toFixed(1)+'" width="'+fw.toFixed(1)+'" height="1" fill="#000" opacity=".10"/>';
+  }
+
+  /* 額（ラックの 上・小さめ） */
+  const frx=bx+bw*0.63, fry=by+bh*0.03, frw=bw*0.14, frh=bh*0.10;
+  g+='<rect x="'+frx.toFixed(1)+'" y="'+fry.toFixed(1)+'" width="'+frw.toFixed(1)+'" height="'+frh.toFixed(1)+'" rx="2" fill="'+C.frame+'"/>';
+  g+='<rect x="'+(frx+frw*0.12).toFixed(1)+'" y="'+(fry+frh*0.14).toFixed(1)+'" width="'+(frw*0.76).toFixed(1)+'" height="'+(frh*0.72).toFixed(1)+'" fill="#e9f1e4"/>';
+  g+='<circle cx="'+(frx+frw*0.5).toFixed(1)+'" cy="'+(fry+frh*0.42).toFixed(1)+'" r="'+(frh*0.16).toFixed(1)+'" fill="#f0c06a"/>';
+  g+='<path d="M'+(frx+frw*0.2).toFixed(1)+' '+(fry+frh*0.78).toFixed(1)+' q'+(frw*0.3).toFixed(1)+' '+(-frh*0.34).toFixed(1)+' '+(frw*0.6).toFixed(1)+' 0" stroke="#7cab66" stroke-width="2" fill="none"/>';
+
+  /* カウンター（手前 中央より右） */
+  const ch=bh*0.30,cx0=bx+bw*0.34,cw0=bw*0.62,cy0=by2-ch*0.5;
   g+='<rect x="'+cx0.toFixed(1)+'" y="'+cy0.toFixed(1)+'" width="'+cw0.toFixed(1)+'" height="'+ch.toFixed(1)+'" fill="'+C.cnt+'"/>';
   g+='<rect x="'+(cx0-cw0*0.02).toFixed(1)+'" y="'+cy0.toFixed(1)+'" width="'+(cw0*1.04).toFixed(1)+'" height="'+(ch*0.16).toFixed(1)+'" rx="'+(ch*0.08).toFixed(1)+'" fill="'+C.cntL+'"/>';
   g+='<rect x="'+cx0.toFixed(1)+'" y="'+(cy0+ch*0.16).toFixed(1)+'" width="'+cw0.toFixed(1)+'" height="'+(ch*0.06).toFixed(1)+'" fill="#000" opacity=".18"/>';
-  for(let i=1;i<5;i++)
-    g+='<rect x="'+(cx0+cw0*i/5).toFixed(1)+'" y="'+(cy0+ch*0.22).toFixed(1)+'" width="1.2" height="'+(ch*0.78).toFixed(1)+'" fill="'+C.cntD+'" opacity=".45"/>';
-  /* おくの かべの 柱（左右） */
-  [bx,b2].forEach((x,i)=>{
-    const pw=Math.max(6,bw*0.026);
-    g+='<rect x="'+(x-(i?0:pw)).toFixed(1)+'" y="'+by+'" width="'+pw.toFixed(1)+'" height="'+bh+'" fill="'+C.beam+'"/>';
-    g+='<rect x="'+(x-(i?0:pw)).toFixed(1)+'" y="'+by+'" width="'+(pw*0.34).toFixed(1)+'" height="'+bh+'" fill="#fff" opacity=".14"/>';
+  for(let i=1;i<5;i++)g+='<rect x="'+(cx0+cw0*i/5).toFixed(1)+'" y="'+(cy0+ch*0.22).toFixed(1)+'" width="1.2" height="'+(ch*0.78).toFixed(1)+'" fill="'+C.cntD+'" opacity=".45"/>';
+  /* カウンターの上：たたんだ服 2山＋ちいさな 鉢 */
+  for(let i=0;i<2;i++){
+    const fx=cx0+cw0*0.08+(cw0*0.20)*i, fw=cw0*0.16, fhh=ch*0.20, fy=cy0-fhh;
+    g+='<rect x="'+fx.toFixed(1)+'" y="'+fy.toFixed(1)+'" width="'+fw.toFixed(1)+'" height="'+fhh.toFixed(1)+'" rx="2" fill="'+GARMENT[(i+1)%GARMENT.length]+'"/>';
+    g+='<rect x="'+fx.toFixed(1)+'" y="'+fy.toFixed(1)+'" width="'+fw.toFixed(1)+'" height="'+(fhh*0.34).toFixed(1)+'" rx="2" fill="#fff" opacity=".16"/>';
+  }
+
+  /* おくの かべの 柱 */
+  [bx,b2].forEach((x,i)=>{const pw=Math.max(6,bw*0.026);g+='<rect x="'+(x-(i?0:pw)).toFixed(1)+'" y="'+by+'" width="'+pw.toFixed(1)+'" height="'+bh+'" fill="'+C.beam+'"/>';g+='<rect x="'+(x-(i?0:pw)).toFixed(1)+'" y="'+by+'" width="'+(pw*0.34).toFixed(1)+'" height="'+bh+'" fill="#fff" opacity=".14"/>';});
+
+  /* 観葉植物（右手前の ゆか） */
+  const ptx=b2- bw*0.02, pty=by2+ (H-by2)*0.30, pw2=bw*0.11, ph2=bh*0.16;
+  g+='<path d="M'+(ptx-pw2*0.5).toFixed(1)+' '+(pty+ph2).toFixed(1)+' L'+(ptx-pw2*0.4).toFixed(1)+' '+pty.toFixed(1)+' L'+(ptx+pw2*0.4).toFixed(1)+' '+pty.toFixed(1)+' L'+(ptx+pw2*0.5).toFixed(1)+' '+(pty+ph2).toFixed(1)+' Z" fill="'+C.plantP+'"/>';
+  g+='<rect x="'+(ptx-pw2*0.5).toFixed(1)+'" y="'+pty.toFixed(1)+'" width="'+pw2+'" height="'+(ph2*0.16).toFixed(1)+'" fill="#000" opacity=".10"/>';
+  for(let i=-2;i<=2;i++){
+    const ang=i*0.5, lx=ptx+i*pw2*0.28, lh=ph2*(1.7-Math.abs(i)*0.18);
+    g+='<path d="M'+ptx.toFixed(1)+' '+pty.toFixed(1)+' Q'+(lx+ang*8).toFixed(1)+' '+(pty-lh*0.7).toFixed(1)+' '+lx.toFixed(1)+' '+(pty-lh).toFixed(1)+'" stroke="'+(i%2?C.plantLD:C.plantL)+'" stroke-width="'+(pw2*0.28).toFixed(1)+'" fill="none" stroke-linecap="round"/>';
+  }
+
+  /* ★ラグ（手前の ゆか・楕円） */
+  const rgx=W*0.42, rgy=H*0.84, rgw=W*0.34, rgh=H*0.11;
+  g+='<ellipse cx="'+rgx.toFixed(1)+'" cy="'+rgy.toFixed(1)+'" rx="'+rgw.toFixed(1)+'" ry="'+rgh.toFixed(1)+'" fill="'+C.rugD+'"/>';
+  g+='<ellipse cx="'+rgx.toFixed(1)+'" cy="'+(rgy-rgh*0.10).toFixed(1)+'" rx="'+(rgw*0.86).toFixed(1)+'" ry="'+(rgh*0.82).toFixed(1)+'" fill="'+C.rug+'"/>';
+  g+='<ellipse cx="'+rgx.toFixed(1)+'" cy="'+(rgy-rgh*0.14).toFixed(1)+'" rx="'+(rgw*0.55).toFixed(1)+'" ry="'+(rgh*0.5).toFixed(1)+'" fill="none" stroke="'+C.rugL+'" stroke-width="2" opacity=".6"/>';
+
+  /* ペンダントライト（天じょうから 3つ） */
+  [0.26,0.5,0.74].forEach((fx,i)=>{
+    const lx=W*fx, cordTop=(i===1?H*0.02:H*0.03), cordBot=(i===1?by*0.62:by*0.78);
+    g+='<line x1="'+lx.toFixed(1)+'" y1="'+cordTop.toFixed(1)+'" x2="'+lx.toFixed(1)+'" y2="'+cordBot.toFixed(1)+'" stroke="'+C.lampS+'" stroke-width="1.4"/>';
+    const sw=H*0.032;
+    g+='<path d="M'+(lx-sw).toFixed(1)+' '+(cordBot+sw*0.9).toFixed(1)+' Q'+lx.toFixed(1)+' '+(cordBot-sw*0.3).toFixed(1)+' '+(lx+sw).toFixed(1)+' '+(cordBot+sw*0.9).toFixed(1)+' Z" fill="'+C.lampS+'"/>';
+    g+='<ellipse cx="'+lx.toFixed(1)+'" cy="'+(cordBot+sw).toFixed(1)+'" rx="'+(sw*0.5).toFixed(1)+'" ry="'+(sw*0.34).toFixed(1)+'" fill="'+C.lampB+'"/>';
+    g+='<circle cx="'+lx.toFixed(1)+'" cy="'+(cordBot+sw).toFixed(1)+'" r="'+(sw*1.5).toFixed(1)+'" fill="url(#rmLamp)"/>';
   });
+
   /* あかりの ぼんやり＋四すみの かげ */
   g+='<ellipse cx="'+(W/2).toFixed(1)+'" cy="'+(by+bh*0.20).toFixed(1)+'" rx="'+(bw*0.55).toFixed(1)+'" ry="'+(bh*0.42).toFixed(1)+'" fill="url(#rmGlow)"/>';
   g+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="url(#rmVig)"/>';
@@ -23050,10 +23107,11 @@ function _shopRoomSVG(W,H){
     '<linearGradient id="rmWin" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+C.winL+'"/><stop offset="100%" stop-color="'+C.win+'"/></linearGradient>'+
     '<linearGradient id="rmCur" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".22"/><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".20"/></linearGradient>'+
     '<radialGradient id="rmGlow"><stop offset="0%" stop-color="'+C.glow+'" stop-opacity=".38"/><stop offset="100%" stop-color="'+C.glow+'" stop-opacity="0"/></radialGradient>'+
+    '<radialGradient id="rmLamp"><stop offset="0%" stop-color="'+C.lampB+'" stop-opacity=".55"/><stop offset="100%" stop-color="'+C.lampB+'" stop-opacity="0"/></radialGradient>'+
     '<radialGradient id="rmVig" cx="50%" cy="46%" r="72%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2b1f14" stop-opacity=".34"/></radialGradient>'+
     '</defs>';
   return{svg:'<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'" style="width:100%;height:100%;display:block;">'+defs+g+'</svg>',
-         cat:{x:(cx0+cw0*0.30)/W,y:cy0/H,h:bh*0.46}};
+         cat:{x:rgx/W,y:(rgy-rgh*0.2)/H,h:bh*0.40}};
 }
 /* ===== お店の 主の 猫（丘の 猫と まったく 同じ 見た目に）=====
    その人の いちばん 新しい 投稿から 体の色・耳の色・衣装（ガチャ＋かいた服）を もらう。
