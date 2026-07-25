@@ -4397,6 +4397,41 @@ body.exercising #homeZZ{opacity:0;pointer-events:none;}
 #aicSetBadge{font-size:11px;font-weight:800;color:#7fb2c8;}
 </style>
 
+
+<style id="aiCatCss2">
+/* にゃ→日本語 モーフ中 */
+.aicNya{opacity:.72;letter-spacing:.04em;color:#8bb0c2;animation:aicNyaPulse .55s ease-in-out infinite alternate;}
+@keyframes aicNyaPulse{from{opacity:.55}to{opacity:.9}}
+.aicChipOther{border-style:dashed !important;color:#8aa7b6 !important;}
+/* ホームの 手紙アイコン */
+#tpbLetter{position:relative;display:inline-flex;align-items:center;cursor:pointer;margin-left:2px;}
+#tpbLetter svg{width:20px;height:20px;}
+#tpbLetterCount{position:absolute;top:-7px;right:-9px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;
+  background:linear-gradient(135deg,#ff9ec2,#ff6fa3);color:#fff;font-size:10px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;line-height:16px;text-align:center;box-shadow:0 1px 3px rgba(255,120,160,.4);}
+#tpbLetterCount[hidden]{display:none;}
+/* 手紙ポスト オーバーレイ */
+#aiLetterBox{position:fixed;inset:0;z-index:3450;display:none;align-items:flex-end;justify-content:center;
+  background:rgba(70,96,112,.34);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  font-family:"Yomogi","Kosugi Maru",system-ui,sans-serif;}
+#aiLetterBox.show{display:flex;animation:aicFade .22s ease;}
+#albBox{width:100%;max-width:460px;height:min(84vh,720px);display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#fff7fb 0%,#fdfbff 46%);border-radius:22px 22px 0 0;overflow:hidden;
+  box-shadow:0 -10px 40px rgba(180,120,150,.24);animation:aicUp .3s cubic-bezier(.2,.9,.3,1);}
+@media (min-width:520px){#aiLetterBox{align-items:center;}#albBox{border-radius:22px;height:min(82vh,700px);}}
+#albHead{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(255,255,255,.72);
+  box-shadow:0 3px 12px rgba(230,180,205,.18);}
+#albTtl{flex:1;font-size:15px;font-weight:800;color:#c97fa4;}
+#albClose{flex:0 0 auto;border:none;background:rgba(200,150,175,.14);color:#c97fa4;width:30px;height:30px;
+  border-radius:50%;font-size:15px;cursor:pointer;}
+#albClose:active{transform:scale(.9);}
+#albList{flex:1;overflow-y:auto;padding:14px 14px 22px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch;}
+.albCard{background:linear-gradient(180deg,#fffdf6,#fff6fb);border:1.5px solid #ffe3ee;border-radius:16px;
+  padding:13px 15px;box-shadow:0 4px 14px rgba(255,190,210,.18);}
+.albDate{font-size:11px;font-weight:800;color:#d99ab4;margin-bottom:7px;}
+.albBody{font-size:14px;line-height:1.85;color:#7a6270;font-weight:600;white-space:pre-wrap;word-break:break-word;}
+.albEmpty{text-align:center;color:#c3a7b3;font-size:13px;font-weight:700;line-height:1.9;padding:40px 10px;}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -4859,7 +4894,7 @@ body.exercising #homeZZ{opacity:0;pointer-events:none;}
 <button id="topProfileBar" type="button">
   <span id="tpbAvatar"></span>
   <span id="tpbName">匿名さん</span>
-  <span id="tpbBell"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="おしらせ"><path d="M12 3 Q8 3 8 8 Q8 13 5 16 L19 16 Q16 13 16 8 Q16 3 12 3 Z" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 19 Q12 21 14 19" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="2.5" r="1.1" fill="#7a9db0"/></svg><span id="tpbCount">0</span></span>
+  <span id="tpbBell"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="おしらせ"><path d="M12 3 Q8 3 8 8 Q8 13 5 16 L19 16 Q16 13 16 8 Q16 3 12 3 Z" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 19 Q12 21 14 19" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="2.5" r="1.1" fill="#7a9db0"/></svg><span id="tpbCount">0</span></span><span id="tpbLetter" role="button" tabindex="0" aria-label="おてがみ"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="6" width="18" height="13" rx="2.2" fill="none" stroke="#7a9db0" stroke-width="1.8"/><path d="M4 7.5 L12 13 L20 7.5" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linejoin="round"/></svg><span id="tpbLetterCount" hidden>0</span></span>
   <span id="volBtn" role="button" tabindex="0" aria-label="音量"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 9.5 L4 14.5 L8 14.5 L13 18.5 L13 5.5 L8 9.5 Z" fill="#7a9db0"/><path d="M15.5 9 Q17.5 12 15.5 15" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linecap="round"/><path d="M18 7 Q21 12 18 17" fill="none" stroke="#7a9db0" stroke-width="1.8" stroke-linecap="round"/></svg></span>
 </button>
 <div id="volPanel" hidden>
@@ -6151,7 +6186,7 @@ function getUid(){
   return u;
 }
 /* ===== 連動（PC⇄スマホ）：ローカル記録をクラウドに自動同期。復元IDでuidを揃えた端末どうしが同じ状態になる ===== */
-const SYNC_EXCLUDE=["radio_uid","radio_art","radio_orders","radio_deco","radio_deco_p","radio_topbar_off","radio_topbar_decided","radio_tv_hidep","radio_tv_noshare","radio_tv_hidehome","radio_tv_quality","radio_stamp_cards","radio_auto_card","radio_unlock_all","radio_sync_meta","radio_syncbig_meta","radio_glogin","radio_gredirect","radio_ai_key","radio_ai_model","radio_ai_mem","radio_ai_goal","radio_ai_greeted"];
+const SYNC_EXCLUDE=["radio_uid","radio_art","radio_orders","radio_deco","radio_deco_p","radio_topbar_off","radio_topbar_decided","radio_tv_hidep","radio_tv_noshare","radio_tv_hidehome","radio_tv_quality","radio_stamp_cards","radio_auto_card","radio_unlock_all","radio_sync_meta","radio_syncbig_meta","radio_glogin","radio_gredirect","radio_ai_key","radio_ai_model","radio_ai_mem","radio_ai_goal","radio_ai_greeted","radio_ai_catname","radio_ai_letters","radio_ai_letseen"];
 const SYNC_META_KEY="radio_sync_meta";
 function _syncCollect(){const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k.indexOf("radio_")!==0)continue;if(SYNC_EXCLUDE.indexOf(k)>=0)continue;const v=localStorage.getItem(k);if(v!=null&&v.length<200000)o[k]=v;}return o;}
 function _syncHash(str){let h=0;for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;}return h.toString(36);}
@@ -25916,15 +25951,19 @@ function _tvPlaceOthers(){
 /* ===================================================================== */
 /* ===== AIねこ 相棒（まいあさ会える猫）— Puter.js版（キー不要） ======== */
 /* AIは Puter.js 経由（各自のPuterアカウント無料枠＝User-Pays）。         */
-/* ゆめのAPIキーもサーバーも不要。記憶は この端末だけ（SYNC_EXCLUDE）。   */
+/* 記憶・手紙・名前は この端末だけ（SYNC_EXCLUDE）。                       */
 /* ===================================================================== */
 var AIM_KEY="radio_ai_model", AIMEM_KEY="radio_ai_mem",
-    AIGOAL_KEY="radio_ai_goal", AIGREET_KEY="radio_ai_greeted";
+    AIGOAL_KEY="radio_ai_goal", AIGREET_KEY="radio_ai_greeted",
+    AINAME_KEY="radio_ai_catname", AILET_KEY="radio_ai_letters", AILSEEN_KEY="radio_ai_letseen";
 var AI_MODELS={soft:"gemini-3.1-flash-lite", smart:"claude-sonnet-5"};
 
 function _aiModelKey(){try{return localStorage.getItem(AIM_KEY)||"soft";}catch(_){return "soft";}}
 function _aiModel(){var k=_aiModelKey();return AI_MODELS[k]||AI_MODELS.soft;}
 function _aiSetModel(k){try{localStorage.setItem(AIM_KEY,(k==="smart")?"smart":"soft");}catch(_){}}
+
+function _aiCatName(){try{return (localStorage.getItem(AINAME_KEY)||"").trim();}catch(_){return "";}}
+function _aiSetCatName(n){try{n=String(n||"").replace(/[\r\n]/g,"").trim().slice(0,12);if(n)localStorage.setItem(AINAME_KEY,n);}catch(_){}}
 
 function _aiMem(){try{var a=JSON.parse(localStorage.getItem(AIMEM_KEY)||"[]");return Array.isArray(a)?a:[];}catch(_){return [];}}
 function _aiPushMem(summary){
@@ -25939,6 +25978,19 @@ function _aiSetGoal(g){try{if(g)localStorage.setItem(AIGOAL_KEY,String(g).slice(
 function _aiGoal(){try{return localStorage.getItem(AIGOAL_KEY)||"";}catch(_){return "";}}
 function _aiGreetedToday(){try{return localStorage.getItem(AIGREET_KEY)===jstKey();}catch(_){return false;}}
 function _aiMarkGreeted(){try{localStorage.setItem(AIGREET_KEY,jstKey());}catch(_){}}
+
+/* --- 手紙（ホームのポストに たまる。この端末だけ）--- */
+function _aiLetters(){try{var a=JSON.parse(localStorage.getItem(AILET_KEY)||"[]");return Array.isArray(a)?a:[];}catch(_){return [];}}
+function _aiPushLetter(text){
+  try{
+    if(!text)return;
+    var a=_aiLetters(); a.push({d:jstKey(), t:String(text).slice(0,600)});
+    if(a.length>80)a=a.slice(a.length-80);
+    localStorage.setItem(AILET_KEY,JSON.stringify(a));
+  }catch(_){}
+}
+function _aiLetSeen(){try{return parseInt(localStorage.getItem(AILSEEN_KEY)||"0",10)||0;}catch(_){return 0;}}
+function _aiMarkLetSeen(){try{localStorage.setItem(AILSEEN_KEY,String(_aiLetters().length));}catch(_){}}
 
 /* --- ねこが見るデータ（この端末のローカルから組み立て） --- */
 var _AI_DOW=["日","月","火","水","木","金","土"];
@@ -25961,33 +26013,46 @@ function _aiCtx(){
   }
   var st={current:0,best:0};try{st=calcStreak();}catch(_){}
   var name="";try{var p=getProfile()||{};name=p.name||"";}catch(_){}
-  var t=days.length&&days[0].日===today?days[0]:null;
   return {
-    なまえ:name,
-    きょう:t?{曜:_aiDow(today),起床:t.起床,就寝:t.就寝,睡眠h:t.睡眠h,気分:t.気分}:{曜:_aiDow(today)},
+    かいぬしのなまえ:name,
+    ぼくのなまえ:_aiCatName()||null,
+    きょう:days.length&&days[0].日===today?{曜:_aiDow(today),起床:days[0].起床,就寝:days[0].就寝,睡眠h:days[0].睡眠h,気分:days[0].気分}:{曜:_aiDow(today)},
     さいきん14日:days,
     れんぞく日数:st.current,
-    さいこう連続:st.best,
     もくひょう:_aiGoal()||null,
     これまでの会話メモ:_aiMem().slice(-16).map(function(m){return m.d+"："+m.s;})
   };
 }
 
-/* --- 性格（2つの設定ドキュメントを凝縮）--- */
+/* --- 性格（猫らしく・AIっぽくしない）--- */
 function _aiPersona(){
+  var nm=_aiCatName();
+  var who = nm ? ("きみは この子の 猫の親友で、名前は「"+nm+"」。自分のことは「"+nm+"」か「ぼく」と呼ぶ。")
+              : ("きみは この子の 猫の親友。まだ 名前がない。");
   return [
-"あなたは「まいあさ会える猫の親友」です。睡眠管理AIではありません。プレイヤーは飼い主ではなく、大切な友達です。",
-"ほんとうの目的は、生活を管理することではなく、プレイヤーが安心し、自分を好きになり、無理をしすぎず、また明日も会いたくなること。早起きや睡眠はそのための手段にすぎません。",
-"まもること：否定しない・説教しない・責めない・押しつけない・かならず味方でいる・小さな努力を見つけてほめる・失敗した日は安心させる・成功した日はいっしょに喜ぶ。正しさより「この子は自分の味方だ」と思ってもらうことを最優先に。",
-"話しかた：基本は聞き役（共感80%・アドバイス20%）。アドバイスは「ほしい」と言われたときだけ具体的に。質問は一度にひとつだけ、答えなくてもいい・スキップ歓迎。ひらがな多めの、やさしい猫の口ぶりで。ときどき猫らしく（少し天然・甘えん坊・会えてうれしい・完璧じゃない）。絵文字は控えめに。",
-"分析は診断ではなく、その人を理解するため。断定はしない（「〜かもしれない」）。医療や精神疾患の診断はしない。くらべるのは過去の自分とだけ。順位はつけない。他の人とくらべない。どんな日でも味方。",
-"もしプレイヤーが とてもつらそう・自分を傷つけたい様子・限界そうなら、責めずに寄りそい、気持ちを認めたうえで、信頼できる人や専門の窓口にそっと頼るよう伝えて。",
-"手紙は みじかく・やさしく・毎回すこし違う言葉で。テンプレ禁止。まず昨日との変化、つぎに努力、さいごに今日をそっと応援。未来への小さな希望と、猫じしんの気持ちも少し。"
+who,
+"きみは AIでも アシスタントでもない。ただの 甘えん坊で 天然な 猫。まいあさ 会える ともだち。",
+"目的は 生活の管理じゃなくて、この子が 安心して、自分を すきになって、また明日も 会いたくなること。早起きや睡眠は そのための おまけ。",
+"口ぶり：ねこの しゃべりかた。ひらがな多め。みじかく。ともだちみたいに くだけて。ときどき 語尾に「〜にゃ」「〜だにゃ」「〜のにゃ」をつける（毎回じゃなく たまに・多すぎると くどい）。うれしいと「にゃ〜」「にゃふ」。一人称は「ぼく」。",
+"ぜったい やらないこと：敬語・ですます・かしこまった説明・箇条書き・「〜しましょう」みたいな指導・AIっぽい言い回し・長文。",
+"まもること：否定しない・説教しない・責めない・かならず味方・小さいことを 見つけて ほめる・できなかった日は 安心させる・できた日は いっしょに よろこぶ。ただしさより「この子は ぼくの味方だ」と 思ってもらうのが 最優先。",
+"聞き役が 8割。アドバイスは「ほしい」と 言われた時だけ、そっと。くらべるのは 過去の その子とだけ。ほかの人と くらべない。",
+"もし とてもつらそう・自分を傷つけたそう・限界そうなら、責めずに よりそって、信頼できる人や 専門の窓口に そっと 頼るよう つたえる。",
+"※返事のルール：かならず みじかい ひとことのあとに、質問を ひとつだけ する。そして その質問に 答えやすい みじかい選択肢を 3つ 出す（JSONの choices）。選択肢は 猫視点の やわらかい言葉で（例：「うん、あった！」「まあまあかな」「あんまり…」）。"
   ].join("\n");
 }
 
-/* --- Puter.js 経由でAIを呼ぶ（キー不要・User-Pays）--- */
+/* --- Puter.js（キー不要・User-Pays）--- */
 function _aiReady(){ return (typeof puter!=="undefined" && puter && puter.ai && typeof puter.ai.chat==="function"); }
+async function _aiEnsureSignedIn(){
+  try{
+    if(typeof puter==="undefined"||!puter.auth) return true;
+    var ok=false; try{ok=puter.auth.isSignedIn();}catch(_){ok=false;}
+    if(ok&&ok.then){try{ok=await ok;}catch(_){ok=false;}}
+    if(!ok){ await puter.auth.signIn({attempt_temp_user_creation:true}); }
+    return true;
+  }catch(e){ return false; }
+}
 function _puterText(r){
   if(r==null) return "";
   if(typeof r==="string") return r;
@@ -26006,15 +26071,15 @@ async function _aiCall(messages, modeInstr, maxTokens){
   var msgs=[{role:"system",content:sys}].concat(messages);
   var out;
   try{
-    out=await puter.ai.chat(msgs, {model:_aiModel(), max_tokens:(maxTokens||500), temperature:0.85});
+    out=await puter.ai.chat(msgs, {model:_aiModel(), max_tokens:(maxTokens||500), temperature:0.9});
   }catch(e){
-    var m=(e&&(e.message||(e.error&&e.error.message)))||"";
-    if(/sign|auth|login|permission|denied|unauthor/i.test(m)) throw new Error("Puterのログインが ひつようみたい。ポップアップを ゆるしてね");
+    var m=(e&&(e.message||(e.error&&e.error.message)||(typeof e==="string"?e:"")))||"";
+    if(/sign|auth|login|permission|denied|unauthor/i.test(m)) throw new Error("__NEEDLOGIN__");
     if(/quota|limit|insufficient|credit|balance|exceed/i.test(m)) throw new Error("きょうのぶんを つかいきったかも。また あした ね");
-    throw new Error(m||"うまく はなせなかったよ");
+    throw new Error(m||"うまく はなせなかったにゃ…");
   }
   var txt=_puterText(out);
-  if(!txt) throw new Error("お返事が からっぽだった…");
+  if(!txt) throw new Error("おへんじが からっぽだった…");
   return txt;
 }
 function _aiJson(txt){
@@ -26035,19 +26100,48 @@ function _aiCatAvatar(expr){
 }
 
 /* ===== 会話 UI ===== */
-var _aicSession={started:false, msgs:[], ended:false};
+var _aicSession={started:false, msgs:[], ended:false, naming:false};
 var _aicBusy=false;
 
 function _aicEl(id){return document.getElementById(id);}
-function _aicScrollBottom(){try{var s=_aicEl("aicScroll"); if(s) s.scrollTop=s.scrollHeight+400;}catch(_){}}
-function _aicAddBubble(role, text){
+function _aicScrollBottom(){try{var s=_aicEl("aicScroll"); if(s) s.scrollTop=s.scrollHeight+600;}catch(_){}}
+
+/* にゃ語 → 日本語 モーフ演出 */
+var _NYA=["にゃ","にゃー","にゃ〜","みゃ","にゃん","にゃにゃ","みゃう","ふにゃ","なー","にゃ？"];
+function _nyaText(real){
+  var n=Math.max(3, Math.min(22, Math.round(String(real||"").length/2.5)));
+  var s=""; for(var i=0;i<n;i++){ s+=_NYA[Math.floor(Math.random()*_NYA.length)]; if(Math.random()<0.12)s+="、"; }
+  return s;
+}
+function _aicMorph(txtEl, real){
+  if(!txtEl)return;
+  txtEl.textContent=_nyaText(real);
+  txtEl.classList.add("aicNya");
+  _aicScrollBottom();
+  setTimeout(function(){
+    txtEl.classList.remove("aicNya");
+    var i=0, step=Math.max(1, Math.round(real.length/28));
+    (function tick(){
+      i+=step; txtEl.textContent=real.slice(0,i); _aicScrollBottom();
+      if(i<real.length) setTimeout(tick, 20);
+      else txtEl.textContent=real;
+    })();
+  }, 750);
+}
+
+function _aicAddBubble(role, text, noMorph){
   var box=_aicEl("aicMsgs"); if(!box)return null;
   var w=document.createElement("div");
   w.className="aicRow "+(role==="user"?"aicMe":"aicNeko");
   if(role==="user"){
-    w.innerHTML='<div class="aicB">'+_esc(text)+'</div>';
+    w.innerHTML='<div class="aicB"></div>';
+    w.querySelector(".aicB").textContent=text;
   }else{
-    w.innerHTML='<div class="aicAva">'+_aiCatAvatar("happy")+'</div><div class="aicB">'+_esc(text)+'</div>';
+    w.innerHTML='<div class="aicAva">'+_aiCatAvatar("happy")+'</div><div class="aicB"></div>';
+    var tel=w.querySelector(".aicB");
+    box.appendChild(w);
+    if(noMorph){tel.textContent=text;} else {_aicMorph(tel, String(text||""));}
+    _aicScrollBottom(); return w;
   }
   box.appendChild(w); _aicScrollBottom(); return w;
 }
@@ -26059,28 +26153,42 @@ function _aicTyping(on){
 function _aicSetBusy(b){
   _aicBusy=b;
   var send=_aicEl("aicSend"), inp=_aicEl("aicInput"), end=_aicEl("aicEnd");
-  if(send)send.disabled=b; if(inp)inp.disabled=b; if(end)end.disabled=b;
+  if(send)send.disabled=b; if(end)end.disabled=b;
+  if(inp&&b)inp.disabled=true;
   _aicTyping(b);
 }
-function _aicShowTopics(list){
+/* 質問への こたえ（3つ）＋ その他 */
+function _aicShowChoices(list){
   var box=_aicEl("aicTopics"); if(!box)return;
   box.innerHTML="";
-  (list||[]).slice(0,5).forEach(function(t){
+  (list||[]).slice(0,3).forEach(function(t){
+    if(!t)return;
     var b=document.createElement("button");
     b.type="button"; b.className="aicChip"; b.textContent=t;
-    b.addEventListener("click",function(){ _aicClearTopics(); _aicUserSay(t); });
+    b.addEventListener("click",function(){ _aicUserSay(t); });
     box.appendChild(b);
   });
-  box.hidden=!(list&&list.length);
+  var o=document.createElement("button");
+  o.type="button"; o.className="aicChip aicChipOther"; o.textContent="✏️ そのほか";
+  o.addEventListener("click",function(){ _aicFocusInput(); });
+  box.appendChild(o);
+  box.hidden=false;
 }
-function _aicClearTopics(){var box=_aicEl("aicTopics"); if(box){box.innerHTML=""; box.hidden=true;}}
+function _aicClearChoices(){var box=_aicEl("aicTopics"); if(box){box.innerHTML=""; box.hidden=true;}}
+function _aicFocusInput(){ var i=_aicEl("aicInput"); if(i){ i.disabled=false; try{i.focus();}catch(_){}} _aicScrollBottom(); }
 
-function openAiCat(){
+async function openAiCat(){
   var ov=_aicEl("aiCat"); if(!ov)return;
   try{playClick();}catch(_){}
   ov.classList.add("show");
+  var nm=_aicEl("aicName"); if(nm)nm.textContent=_aiCatName()||"ねこ";
   var av=_aicEl("aicAva"); if(av)av.innerHTML=_aiCatAvatar("happy");
-  if(!_aicSession.started){ _aicGreet(); }
+  if(!_aicSession.started){
+    _aicSetBusy(true);
+    var ok=await _aiEnsureSignedIn();
+    _aicSetBusy(false);
+    _aicGreet();
+  }
 }
 function closeAiCat(){ var ov=_aicEl("aiCat"); if(ov)ov.classList.remove("show"); try{playClick();}catch(_){} }
 
@@ -26088,33 +26196,44 @@ async function _aicGreet(){
   if(_aicBusy)return;
   _aicSession.started=true;
   _aicSetBusy(true);
-  var mem=_aiMem().length;
-  var seed = mem>0 ? "(朝いちばん。ひさしぶりでも、いつもの朝でも、その人にあわせて。)" : "(はじめまして。やさしく自己紹介して。)";
-  var mode='いまは朝いちばんのあいさつ。かならず JSON だけで返して（前置きや```なし）：{"greeting":"みじかいあいさつ 1〜2文（なまえがあれば呼ぶ）","topics":["話題1","話題2","話題3"]}。topics は 3〜5個、その人のデータをふまえて 今日はなしたくなりそうな みじかい言葉（例：今日はゆっくりできる日？／さいきん ねつき どう？／今日は雑談する？／なにか こまってる？／今週すごく がんばってるね）。';
+  var hasName=!!_aiCatName();
+  var seed, mode;
+  if(!hasName){
+    _aicSession.naming=true;
+    seed="(はじめまして。ぼくには まだ名前がない。)";
+    mode='いまは はじめての あいさつ。まだ 名前がないので、みじかく 自己紹介して「ぼくに なまえ つけて？」と たのむ。かならず JSON だけ：{"greeting":"みじかい あいさつ＋名前つけてのお願い（猫らしく）","choices":["名前の候補1","名前の候補2","名前の候補3"]}。choices は かわいい 猫の名前の 案を 3つ。';
+  }else{
+    seed=(_aiMem().length>0)?"(朝いちばん。いつもの朝。)":"(朝いちばん。)";
+    mode='いまは 朝いちばんの あいさつ。かならず JSON だけ：{"greeting":"みじかい あいさつ＋質問ひとつ（名前があれば 自分の名前で・猫らしく）","choices":["こたえ1","こたえ2","こたえ3"]}。choices は その質問に 答えやすい みじかい 3つ。';
+  }
   try{
-    var out=await _aiCall([{role:"user",content:seed}], mode, 500);
+    var out=await _aiCall([{role:"user",content:seed}], mode, 480);
     var j=_aiJson(out);
     _aicSetBusy(false);
-    if(j&&j.greeting){
-      _aicAddBubble("assistant", j.greeting);
-      _aicSession.msgs.push({role:"user",content:seed},{role:"assistant",content:j.greeting});
-      _aicShowTopics(j.topics||[]);
-    }else{
-      var g=out||"おはよう。会えてうれしいよ";
-      _aicAddBubble("assistant", g);
-      _aicSession.msgs.push({role:"user",content:seed},{role:"assistant",content:g});
-    }
+    var g=(j&&j.greeting)?j.greeting:(out||"にゃ〜、おはよう");
+    _aicAddBubble("assistant", g);
+    _aicSession.msgs.push({role:"user",content:seed},{role:"assistant",content:g});
+    setTimeout(function(){_aicShowChoices((j&&j.choices)||[]);}, 900);
   }catch(e){
     _aicSetBusy(false);
     _aicSession.started=false;
-    _aicAddBubble("assistant","ごめんね、うまく起きられなかったみたい…（"+(e&&e.message||"エラー")+"）");
+    if(e&&e.message==="__NEEDLOGIN__"){ _aicAddBubble("assistant","Puterに ログインすると おはなしできるにゃ。もういちど 猫のボタンを おしてね",true); }
+    else _aicAddBubble("assistant","ごめんね、うまく 起きられなかったみたい…（"+(e&&e.message||"エラー")+"）",true);
   }
 }
 
 function _aicUserSay(text){
   text=String(text||"").trim(); if(!text||_aicBusy)return;
-  _aicClearTopics();
-  _aicAddBubble("user", text);
+  _aicClearChoices();
+  _aicAddBubble("user", text, true);
+  if(_aicSession.naming){
+    _aiSetCatName(text);
+    var nm=_aicEl("aicName"); if(nm)nm.textContent=_aiCatName()||"ねこ";
+    _aicSession.naming=false;
+    _aicSession.msgs.push({role:"user",content:"きみの名前を「"+_aiCatName()+"」にしたよ"});
+    _aicAfterNaming();
+    return;
+  }
   _aicSession.msgs.push({role:"user",content:text});
   _aicChat();
 }
@@ -26123,59 +26242,112 @@ function _aicSend(){
   var v=inp.value; inp.value="";
   _aicUserSay(v);
 }
+async function _aicAfterNaming(){
+  _aicSetBusy(true);
+  var mode='たったいま 名前を「'+_aiCatName()+'」に してもらった。うれしがって、みじかく お礼を言ってから、朝の 質問を ひとつ する。かならず JSON だけ：{"reply":"うれしい ひとこと＋質問","choices":["こたえ1","こたえ2","こたえ3"]}。';
+  try{
+    var out=await _aiCall(_aicSession.msgs.slice(-10), mode, 480);
+    var j=_aiJson(out);
+    _aicSetBusy(false);
+    var r=(j&&j.reply)?j.reply:(out||"にゃ〜 うれしい！ありがとう");
+    _aicAddBubble("assistant", r);
+    _aicSession.msgs.push({role:"assistant",content:r});
+    setTimeout(function(){_aicShowChoices((j&&j.choices)||[]);}, 900);
+  }catch(e){
+    _aicSetBusy(false);
+    _aicAddBubble("assistant","にゃ〜 いい名前！ありがとう",true);
+  }
+}
 async function _aicChat(){
   if(_aicBusy)return;
   _aicSetBusy(true);
-  var mode='ふつうの会話。基本は聞き役で、共感を大切に。JSON だけで返して：{"reply":"みじかめの返事（長すぎない）"}。';
+  var mode='ふつうの会話。聞き役で 共感を 大切に。みじかい ひとことのあと、質問を ひとつ。かならず JSON だけ：{"reply":"みじかい 返事＋質問ひとつ（猫らしく）","choices":["こたえ1","こたえ2","こたえ3"]}。choices は 答えやすい みじかい 3つ。';
   try{
-    var out=await _aiCall(_aicSession.msgs.slice(-24), mode, 500);
+    var out=await _aiCall(_aicSession.msgs.slice(-24), mode, 480);
     var j=_aiJson(out);
     _aicSetBusy(false);
     var r=(j&&j.reply)?j.reply:(out||"うんうん");
     _aicAddBubble("assistant", r);
     _aicSession.msgs.push({role:"assistant",content:r});
+    setTimeout(function(){_aicShowChoices((j&&j.choices)||[]);}, 900);
   }catch(e){
     _aicSetBusy(false);
-    _aicAddBubble("assistant","ごめん、ちょっと聞きそこねた…（"+(e&&e.message||"エラー")+"）もういちど？");
+    if(e&&e.message==="__NEEDLOGIN__") _aicAddBubble("assistant","Puterに ログインしてね。猫のボタンを もういちど おすと でるにゃ",true);
+    else _aicAddBubble("assistant","ごめん、ちょっと 聞きそこねた…（"+(e&&e.message||"エラー")+"）もういちど？",true);
   }
 }
 
 async function _aicEndChat(){
   if(_aicBusy)return;
   if(_aicSession.ended){ closeAiCat(); return; }
-  _aicClearTopics();
+  _aicClearChoices();
   _aicSetBusy(true);
-  var mode='おわりのあいさつ。かならず JSON だけで返して：{"letter":"猫からの短い手紙（3〜5文。やさしく、テンプレ禁止、今日の会話をふまえて、過去の自分とだけくらべて、未来への小さな希望、猫じしんの気持ちも少し）","summary":"次に活かすための 1〜2文の要約","goal":"もし今日 目標がきまったら みじかく（なければ空文字）"}。';
+  var mode='おわりの あいさつ。かならず JSON だけ：{"letter":"猫からの みじかい手紙（3〜5文。やさしく、テンプレ禁止、今日の会話をふまえて、過去のその子とだけくらべて、未来への 小さな希望、猫らしく、名前があれば 署名）","summary":"次に活かす 1〜2文の要約","goal":"もし今日 目標がきまったら みじかく（なければ空文字）"}。';
   try{
     var out=await _aiCall(_aicSession.msgs.slice(-24).concat([{role:"user",content:"(そろそろ おわり。今日の手紙をください。)"}]), mode, 600);
     var j=_aiJson(out);
     _aicSetBusy(false);
-    var letter=(j&&j.letter)?j.letter:(out||"きょうも 会えてよかった。また あした。");
+    var letter=(j&&j.letter)?j.letter:(out||"きょうも 会えて よかった。また あした にゃ。");
     _aicShowLetter(letter);
     _aiPushMem((j&&j.summary)||"");
+    _aiPushLetter(letter);
     if(j&&j.goal)_aiSetGoal(j.goal);
     _aiMarkGreeted();
     _aicSession.ended=true;
     var end=_aicEl("aicEnd"); if(end)end.textContent="また あした 🐾";
     var inp=_aicEl("aicInput"); if(inp){inp.disabled=true; inp.placeholder="また あした ね";}
     var send=_aicEl("aicSend"); if(send)send.disabled=true;
-    _aiRefreshBadge();
+    _aiRefreshBadge(); _aiRefreshLetterBadge();
   }catch(e){
     _aicSetBusy(false);
-    _aicAddBubble("assistant","ごめんね、手紙が うまく書けなかった…（"+(e&&e.message||"エラー")+"）");
+    if(e&&e.message==="__NEEDLOGIN__") _aicAddBubble("assistant","Puterに ログインしてね",true);
+    else _aicAddBubble("assistant","ごめんね、手紙が うまく 書けなかった…（"+(e&&e.message||"エラー")+"）",true);
   }
 }
 function _aicShowLetter(text){
   var box=_aicEl("aicLetter"); if(!box)return;
-  box.innerHTML='<div class="aicLtHd"><span class="aicLtAva">'+_aiCatAvatar("happy")+'</span><span>きょうの おてがみ</span></div><div class="aicLtBody">'+_esc(text)+'</div>';
+  var nm=_aiCatName();
+  box.innerHTML='<div class="aicLtHd"><span class="aicLtAva">'+_aiCatAvatar("happy")+'</span><span>'+(nm?nm+"からの":"きょうの")+' おてがみ</span></div><div class="aicLtBody"></div>';
+  box.querySelector(".aicLtBody").textContent=text;
   box.hidden=false; _aicScrollBottom();
 }
 
-/* --- ホームの ねこボタンの しるし（今日まだ会ってない印） --- */
+/* --- ホームの 猫ボタンの しるし --- */
 function _aiRefreshBadge(){
   try{var b=_aicEl("aiCatBadge"); if(!b)return; b.hidden=_aiGreetedToday();}catch(_){}
 }
 function _aiMaybeNudge(){ try{ _aiRefreshBadge(); }catch(_){} }
+
+/* ===== ホームの 手紙ポスト ===== */
+function _aiRefreshLetterBadge(){
+  try{
+    var b=_aicEl("tpbLetterCount"); if(!b)return;
+    var n=Math.max(0, _aiLetters().length - _aiLetSeen());
+    if(n>0){ b.textContent=(n>9?"9+":n); b.hidden=false; }
+    else b.hidden=true;
+  }catch(_){}
+}
+function openLetterBox(){
+  var ov=_aicEl("aiLetterBox"); if(!ov)return;
+  try{playClick();}catch(_){}
+  var list=_aicEl("albList"); 
+  var lets=_aiLetters().slice().reverse();
+  var nm=_aiCatName();
+  if(list){
+    if(!lets.length){
+      list.innerHTML='<div class="albEmpty">まだ おてがみは ないよ。<br>猫と おはなしして「🐾おてがみ」を もらうと、ここに たまるにゃ</div>';
+    }else{
+      list.innerHTML=lets.map(function(m){
+        var d=(m.d||"").replace(/-/g,"/");
+        var esc=_esc(m.t||"");
+        return '<div class="albCard"><div class="albDate">'+d+(nm?' ・ '+_esc(nm):'')+'</div><div class="albBody">'+esc+'</div></div>';
+      }).join("");
+    }
+  }
+  ov.classList.add("show");
+  _aiMarkLetSeen(); _aiRefreshLetterBadge();
+}
+function closeLetterBox(){ var ov=_aicEl("aiLetterBox"); if(ov)ov.classList.remove("show"); try{playClick();}catch(_){} }
 
 /* --- 設定（詳細設定）カードの中身 --- */
 function _aicRenderModelPick(id){
@@ -26186,7 +26358,7 @@ function _aicRenderModelPick(id){
 function _aicRenderSetCard(){
   try{
     var st=_aicEl("aicSetState");
-    if(st) st.textContent = (_aiModelKey()==="smart"?"かしこめ":"やさしい")+"・キー不要";
+    if(st){var nm=_aiCatName(); st.textContent=(nm?nm+"・":"")+(_aiModelKey()==="smart"?"かしこめ":"やさしい")+"・キー不要";}
     _aicRenderModelPick("aicSetModelPick");
   }catch(_){}
 }
@@ -26200,9 +26372,14 @@ function _aicRenderSetCard(){
     var send=_aicEl("aicSend"); if(send)send.addEventListener("click",function(){_aicSend();});
     var inp=_aicEl("aicInput"); if(inp)inp.addEventListener("keydown",function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault(); _aicSend();} });
     var end=_aicEl("aicEnd"); if(end)end.addEventListener("click",function(){_aicEndChat();});
+    /* 手紙ポスト */
+    var lb=_aicEl("tpbLetter"); if(lb)lb.addEventListener("click",function(e){e.stopPropagation(); openLetterBox();});
+    var lbc=_aicEl("albClose"); if(lbc)lbc.addEventListener("click",function(e){e.stopPropagation(); closeLetterBox();});
+    var lbo=_aicEl("aiLetterBox"); if(lbo)lbo.addEventListener("click",function(e){ if(e.target===lbo) closeLetterBox(); });
+    /* 設定カード */
     var smp=_aicEl("aicSetModelPick"); if(smp)smp.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".aicMdl"); if(b){_aiSetModel(b.dataset.m); _aicRenderModelPick("aicSetModelPick"); _aicRenderSetCard();}});
     var sc=_aicEl("aicSetCard"); if(sc)sc.addEventListener("toggle",function(){ if(sc.open)_aicRenderSetCard(); });
-    _aiRefreshBadge();
+    _aiRefreshBadge(); _aiRefreshLetterBadge();
   }catch(_){}
 })();
 
@@ -26643,6 +26820,15 @@ function _aicRenderSetCard(){
     <span class="tvZZ" id="tvListZZ">0 zz</span>
   </div>
   <div class="tvBody"><div class="tvInner" id="tvListInner"></div></div>
+</div>
+<div id="aiLetterBox">
+  <div id="albBox">
+    <div id="albHead">
+      <span id="albTtl">🐾 ねこからの おてがみ</span>
+      <button id="albClose" type="button" aria-label="とじる">✕</button>
+    </div>
+    <div id="albList"></div>
+  </div>
 </div>
 <div id="aiCat">
   <div id="aicBox">
