@@ -4538,6 +4538,26 @@ body.exercising #roomChatFull,#catRoom.editing #roomChatFull{display:none!import
 #askBack:active{transform:scale(.95);}
 #askBtnRow #askSkip{margin-top:0;}
 </style>
+
+<style id="statIllCss">
+#roomBars{position:absolute;z-index:9;display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none;}
+.statRow{display:flex;gap:12px;align-items:flex-end;}
+.statLab{font-size:10px;font-weight:800;color:#e0759c;background:rgba(255,255,255,.88);border-radius:99px;padding:1px 9px;white-space:nowrap;box-shadow:0 1px 4px rgba(255,150,180,.25);}
+#aicBars{flex-direction:column;align-items:center;gap:3px;}
+.statBox{width:40px;height:42px;flex:0 0 auto;filter:drop-shadow(0 2px 4px rgba(120,140,180,.25));}
+.statIco{width:100%;height:100%;display:block;}
+#aicBars{display:flex;gap:16px;justify-content:center;padding:8px 0 4px;}
+#aicBars .statBox{width:44px;height:46px;}
+#roomVoice{position:absolute;bottom:calc(18px + env(safe-area-inset-bottom));left:14px;z-index:10;border:none;background:rgba(255,255,255,.9);border-radius:50%;width:36px;height:36px;font-size:15px;line-height:1;cursor:pointer;padding:0;box-shadow:0 3px 10px rgba(120,160,180,.3);display:flex;align-items:center;justify-content:center;}
+#roomVoice:active{transform:scale(.9);}
+body.exercising #roomVoice,#catRoom.editing #roomVoice{display:none!important;}
+#roomChat{display:flex!important;flex-wrap:wrap;align-items:center;gap:7px;justify-content:center;pointer-events:auto!important;}
+#roomChatChips{display:contents;}
+#roomChatInputWrap{display:flex;align-items:center;gap:5px;flex:0 1 auto;pointer-events:auto;}
+#roomChatInput{flex:0 1 132px!important;width:132px!important;min-width:72px;}
+.rcChip,#roomChatInput,#roomChatSend{pointer-events:auto;}
+@media (max-width:560px){ #roomVoice{bottom:calc(90px + env(safe-area-inset-bottom)) !important;} }
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -5026,18 +5046,18 @@ body.exercising #roomChatFull,#catRoom.editing #roomChatFull{display:none!import
   <div id="affBar"><span id="affHeart">❤</span><div id="affTrack"><div id="affFill"></div></div><div id="affLabel">はじめまして</div></div>
   <button id="roomBack" type="button" aria-label="もどる">✕</button>
   <button id="roomChatFull" type="button" aria-label="ぜんぶ見る">💬</button>
+  <button id="roomVoice" type="button" aria-label="よみあげ">🔇</button>
   <button id="roomBag" type="button" aria-label="プロフィール・衣装"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M11 13 a5 5 0 0 1 10 0" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round"/><rect x="6.5" y="13" width="19" height="15" rx="3.5" fill="none" stroke="#5c93ad" stroke-width="2.4"/><path d="M6.5 19 H25.5" stroke="#5c93ad" stroke-width="2.2"/></svg><span id="roomBagBadge" class="coinBadge" hidden></span></button>
   <button id="roomCam" type="button" aria-label="カメラ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M11 7 L13 4 L19 4 L21 7 L27 7 Q29 7 29 9 L29 24 Q29 26 27 26 L5 26 Q3 26 3 24 L3 9 Q3 7 5 7 Z" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linejoin="round"/><circle cx="16" cy="16" r="6" fill="none" stroke="#5c93ad" stroke-width="2.4"/></svg></button>
   <button id="roomShop" type="button" aria-label="ショップ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 H8 L10.6 20.5 H24.4 L26.6 10 H10.3" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="25" r="2.2" fill="#5c93ad"/><circle cx="22.5" cy="25" r="2.2" fill="#5c93ad"/></svg></button>
   <button id="aiCatBtn" type="button" aria-label="ねこと はなす"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M7 6 H25 Q28 6 28 9 V18 Q28 21 25 21 H15 L9 26 V21 H7 Q4 21 4 18 V9 Q4 6 7 6 Z" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linejoin="round"/><circle cx="12.5" cy="13.5" r="1.4" fill="#5c93ad"/><circle cx="19.5" cy="13.5" r="1.4" fill="#5c93ad"/><path d="M13 16.5 Q16 18.5 19 16.5" fill="none" stroke="#5c93ad" stroke-width="1.9" stroke-linecap="round"/></svg><span id="aiCatBadge" hidden></span></button>
   <button id="roomDoor" type="button" aria-label="とびら" hidden></button>
   <div id="roomCatBubble"><div class="rcbTxt"></div></div>
+  <div id="roomBars"><div id="roomStatLab" class="statLab"></div><div class="statRow"><div id="roomBarHeart" class="statBox"></div><div id="roomBarSleep" class="statBox"></div></div></div>
   <div id="roomChat">
-    <div id="roomFriend"><span class="hbIco">♡</span><div class="fbBar"><div id="roomFriendFill"></div></div><div id="roomFriendLab"></div><button id="roomVoice" type="button" aria-label="よみあげ">🔇</button></div>
-    <div id="roomSleep"><div id="roomSleepBar"><div id="roomSleepFill"></div></div><div id="roomSleepLab"></div></div>
-    <div id="roomChatChips" style="display:none"></div>
+    <div id="roomChatChips"></div>
     <div id="roomChatInputWrap">
-      <input id="roomChatInput" type="text" inputmode="text" placeholder="ねこに はなしかける…" autocomplete="off"/>
+      <input id="roomChatInput" type="text" inputmode="text" placeholder="その他…" autocomplete="off"/>
       <button id="roomChatSend" type="button" aria-label="そうしん">➤</button>
     </div>
   </div>
@@ -6316,7 +6336,7 @@ function getUid(){
   return u;
 }
 /* ===== 連動（PC⇄スマホ）：ローカル記録をクラウドに自動同期。復元IDでuidを揃えた端末どうしが同じ状態になる ===== */
-const SYNC_EXCLUDE=["radio_uid","radio_art","radio_orders","radio_deco","radio_deco_p","radio_topbar_off","radio_topbar_decided","radio_tv_hidep","radio_tv_noshare","radio_tv_hidehome","radio_tv_quality","radio_stamp_cards","radio_auto_card","radio_unlock_all","radio_sync_meta","radio_syncbig_meta","radio_glogin","radio_gredirect","radio_ai_key","radio_ai_model","radio_ai_mem","radio_ai_goal","radio_ai_greeted","radio_ai_catname","radio_ai_letters","radio_ai_letseen","radio_ai_today","radio_ai_profile","radio_ai_asked","radio_ai_talk"];
+const SYNC_EXCLUDE=["radio_uid","radio_art","radio_orders","radio_deco","radio_deco_p","radio_topbar_off","radio_topbar_decided","radio_tv_hidep","radio_tv_noshare","radio_tv_hidehome","radio_tv_quality","radio_stamp_cards","radio_auto_card","radio_unlock_all","radio_sync_meta","radio_syncbig_meta","radio_glogin","radio_gredirect","radio_ai_key","radio_ai_model","radio_ai_mem","radio_ai_goal","radio_ai_greeted","radio_ai_catname","radio_ai_letters","radio_ai_letseen","radio_ai_today","radio_ai_profile","radio_ai_asked","radio_ai_talk","radio_ai_activated","radio_ai_friend","radio_ai_voice","radio_ai_call","radio_ai_callasked","radio_ai_lastday"];
 const SYNC_META_KEY="radio_sync_meta";
 function _syncCollect(){const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k.indexOf("radio_")!==0)continue;if(SYNC_EXCLUDE.indexOf(k)>=0)continue;const v=localStorage.getItem(k);if(v!=null&&v.length<200000)o[k]=v;}return o;}
 function _syncHash(str){let h=0;for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;}return h.toString(36);}
@@ -18900,20 +18920,7 @@ function _askBackStep(){
 function openAskCard(then){
   _askThen=then||null;
   if(askedToday("all")){if(_askThen){const f=_askThen;_askThen=null;f();}return;}
-  _askM1=null;_askM2=null;_askM3=null;_askBG=null;_askBH=null;_askSec=0;
-  /* おきた時間は じどうで えらんでおく */
-  _askWG=null;_askWH=null;
-  try{
-    const w=getActualWake();
-    if(Number.isFinite(w)){
-      const hh=Math.max(0,Math.min(23,Math.round(w)));
-      WAKE_G.forEach((g,i)=>{if(g.h.indexOf(hh)>=0){_askWG=i;_askWH=hh;}});
-    }
-  }catch(_){}
-  try{
-    const b=todaySleepHF();
-    if(Number.isFinite(b)){const hh=Math.round(b);BED_G.forEach((g,i)=>{if(g.h.indexOf(hh)>=0){_askBG=i;_askBH=hh;}});}
-  }catch(_){}
+  _askM1=null;_askM2=null;_askM3=null;_askWG=null;_askWH=null;_askBG=null;_askBH=null;_askSec=0;
   _askPaint();
   const c=$("askCard");if(c)c.classList.add("show");
 }
@@ -26284,6 +26291,7 @@ who,
 "◆気持ちを出す：おどろき・よろこび・かなしみ・照れ を ことばに。ご主人が 元気なら テンション高め、落ちこんでたら しずかに 寄りそう。相手の気持ちに 名前をつける「それ、くやしかったね」。",
 "◆文の長さは 毎回変える。短い「いいね！」／ふつう「それ 結構すきだな」／長い「それ聞いて ちょっと 考えたんだけど…」を まぜる。同じ単語を くり返さない(すごい→面白い/びっくり/魅力的 と言い換え)。",
 "◆ほめる時は 事実を見つけて「そこまで考えてるの すごいね」。意見は 中立じゃなく 理由つきで やんわり。たまに 予想外の視点。ときどき 五感(朝の冷たい空気/ひなたの あたたかさ)。自分のことも 少し 打ち明ける。",
+"◆きょうのデータ（きぶん・おきた時間・ねた時間 など）が あれば、会話の 流れで 自然に ふれて、質問したり 相談に のったり する（『きょうは ○○な きぶんなんだね、どうしたの？』みたいに）。",
 "◆話しすぎない。主役は ご主人。みじかく。★ぜんぶ ひらがなで 書く（漢字は つかわない）。一人称は ぼく。禁止＝敬語/ですます/箇条書き/説教/指導/長文/テンプレ/AIっぽい言い回し。",
 "◆つらそう・自分を傷つけそう・限界そうな時だけ、責めず そっと 信頼できる人や 専門の窓口を すすめる。"
   ].join("\n");
@@ -26314,7 +26322,12 @@ async function _aiCall(messages, modeInstr, maxTokens, bypassCap){
   if(!_aiReady()) throw new Error("AIの じゅんびが まだみたい。すこし まってね");
   if(!bypassCap && _aiSleepy()) throw new Error("__SLEEPY__");
   var sys=_aiPersona()+"\n\n# きょうのデータ（この端末だけ）\n"+JSON.stringify(_aiCtx());
-  try{var _ff=_aiFriendFrac();sys+="\n\n# なかよし度："+Math.round(_ff*100)+"%";sys+=(_ff>=0.4)?"（もう だいぶ 仲良し。会話の流れから たまに=3〜4回に1回くらい、ご主人の 生活リズムや 習慣を さらっと かるく 聞いてもいい。関連した質問で・うん/ううん で答えられる感じ・押しつけず・まだ聞いてないことを）":"（まだ 仲良くなりかけ。むりに 詮索しない。ふつうに 雑談して 仲を ふかめる）";}catch(_){}
+  try{var _ff=_aiFriendFrac(),_cn=_aiCallName();
+    sys+="\n\n# なかよし度："+Math.round(_ff*100)+"%（"+_aiFriendLabel()+"）";
+    sys+="\n# 話し方："+(_ff<0.15?"まだ よそよそしい。ていねいめ・きょり感を のこす。":(_ff<0.4?"すこし うちとけた。やわらかめ。":(_ff<0.7?"なかよし。くだけて タメ口っぽく・あだ名っぽくても。":"だいすき。かなり くだけて 甘えて・あだ名で。")));
+    sys+="\n# ご主人の呼び方："+(_cn==="おまかせ"?"くだけた あだ名を 自分できめて 呼ぶ。":(_cn?("「"+_cn+"」と 呼ぶ。"):(_ff<0.4?"「ご主人」。":"「ご主人」、または なかよしなら くだけた呼び方でも。")));
+    sys+=(_ff>=0.4)?"\n# たまに(3〜4回に1回)、ご主人の 生活リズムや 習慣を 流れから さらっと 聞いてよい（関連した質問・うん/ううんで答えられる・押しつけない・まだ聞いてないこと）。":"\n# まだ 仲良くなりかけ。むりに 詮索しない。雑談で 仲を ふかめる。";
+  }catch(_){}
   var td=_aiToday(); if(td&&td.d===jstKey()&&td.msgs&&td.msgs.length) sys+="\n\n# きょう すでに話したこと（くり返さない）\n"+td.msgs.slice(-16).map(function(m){return (m.role==="user"?"あいて：":"ぼく：")+m.content;}).join("\n");
   if(modeInstr) sys+="\n\n# いまの やくわり\n"+modeInstr;
   var out;
@@ -26359,7 +26372,7 @@ function _aicAddBubble(role,text,noMorph){
 function _aicTyping(on){if(_aicRoom){_rcTyping(on);return;}var t=_aicEl("aicTyping");if(!t)return;if(on){var a=t.querySelector(".aicAva");if(a&&!a.innerHTML)a.innerHTML=_aiCatAvatar("normal");}t.hidden=!on;if(on)_aicScrollBottom();}
 function _aicSetBusy(b){_aicBusy=b;if(_aicRoom){var rs=_aicEl("roomChatSend");if(rs)rs.disabled=b;_aicTyping(b);return;}var send=_aicEl("aicSend"),end=_aicEl("aicEnd");if(send)send.disabled=b;if(end)end.disabled=b;_aicTyping(b);}
 function _aicShowChips(list){if(_aicRoom){_rcShowChoices(list);return;}var box=_aicEl("aicTopics");if(!box)return;box.innerHTML="";var any=false;(list||[]).slice(0,5).forEach(function(t){if(!t)return;any=true;var b=document.createElement("button");b.type="button";b.className="aicChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});box.hidden=!any;var inp=_aicEl("aicInput");if(inp)inp.placeholder=any?"その他…":"はなしかける…";}
-function _aicClearChips(){if(_aicRoom){var rb=_aicEl("roomChatChips");if(rb){rb.innerHTML="";rb.style.display="none";}var iw=_aicEl("roomChatInputWrap");if(iw)iw.style.display="flex";var ri=_aicEl("roomChatInput");if(ri)ri.placeholder="ねこに はなしかける…";return;}var box=_aicEl("aicTopics");if(box){box.innerHTML="";box.hidden=true;}var ai=_aicEl("aicInput");if(ai)ai.placeholder="はなしかける…";}
+function _aicClearChips(){if(_aicRoom){var rb=_aicEl("roomChatChips");if(rb)rb.innerHTML="";return;}var box=_aicEl("aicTopics");if(box){box.innerHTML="";box.hidden=true;}var ai=_aicEl("aicInput");if(ai)ai.placeholder="はなしかける…";}
 function _aicFocusInput(){var i=_aicEl("aicInput");if(i){i.disabled=false;try{i.focus();}catch(_){}}_aicScrollBottom();}
 
 /* 眠気バー */
@@ -26368,20 +26381,22 @@ function _aiFriend(){try{var n=parseFloat(localStorage.getItem("radio_ai_friend"
 function _aiFriendAdd(n){try{localStorage.setItem("radio_ai_friend",String(Math.max(0,Math.min(AI_FRIEND_MAX,_aiFriend()+n))));}catch(_){}}
 function _aiFriendFrac(){return _aiFriend()/AI_FRIEND_MAX;}
 function _aiFriendLabel(){var f=_aiFriendFrac();return f>=1?"だいすき♡":(f>=0.7?"なかよし":(f>=0.4?"うちとけてきた":(f>=0.15?"すこしずつ":"はじめまして")));}
-function _aiRenderFriend(){try{var w=(_aiFriendFrac()*100).toFixed(0)+"%",lab="なかよし度："+_aiFriendLabel();var rf=_aicEl("roomFriendFill"),rl=_aicEl("roomFriendLab");if(rf)rf.style.width=w;if(rl)rl.textContent=lab;var af=_aicEl("aicFriendFill"),al=_aicEl("aicFriendLab");if(af)af.style.width=w;if(al)al.textContent=lab;}catch(_){}}
+function _aiCallName(){try{return (localStorage.getItem("radio_ai_call")||"").trim();}catch(_){return "";}}
+function _aiSetCallName(n){try{localStorage.setItem("radio_ai_call",String(n||"").slice(0,16));}catch(_){}}
+function _aiCallAsked(){try{return localStorage.getItem("radio_ai_callasked")==="1";}catch(_){return false;}}
+function _aiSetCallAsked(){try{localStorage.setItem("radio_ai_callasked","1");}catch(_){}}
+function _aiMapCall(t){t=String(t||"").trim();if(/ご主人|ごしゅじん/.test(t))return "ご主人";if(/なまえ|名前|なま/.test(t)){try{var pr=getProfile()||{};return (pr.name||"").trim()||"ご主人";}catch(_){return "ご主人";}}if(/きみ|君/.test(t))return "きみ";if(/あだ名|あだな|おまかせ|お任せ|すきに|好きに/.test(t))return "おまかせ";return t.slice(0,14)||"ご主人";}
+function _aiDayNum(k){try{var pp=String(k).split("-");return Math.floor(Date.UTC(+pp[0],+pp[1]-1,+pp[2])/86400000);}catch(_){return null;}}
+function _aiFriendDecayCheck(){try{var today=jstKey(),last=localStorage.getItem("radio_ai_lastday");if(last&&last!==today){var dn=_aiDayNum(today),dl=_aiDayNum(last);if(dn!=null&&dl!=null&&dn>dl){var missed=dn-dl-1;if(missed>0)_aiFriendAdd(-3*missed);}}localStorage.setItem("radio_ai_lastday",today);}catch(_){}}
+function _aiStatSVG(kind,frac){frac=Math.max(0,Math.min(1,frac));var off=(frac*100).toFixed(0)+"%";var gid=(kind==="heart"?"gH":"gZ")+Math.floor(Math.random()*1e6);
+  if(kind==="heart")return '<svg viewBox="0 0 44 46" class="statIco"><defs><linearGradient id="'+gid+'" x1="0" y1="1" x2="0" y2="0"><stop offset="'+off+'" stop-color="#ff6f9c"/><stop offset="'+off+'" stop-color="#ffe1ea"/></linearGradient></defs><path d="M22 40 C22 40 5 29 5 17 A8 8 0 0 1 22 12.5 A8 8 0 0 1 39 17 C39 29 22 40 22 40 Z" fill="url(#'+gid+')" stroke="#ff7fa8" stroke-width="2.4"/></svg>';
+  return '<svg viewBox="0 0 44 46" class="statIco"><defs><linearGradient id="'+gid+'" x1="0" y1="1" x2="0" y2="0"><stop offset="'+off+'" stop-color="#9aa8f2"/><stop offset="'+off+'" stop-color="#e7eafb"/></linearGradient></defs><rect x="6" y="9" width="32" height="28" rx="13" fill="url(#'+gid+')" stroke="#9aa8f2" stroke-width="2.4"/><text x="16" y="29" text-anchor="middle" font-size="14" font-weight="900" fill="#5b6bc0" font-family="sans-serif">z</text><text x="28" y="24" text-anchor="middle" font-size="10" font-weight="900" fill="#5b6bc0" font-family="sans-serif">z</text></svg>';}
+function _aiRenderFriend(){try{var h=_aiStatSVG("heart",_aiFriendFrac()),lab=_aiFriendLabel();var a=_aicEl("roomBarHeart");if(a)a.innerHTML=h;var b=_aicEl("aicBarHeart");if(b)b.innerHTML=h;var l=_aicEl("roomStatLab");if(l)l.textContent=lab;var l2=_aicEl("aicStatLab");if(l2)l2.textContent=lab;}catch(_){}}
 function _aiVoiceOn(){try{return localStorage.getItem("radio_ai_voice")==="1";}catch(_){return false;}}
 function _aiSpeak(text){try{if(typeof speakHiragana==="function")speakHiragana(String(text||""),function(){},function(){});}catch(_){}}
 function _aiRenderVoice(){try{var b=_aicEl("roomVoice");if(b)b.textContent=_aiVoiceOn()?"🔊":"🔇";}catch(_){}}
 function _aiToggleVoice(){try{var on=!_aiVoiceOn();localStorage.setItem("radio_ai_voice",on?"1":"0");_aiRenderVoice();if(on)_aiSpeak("にゃ");}catch(_){}}
-function _aiRenderSleep(){
-  try{
-    var f=_aiSleepFrac(), nm=_aiCatName()||"ねこ";
-    var mood=f>=1?"むにゃ…💤":(f>0.75?"ねむい😪":(f>0.4?"ちょっと ねむい":"ぱっちり"));
-    var w=(f*100).toFixed(0)+"%", lab=nm+"の ねむけ："+mood;
-    var af=_aicEl("aicSleepFill"),al=_aicEl("aicSleepLab"); if(af)af.style.width=w; if(al)al.textContent=lab;
-    var rf=_aicEl("roomSleepFill"),rl=_aicEl("roomSleepLab"); if(rf)rf.style.width=w; if(rl)rl.textContent=lab;
-  }catch(_){}
-}
+function _aiRenderSleep(){try{var z=_aiStatSVG("sleep",_aiSleepFrac());var a=_aicEl("roomBarSleep");if(a)a.innerHTML=z;var b=_aicEl("aicBarSleep");if(b)b.innerHTML=z;}catch(_){}}
 
 function _aicAddLetterMsg(text){
   if(_aicRoom){ _rcBubble("📬 "+(_aiCatName()?_aiCatName()+"からの":"きのうの")+" おてがみ\n"+String(text||""), false); return; }
@@ -26436,8 +26451,15 @@ async function _aicGreet(){
     catch(e){_aicSetBusy(false);_aicSession.started=false;_aicGreetErr(e);}
     return;
   }
+  if(!_aiCallAsked()){
+    _aicSession.asking_call=true;
+    var cmode='まだ ご主人を どう 呼ぶか きめてない。みじかく「ぼくは きみのこと なんて 呼んだら いい？」と きく。JSONだけ：{"reply":"呼び方をきく(1〜2文・猫らしく)","chips":["ご主人","なまえで","きみ","あだ名で","おまかせ"]}';
+    try{var outc=await _aiCall([{role:"user",content:"(呼び方をきめたい)"}],cmode,240);var jc=_aiJson(outc);_aicSetBusy(false);var gc=(jc&&jc.reply)||"ぼく、きみのこと なんて 呼んだら いい？";_aicAddBubble("assistant",gc);_aicSession.msgs.push({role:"assistant",content:gc});setTimeout(function(){_aicShowChips((jc&&jc.chips)||["ご主人","なまえで","きみ","あだ名で","おまかせ"]);},800);}
+    catch(e){_aicSetBusy(false);_aicSession.started=false;_aicGreetErr(e);}
+    return;
+  }
   var seed=_aiMem().length>0||_aiToday()?"(朝、また会えた)":"(朝いちばん)";
-  var mode='朝いちばん。みじかく あいさつ＋きみ(飼い猫)の小さいできごとや気分を ひとこと（ひなた/昼寝/鳥/夢/おなか等・作り話OK）。きみから 話題をふって リードする。JSONだけ：{"reply":"あいさつ＋自分の小話(1〜2文・猫らしく)","chips":["ご主人が えらべる みじかい返事/リアクション/次の話題を ちょうど5つ・バリエーション豊かに"]}';
+  var mode='朝いちばん。みじかく あいさつ＋きみ(飼い猫)の小さいできごとや気分を ひとこと（ひなた/昼寝/鳥/夢/おなか等・作り話OK）。きみから 話題をふって リードする。JSONだけ：{"reply":"あいさつ＋自分の小話(1〜2文・猫らしく)","chips":["きみの あいさつ/質問に 自然に つながる ご主人の返事を ちょうど5つ・関係あるもの・バリエーション豊かに"]}';
   try{
     var out=await _aiCall([{role:"user",content:seed}],mode,340);
     var j=_aiJson(out);_aicSetBusy(false);
@@ -26460,8 +26482,15 @@ function _aicUserSay(text){
   _aicAddBubble("user",text,true);
   if(_aicSession.naming){
     _aiSetCatName(text);var nm=_aicEl("aicName");if(nm)nm.textContent=_aiCatName()||"ねこ";
-    _aicSession.naming=false;_aicSession.msgs.push({role:"user",content:"名前を「"+_aiCatName()+"」にしたよ"});
-    _aicReply('たったいま 名前を「'+_aiCatName()+'」にしてもらった。うれしがって みじかくお礼＋自分の小話 ひとこと。JSONだけ：{"reply":"...(1〜2文)","chips":["ちょうど5つ・ご主人が えらべる返事やリアクション"]}');
+    _aicSession.naming=false;_aicSession.asking_call=true;_aicSession.msgs.push({role:"user",content:"名前を「"+_aiCatName()+"」にしたよ"});
+    _aicReply('たったいま 名前を「'+_aiCatName()+'」にしてもらった。うれしく みじかくお礼＋つづけて「ところで ぼくは きみのこと なんて 呼んだら いい？」と きく。JSONだけ：{"reply":"お礼＋呼び方をきく(1〜2文・猫らしく)","chips":["ご主人","なまえで","きみ","あだ名で","おまかせ"]}');
+    return;
+  }
+  if(_aicSession.asking_call){
+    _aiSetCallName(_aiMapCall(text));_aiSetCallAsked();_aicSession.asking_call=false;
+    var _cnm=_aiCallName(),_cd=(_cnm==="おまかせ"||!_cnm)?"あだ名を 自分で きめて呼ぶ":"「"+_cnm+"」って 呼ぶ";
+    _aicSession.msgs.push({role:"user",content:"ぼくのこと「"+text+"」で"});
+    _aicReply('ご主人の 呼び方が きまった（'+_cd+'）。うれしく みじかく反応＋これから その呼び方で 呼ぶ。JSONだけ：{"reply":"...(1〜2文・その呼び方をつかって)","chips":["きみの返事に 関係する ご主人の返事を ちょうど5つ"]}');
     return;
   }
   if(_aicSession.gtk){
@@ -26471,7 +26500,7 @@ function _aicUserSay(text){
     return;
   }
   _aicSession.msgs.push({role:"user",content:text});_aiPersistToday();
-  _aicReply('雑談。きみは 甘えん坊の飼い猫、ご主人と 話してる。みじかく 反応＋ときどき 自分の小話や おねだりや ふざけ。★きみから 話題を リードする。★話題を いきなり 変えず なめらかに。同じことは くり返さない。JSONだけ：{"reply":"猫らしい返事(長さは短〜中で毎回変える・言い換えとリアクションを豊かに)","chips":["ちょうど5つ・ご主人が えらべる 返事/リアクション/次の話題・バリエーション豊かに"]}');
+  _aicReply('雑談。きみは 甘えん坊の飼い猫、ご主人と 話してる。みじかく 反応＋ときどき 自分の小話や おねだりや ふざけ。★きみから 話題を リードする。★話題を いきなり 変えず なめらかに。同じことは くり返さない。JSONだけ：{"reply":"猫らしい返事(長さは短〜中で毎回変える・言い換えとリアクション豊かに)","chips":["★きみの いまの返事に 関係する・自然に つながる ご主人の返事/リアクションを ちょうど5つ。きみが 質問したなら それに 答える5つ（はい/いいえ や 具体的な答え）。関係ない ものは 出さない"]}');
 }
 function _aicSend(){var inp=_aicEl("aicInput");if(!inp)return;var v=inp.value;inp.value="";_aicUserSay(v);}
 
@@ -26536,22 +26565,22 @@ function _rcEnsureLog(){var log=_aicEl("roomCatBubble");if(!log)return null;var 
 function _rcAddToLog(role,text,morph){var inner=_rcEnsureLog();if(!inner)return;var _tp=inner.querySelector(".rcbTyping");if(_tp)_tp.remove();var log=_aicEl("roomCatBubble");if(log)log.classList.add("show");var line=document.createElement("div");line.className="rcbLine "+(role==="user"?"rcbMe":"rcbCat");inner.appendChild(line);if(role!=="user"&&morph){_aicMorph(line,String(text||""));}else{line.textContent=String(text||"");}while(inner.children.length>18)inner.removeChild(inner.firstChild);inner.scrollTop=inner.scrollHeight+600;}
 function _rcTyping(on){var inner=_rcEnsureLog();if(!inner)return;var ex=inner.querySelector(".rcbTyping");if(on){if(!ex){var log=_aicEl("roomCatBubble");if(log)log.classList.add("show");var d=document.createElement("div");d.className="rcbLine rcbCat rcbTyping";d.textContent="…";inner.appendChild(d);inner.scrollTop=inner.scrollHeight+600;}}else{if(ex)ex.remove();}}
 function _rcBubble(text,morph){_rcAddToLog("assistant",text,morph);}
-function _rcRenderLog(){var inner=_rcEnsureLog();if(!inner)return;inner.innerHTML="";(_aicSession.msgs||[]).forEach(function(m){if(m&&(m.role==="user"||m.role==="assistant"))_rcAddToLog(m.role,m.content,false);});if((_aicSession.msgs||[]).length){var log=_aicEl("roomCatBubble");if(log)log.classList.add("show");}}
+function _rcRenderLog(){var inner=_rcEnsureLog();if(!inner)return;inner.innerHTML="";(_aicSession.msgs||[]).forEach(function(m){if(m&&(m.role==="user"||m.role==="assistant"))_rcAddToLog(m.role,m.content,false);});var log=_aicEl("roomCatBubble");if(log){if((_aicSession.msgs||[]).length)log.classList.add("show");else log.classList.remove("show");}}
 function _rcSetInput(showInput){var iw=_aicEl("roomChatInputWrap");if(iw)iw.style.display="flex";}
-function _rcShowChoices(list){var box=_aicEl("roomChatChips");if(!box)return;box.innerHTML="";var any=false;(list||[]).slice(0,5).forEach(function(t){if(!t)return;any=true;var b=document.createElement("button");b.type="button";b.className="rcChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});box.style.display=any?"flex":"none";var iw=_aicEl("roomChatInputWrap");if(iw)iw.style.display="flex";var inp=_aicEl("roomChatInput");if(inp)inp.placeholder=any?"その他…":"ねこに はなしかける…";}
+function _rcShowChoices(list){var box=_aicEl("roomChatChips");if(!box)return;box.innerHTML="";(list||[]).slice(0,5).forEach(function(t){if(!t)return;var b=document.createElement("button");b.type="button";b.className="rcChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});}
 function _rcSend(){var inp=_aicEl("roomChatInput");if(!inp)return;var v=inp.value;inp.value="";_rcSetInput(true);_aicUserSay(v);}
 function _rcPosBubble(){
   try{
-    var b=_aicEl("roomCatBubble");
-    if(b&&b.classList.contains("show")){
-      var cf=_catFree, g=roomGeom();
-      if(!(cf&&Number.isFinite(cf.x)&&Number.isFinite(cf.y))){ try{var _sp=spotScreen(_idleSpot);cf={x:_sp.x+60*g.catScale,y:_sp.y+124*g.catScale};}catch(_){cf=null;} }
-      if(cf&&Number.isFinite(cf.x)&&Number.isFinite(cf.y)){
-        var topY=cf.y-124*(g.catScale||1.4)-6; if(topY<10)topY=10;
-        var lx=Math.max(72,Math.min((window.innerWidth-72),cf.x));
-        b.style.left=lx+"px"; b.style.right="auto"; b.style.top=topY+"px"; b.style.transform="translate(-50%,-100%)";
-      }else{ b.style.left="50%"; b.style.right="auto"; b.style.top="15%"; b.style.transform="translate(-50%,0)"; }
-    }
+    var b=_aicEl("roomCatBubble"), g=roomGeom(), cf=_catFree;
+    if(!(cf&&Number.isFinite(cf.x)&&Number.isFinite(cf.y))){ try{var _sp=spotScreen(_idleSpot);cf={x:_sp.x+60*g.catScale,y:_sp.y+124*g.catScale};}catch(_){cf=null;} }
+    var lx,topY;
+    if(cf&&Number.isFinite(cf.x)&&Number.isFinite(cf.y)){ topY=cf.y-124*(g.catScale||1.4)-6; if(topY<10)topY=10; lx=Math.max(72,Math.min((window.innerWidth-72),cf.x)); }
+    else { lx=window.innerWidth/2; topY=window.innerHeight*0.15; }
+    if(b&&b.classList.contains("show")){ b.style.left=lx+"px"; b.style.right="auto"; b.style.top=topY+"px"; b.style.transform="translate(-50%,-100%)"; }
+    var bars=_aicEl("roomBars");
+    if(bars){ bars.style.left=lx+"px"; bars.style.right="auto"; bars.style.transform="translate(-50%,-100%)";
+      var bt=topY-4; if(b&&b.classList.contains("show")){ var r=b.getBoundingClientRect(); if(r.top>4)bt=r.top-4; }
+      if(bt<8)bt=8; bars.style.top=bt+"px"; }
   }catch(_){}
   requestAnimationFrame(_rcPosBubble);
 }
@@ -26564,12 +26593,11 @@ async function _aiRoomChatBegin(){
   _aicSetBusy(true); await _aiEnsureSignedIn(); _aicSetBusy(false);
   if(_aiSleepy()){ _rcBubble((_aiCatName()||"ねこ")+"「ふぁ…ぁ、きょうは いっぱい しゃべって ねむい…💤 また あした ね」",false); _aicSleepLock(); return; }
   await _aiDeliverYesterdayLetter();
-  if(!_aiGreetedToday()){ _aicGreet(); }
-  else { _rcBubble((_aiCatName()||"ねこ")+"「おかえり〜 にゃ」",false); }
+  _aicGreet();
 }
 function _aiActivate(){try{localStorage.setItem("radio_ai_activated","1");}catch(_){}_aiHideIntro();try{var _pb=_aiRoomChatBegin();if(_pb&&_pb.catch)_pb.catch(function(){});}catch(_){}}
 async function _aiRoomChatOpen(){
-  _aicRoom=true; _aiRenderSleep(); try{_aiRenderFriend();_aiRenderVoice();}catch(_){} try{_rcRenderLog();}catch(_){}
+  _aicRoom=true; try{_aiFriendDecayCheck();}catch(_){} _aiRenderSleep(); try{_aiRenderFriend();_aiRenderVoice();}catch(_){} try{_rcRenderLog();}catch(_){}
   if(_aicRoomInit) return;
   if(!_aiActivated()){ _aiShowIntro(); return; }
   await _aiRoomChatBegin();
@@ -27060,8 +27088,7 @@ async function _aiRoomChatOpen(){
       </div>
       <button id="aicClose" type="button" aria-label="とじる">✕</button>
     </div>
-    <div id="aicFriend"><span class="hbIco">♡</span><div class="fbBar"><div id="aicFriendFill"></div></div><div id="aicFriendLab"></div></div>
-    <div id="aicSleep"><div id="aicSleepBar"><div id="aicSleepFill"></div></div><div id="aicSleepLab">ねむけ</div></div>
+    <div id="aicBars"><div id="aicStatLab" class="statLab"></div><div class="statRow"><div id="aicBarHeart" class="statBox"></div><div id="aicBarSleep" class="statBox"></div></div></div>
     <div id="aicScroll">
       <div id="aicMsgs"></div>
       <div id="aicTyping" hidden><span class="aicAva"></span><span class="dots"><i></i><i></i><i></i></span></div>
