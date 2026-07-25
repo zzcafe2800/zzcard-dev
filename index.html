@@ -5349,10 +5349,10 @@ function _isBenignEnvError(msg){
   /* プレビュー/サンドボックス特有で、本番(GitHub Pages)では起きない無害なやつは赤バーを出さない。
      例：クロスオリジンでcanvasが汚染→toDataURLのSecurityError、Firebase/CDN通信のブロック等。 */
   msg=String(msg||"");
-  return /SecurityError|tainted|cross-origin|toDataURL|Failed to fetch|NetworkError|Importing a module script failed|dynamically imported module|permission_denied|PERMISSION_DENIED|client is offline|Could not reach Cloud Firestore|ERR_BLOCKED_BY_CLIENT|Load failed/i.test(msg);
+  return /SecurityError|tainted|cross-origin|toDataURL|Failed to fetch|NetworkError|Importing a module script failed|dynamically imported module|permission_denied|PERMISSION_DENIED|client is offline|Could not reach Cloud Firestore|ERR_BLOCKED_BY_CLIENT|Load failed|Unauthorized|unauthenticated|whoami|not signed in|Refused to set unsafe header|api\.puter|js\.puter|attempt_temp_user|"status":\s?40[13]|"statusCode":\s?40[13]/i.test(msg);
 }
 window.addEventListener("error",ev=>{const m=(ev.error&&ev.error.message)||ev.message||String(ev.type);if(_isBenignEnvError(m)){console.warn("(無視)",m);return;}showFatal(m);});
-window.addEventListener("unhandledrejection",ev=>{const m=(ev.reason&&ev.reason.message)||String(ev.reason);if(_isBenignEnvError(m)){console.warn("(無視)",m);return;}showFatal("promise: "+m);});
+window.addEventListener("unhandledrejection",ev=>{const r=ev.reason;let m=(r&&r.message)||String(r);try{if(r&&typeof r==="object"){const j=JSON.stringify(r);if(j&&j!=="{}")m=m+" "+j;}}catch(_){}if(_isBenignEnvError(m)){console.warn("(無視)",m);return;}showFatal("promise: "+m);});
 
 /* ===== Firebase（card-zz） =====
    ★「ボタン押しても始まらない」対策：
@@ -22857,6 +22857,7 @@ function _tvDrawSoon(){
 }
 function _tvDraw(){
   const wrap=$("tvWrap");if(!wrap)return;
+  if(wrap.hidden||wrap.offsetParent===null||(wrap.clientWidth||0)<10||(wrap.clientHeight||0)<10)return;
   _tvRectCache=null;_tvBoxCache=null;
   const old=wrap.querySelector(".tvMapSvg");
   const html=_tvMapSVG();
@@ -25957,6 +25958,14 @@ var AIM_KEY="radio_ai_model", AIMEM_KEY="radio_ai_mem",
     AIGOAL_KEY="radio_ai_goal", AIGREET_KEY="radio_ai_greeted",
     AINAME_KEY="radio_ai_catname", AILET_KEY="radio_ai_letters", AILSEEN_KEY="radio_ai_letseen";
 var AI_MODELS={soft:"gemini-3.1-flash-lite", smart:"claude-sonnet-5"};
+try{ window.addEventListener("unhandledrejection", function(ev){ try{
+  var r=ev.reason; if(!r) return;
+  var st=r.status||r.statusCode||0;
+  var blob=""; try{blob=JSON.stringify(r);}catch(_){blob="";}
+  var tx=((r.message||r.error||"")+" "+blob).toLowerCase();
+  if(st===401||st===403||/unauthor|whoami|not.?signed|js\.puter|api\.puter|"puter"/.test(tx)){ ev.preventDefault(); }
+}catch(_){}
+}); }catch(_){}
 
 function _aiModelKey(){try{return localStorage.getItem(AIM_KEY)||"soft";}catch(_){return "soft";}}
 function _aiModel(){var k=_aiModelKey();return AI_MODELS[k]||AI_MODELS.soft;}
@@ -26047,9 +26056,9 @@ function _aiReady(){ return (typeof puter!=="undefined" && puter && puter.ai && 
 async function _aiEnsureSignedIn(){
   try{
     if(typeof puter==="undefined"||!puter.auth) return true;
-    var ok=false; try{ok=puter.auth.isSignedIn();}catch(_){ok=false;}
-    if(ok&&ok.then){try{ok=await ok;}catch(_){ok=false;}}
-    if(!ok){ await puter.auth.signIn({attempt_temp_user_creation:true}); }
+    var signed=false; try{signed=(puter.auth.isSignedIn()===true);}catch(_){signed=false;}
+    if(signed) return true;
+    await puter.auth.signIn({attempt_temp_user_creation:true});
     return true;
   }catch(e){ return false; }
 }
@@ -26366,7 +26375,7 @@ function _aicRenderSetCard(){
 /* ===== 配線 ===== */
 (function _aiWire(){
   try{
-    var btn=_aicEl("aiCatBtn"); if(btn)btn.addEventListener("click",function(e){e.stopPropagation(); openAiCat();});
+    var btn=_aicEl("aiCatBtn"); if(btn)btn.addEventListener("click",function(e){e.stopPropagation(); try{var _p=openAiCat();if(_p&&_p.catch)_p.catch(function(){});}catch(_){}});
     var cl=_aicEl("aicClose"); if(cl)cl.addEventListener("click",function(e){e.stopPropagation(); closeAiCat();});
     var ov=_aicEl("aiCat"); if(ov)ov.addEventListener("click",function(e){ if(e.target===ov) closeAiCat(); });
     var send=_aicEl("aicSend"); if(send)send.addEventListener("click",function(){_aicSend();});
