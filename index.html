@@ -8835,6 +8835,10 @@ let _sfxMuted=false,_sfxPrevVol=null;
 let _sfxVol=0.8,_sfxMaster=null;
 try{const _bv=parseFloat(localStorage.getItem("radio_bgm_vol"));if(Number.isFinite(_bv))bgmVol=Math.max(0,Math.min(1,_bv));}catch(_){}
 try{const _sv=parseFloat(localStorage.getItem("radio_sfx_vol"));if(Number.isFinite(_sv))_sfxVol=Math.max(0,Math.min(1,_sv));}catch(_){}
+try{bgmMuted=(localStorage.getItem("radio_bgm_muted")==="1");}catch(_){}
+try{_sfxMuted=(localStorage.getItem("radio_sfx_muted")==="1");}catch(_){}
+try{const _pv=parseFloat(localStorage.getItem("radio_sfx_prevvol"));if(Number.isFinite(_pv))_sfxPrevVol=_pv;}catch(_){}
+function _saveMuteState(){try{localStorage.setItem("radio_bgm_muted",bgmMuted?"1":"0");localStorage.setItem("radio_sfx_muted",_sfxMuted?"1":"0");if(_sfxPrevVol!=null)localStorage.setItem("radio_sfx_prevvol",String(_sfxPrevVol));}catch(_){}}
 let _devUnlockAll=false;   /* テストモード中は全アイテム解放 */
 try{ localStorage.removeItem("radio_unlock_all"); }catch(_){}   /* 未所持衣装が見えるバグ対策：起動時に必ず解除 */
 let todIsNight=false;
@@ -8978,16 +8982,19 @@ function setBGM(v){
   try{localStorage.setItem("radio_bgm_vol",String(bgmVol));}catch(_){}
 }
 setBGM(bgmVol);
+try{if(bgmMuted){bgmAudio.volume=0;bgmIcon.classList.add("muted");}}catch(_){}
 bgmIcon.addEventListener("click",()=>{
   playClick();bgmMuted=!bgmMuted;
   bgmAudio.volume=bgmMuted?0:bgmVol;
   bgmIcon.classList.toggle("muted",bgmMuted);
+  _saveMuteState();
 });
 /* 音量パネルの「BGM」「効果音」の文字タップでその音をミュート */
 try{
   const _vl=document.querySelectorAll("#volPanel .vpLbl");
-  if(_vl[0])_vl[0].addEventListener("click",()=>{try{playClick();}catch(_){}bgmMuted=!bgmMuted;bgmAudio.volume=bgmMuted?0:bgmVol;_vl[0].classList.toggle("muted",bgmMuted);try{bgmIcon.classList.toggle("muted",bgmMuted);}catch(_){}});
-  if(_vl[1])_vl[1].addEventListener("click",()=>{try{playClick();}catch(_){}_sfxMuted=!_sfxMuted;if(_sfxMuted){_sfxPrevVol=_sfxVol;setSfxVol(0);}else{setSfxVol((_sfxPrevVol!=null&&_sfxPrevVol>0)?_sfxPrevVol:0.5);}_vl[1].classList.toggle("muted",_sfxMuted);try{const s2=$("volSfx");if(s2)s2.value=Math.round(_sfxVol*100);const vv=$("volSfxVal");if(vv)vv.textContent=Math.round(_sfxVol*100)+"%";}catch(_){}});
+  if(_vl[0])_vl[0].addEventListener("click",()=>{try{playClick();}catch(_){}bgmMuted=!bgmMuted;bgmAudio.volume=bgmMuted?0:bgmVol;_vl[0].classList.toggle("muted",bgmMuted);try{bgmIcon.classList.toggle("muted",bgmMuted);}catch(_){}_saveMuteState();});
+  if(_vl[1])_vl[1].addEventListener("click",()=>{try{playClick();}catch(_){}_sfxMuted=!_sfxMuted;if(_sfxMuted){_sfxPrevVol=_sfxVol;setSfxVol(0);}else{setSfxVol((_sfxPrevVol!=null&&_sfxPrevVol>0)?_sfxPrevVol:0.5);}_vl[1].classList.toggle("muted",_sfxMuted);try{const s2=$("volSfx");if(s2)s2.value=Math.round(_sfxVol*100);const vv=$("volSfxVal");if(vv)vv.textContent=Math.round(_sfxVol*100)+"%";}catch(_){}_saveMuteState();});
+  try{if(bgmMuted&&_vl[0])_vl[0].classList.add("muted");if(_sfxMuted&&_vl[1])_vl[1].classList.add("muted");}catch(_){}
 }catch(_){}
 function trkPos(e){
   const r=bgmTrack.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX;
@@ -14125,7 +14132,7 @@ function toggleVolPanel(){
 $("volBtn").addEventListener("click",e=>{e.stopPropagation();playClick();toggleVolPanel();});
 $("volBgm").addEventListener("input",e=>{
   const v=Number(e.target.value)/100;
-  if(bgmMuted){bgmMuted=false;try{bgmIcon.classList.remove("muted");}catch(_){}}
+  if(bgmMuted){bgmMuted=false;try{bgmIcon.classList.remove("muted");}catch(_){}_saveMuteState();}
   setBGM(v);$("volBgmVal").textContent=Math.round(v*100)+"%";
 });
 $("volSfx").addEventListener("input",e=>{const v=Number(e.target.value)/100;setSfxVol(v);$("volSfxVal").textContent=Math.round(v*100)+"%";});
