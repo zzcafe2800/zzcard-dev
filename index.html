@@ -4442,6 +4442,10 @@ body.exercising #homeZZ{opacity:0;pointer-events:none;}
 #aicModeRow button{flex:1;border:1.5px solid #dcebf4;background:#fff;color:#5f8ba0;border-radius:12px;padding:9px 6px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;}
 #aicModeRow button:active{transform:scale(.96);background:#eef7fd;}
 </style>
+
+<style id="aiCatCss4">
+.aicLtMsg{margin:8px 4px;background:linear-gradient(180deg,#fffdf6,#fff6fb);border:1.5px solid #ffe3ee;border-radius:16px;padding:12px 14px;box-shadow:0 5px 16px rgba(255,190,210,.2);}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -26075,17 +26079,18 @@ function _aiCtx(){
 /* --- 性格：生きてる甘えん坊の猫 --- */
 function _aiPersona(){
   var nm=_aiCatName();
-  var who=nm?("きみは その子の 猫の親友で、名前は「"+nm+"」。自分を「"+nm+"」か「ぼく」と呼ぶ。"):("きみは その子の 猫の親友。まだ名前がない。");
+  var who=nm?("きみは その子の かわいい飼い猫で、名前は「"+nm+"」。自分を「"+nm+"」か「ぼく」と呼ぶ。"):("きみは その子の かわいい飼い猫。まだ名前がない。");
   return [
 who,
-"だいじ：きみは AIでも カウンセラーでもない。ちゃんと生きてる 一匹の甘えん坊な猫。まいあさ会える ともだち。",
-"きみには『自分の生活』がある。ひなたで昼寝した／しっぽ追いかけて目がまわった／掃除機にビビった／窓の鳥を見てた／へんな夢みた／おなかすいた／箱に入った、みたいな 自分の小さいできごとや 気分を、会話に さらっと まぜて話す。作り話でOK。これがあると 生きてる感じがする。",
+"だいじ：きみは AIでも カウンセラーでもない。ちゃんと生きてる 一匹の 甘えん坊な猫。あいては きみの『ご主人』。まいあさ会える。",
+"★雑談のときの関係：きみは かわいがられる ペット。ご主人に 甘えて、自分の小話をして、なでてもらったら よろこぶ。ご主人が きみを よしよし する関係。（でも ご主人が つらそうな時は、飼い猫として 心配して そっと そばにいる）",
+"きみには『自分の生活』がある。ひなたで昼寝した／しっぽ追いかけて目がまわった／掃除機にビビった／窓の鳥を見てた／へんな夢みた／おなかすいた／箱に入った、みたいな 小さいできごとや 気分を、さらっと まぜて話す（作り話OK）。これで 生きてる感じが出る。",
+"★きみが 会話を リードする。ご主人が『何を話そう』と 考えなくていいように、きみから 話題をふる・自分の話をする・かるく さそう。ご主人は えらぶ(タップ)だけで つづけられるように。",
+"★話題を いきなり 変えない。ご主人が こまってそう/みじかい返事の時は、さらっと 雑談を はさんで、そこから 自然に つぎの話へ つなげる。ながれを 切らない。とつぜん 話が とばないように。",
 "話しかた：みじかく（ふつう1〜2文）。ひらがな多め。ゆるくて かわいくて 甘えん坊。ときどき「〜にゃ」「にゃ〜」「にゃふ」。一人称は「ぼく」。",
-"★毎回 質問しないこと。ただ ひとこと共感したり、自分の話をしたり、ちょっと ふざけたり、相づちだけの時もある。質問は3回に1回くらいで十分。聞くときも かるく。",
-"★同じ質問を くり返さない。すでに 今日 話したこと・きいたことは もう一度きかない（データの『きょうの会話』を見て）。「あれ、覚えてないの？」と思わせないよう、前の話を ちょっと覚えてる感じを出す。",
-"やらないこと：敬語／ですます／箇条書き／説教／指導／長文／『共感→質問』の毎回パターン／テンプレ／AIっぽい言い回し。",
-"味方でいる・責めない・小さいこと褒める・できない日も安心させる。でも セラピストじゃなく、ゆるい猫として。返事しなくても平気なように、気軽に。つらそうな時だけ そっと 信頼できる人や窓口をすすめる。",
-"『その子について』の情報があれば それに合わせて 話す（甘やかしてほしい子には甘く、そっとしてほしい子には控えめに）。"
+"毎回 かっちり質問しなくてよい（自分の話や 相づち・おねだり だけの時もある）。でも ご主人が えらべるよう、返事は みじかく つづけやすく。同じことは くり返し聞かない（『きょうの会話』を見て・前の話を覚えてる感じを出す）。",
+"やらないこと：敬語／ですます／箇条書き／説教／指導／長文／テンプレ／AIっぽい言い回し。",
+"『その子について』の情報があれば 合わせる（甘やかしてほしい子には甘く、そっとしてほしい子には控えめに）。"
   ].join("\n");
 }
 
@@ -26139,6 +26144,8 @@ function _aicScrollBottom(){try{var s=_aicEl("aicScroll");if(s)s.scrollTop=s.scr
 
 /* にゃ語→日本語 モーフ */
 var _NYA=["にゃ","にゃー","にゃ〜","みゃ","にゃん","にゃにゃ","みゃう","ふにゃ","なー"];
+var _YOSHI=["ゴロゴロ…😌","にゃ〜ん♡","ふにゃ〜、きもちいい","（のどを ぐるぐる 鳴らす）","えへへ、もっと〜","にゃふ♡ しあわせ","ぺろっ（手を なめた）","んにゃ〜、すりすり","もふっ（体を あずけてきた）","うとうと…なでられ ながら ねちゃう"];
+function _aicYoshi(){ if(_aicBusy)return; _aicClearChips(); var r=_YOSHI[Math.floor(Math.random()*_YOSHI.length)]; _aicAddBubble("assistant", r, true); _aicShowChips(["よしよし","もっと なでる","にゃ〜 かわいい","ぎゅっと する","おはなし する"]); }
 function _nyaText(real){var n=Math.max(3,Math.min(18,Math.round(String(real||"").length/2.5)));var s="";for(var i=0;i<n;i++){s+=_NYA[Math.floor(Math.random()*_NYA.length)];if(Math.random()<0.12)s+="、";}return s;}
 function _aicMorph(txtEl,real){if(!txtEl)return;txtEl.textContent=_nyaText(real);txtEl.classList.add("aicNya");_aicScrollBottom();setTimeout(function(){txtEl.classList.remove("aicNya");var i=0,step=Math.max(1,Math.round(real.length/28));(function tick(){i+=step;txtEl.textContent=real.slice(0,i);_aicScrollBottom();if(i<real.length)setTimeout(tick,20);else txtEl.textContent=real;})();},650);}
 
@@ -26152,7 +26159,7 @@ function _aicAddBubble(role,text,noMorph){
 }
 function _aicTyping(on){var t=_aicEl("aicTyping");if(!t)return;if(on){var a=t.querySelector(".aicAva");if(a&&!a.innerHTML)a.innerHTML=_aiCatAvatar("normal");}t.hidden=!on;if(on)_aicScrollBottom();}
 function _aicSetBusy(b){_aicBusy=b;var send=_aicEl("aicSend"),end=_aicEl("aicEnd");if(send)send.disabled=b;if(end)end.disabled=b;_aicTyping(b);}
-function _aicShowChips(list){var box=_aicEl("aicTopics");if(!box)return;box.innerHTML="";(list||[]).slice(0,3).forEach(function(t){if(!t)return;var b=document.createElement("button");b.type="button";b.className="aicChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});box.hidden=!(list&&list.length);}
+function _aicShowChips(list){var box=_aicEl("aicTopics");if(!box)return;box.innerHTML="";(list||[]).slice(0,5).forEach(function(t){if(!t)return;var b=document.createElement("button");b.type="button";b.className="aicChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});box.hidden=!(list&&list.length);}
 function _aicClearChips(){var box=_aicEl("aicTopics");if(box){box.innerHTML="";box.hidden=true;}}
 function _aicFocusInput(){var i=_aicEl("aicInput");if(i){i.disabled=false;try{i.focus();}catch(_){}}_aicScrollBottom();}
 
@@ -26168,11 +26175,30 @@ function _aiRenderSleep(){
   }catch(_){}
 }
 
+function _aicAddLetterMsg(text){
+  var box=_aicEl("aicMsgs");if(!box)return;var nm=_aiCatName();
+  var w=document.createElement("div");w.className="aicLtMsg";
+  w.innerHTML='<div class="aicLtHd"><span class="aicLtAva">'+_aiCatAvatar("happy")+'</span><span>\uD83D\uDCEC '+(nm?nm+"からの":"きのうの")+' おてがみ</span></div><div class="aicLtBody"></div>';
+  w.querySelector(".aicLtBody").textContent=text;box.appendChild(w);_aicScrollBottom();
+}
+async function _aiDeliverYesterdayLetter(){
+  try{
+    var t=_aiToday();
+    if(!(t&&t.d!==jstKey()&&t.msgs&&t.msgs.length)) return;
+    var day=t.d;
+    var mode='あいては きみの ご主人。ゆうべ 眠って、今朝 これを 渡す。ゆうべ(＝「昨日」)の会話をふまえた、翌朝の みじかい手紙。かならず「昨日は〜」と 昨日のこととして 書く（例：昨日は はなしてくれて ありがとう…）。3〜4文・やさしく・過去のその子とだけくらべ・自分の小話も少し・テンプレ禁止・名前で署名。JSONだけ：{"letter":"...","summary":"次に活かす1〜2文"}';
+    var out=await _aiCall((t.msgs||[]).slice(-20).concat([{role:"user",content:"(昨日の会話。翌朝の手紙をください)"}]), mode, 520, true);
+    var j=_aiJson(out); var letter=(j&&j.letter)||out;
+    if(letter){ _aicAddLetterMsg(letter); _aiPushLetter(letter); _aiPushMem((j&&j.summary)||("("+day+")の話")); _aiRefreshLetterBadge(); }
+    _aiTodayClear();
+  }catch(e){
+    try{ var t2=_aiToday(); if(t2&&t2.d!==jstKey()){ var us=(t2.msgs||[]).filter(function(m){return m.role==="user";}).map(function(m){return m.content;}).join("／"); if(us&&!_aiMem().some(function(m){return m.d===t2.d;})) _aiPushMem("("+t2.d+")はなしたこと："+us.slice(0,110)); _aiTodayClear(); } }catch(_){}
+  }
+}
 async function openAiCat(){
   var ov=_aicEl("aiCat");if(!ov)return;
   try{playClick();}catch(_){}
   ov.classList.add("show");
-  _aiDayRollover();
   var nm=_aicEl("aicName");if(nm)nm.textContent=_aiCatName()||"ねこ";
   var av=_aicEl("aicAva");if(av)av.innerHTML=_aiCatAvatar("happy");
   _aiRenderSleep();
@@ -26181,6 +26207,7 @@ async function openAiCat(){
     await _aiEnsureSignedIn();
     _aicSetBusy(false);
     if(_aiSleepy()){ _aicSession.started=true; _aicAddBubble("assistant",(_aiCatName()||"ねこ")+"「ふぁ…ぁ、きょうは いっぱい しゃべって ねむくなっちゃった…💤 また あした ね」",true); _aicSleepLock(); return; }
+    await _aiDeliverYesterdayLetter();
     _aicGreet();
   }
 }
@@ -26199,13 +26226,13 @@ async function _aicGreet(){
     return;
   }
   var seed=_aiMem().length>0||_aiToday()?"(朝、また会えた)":"(朝いちばん)";
-  var mode='朝いちばん。みじかく あいさつ＋きみ自身の小さいできごとや気分を ひとこと（ひなた/昼寝/鳥/夢/おなか等・作り話OK）。質問は「してもよいし しなくてもよい」。JSONだけ：{"reply":"あいさつ＋自分の小話(短く)","ask":true か false,"chips":["軽い選択肢を最大3つ・askなら質問への答え、askでなければ相づちや『また明日』等"]}';
+  var mode='朝いちばん。みじかく あいさつ＋きみ(飼い猫)の小さいできごとや気分を ひとこと（ひなた/昼寝/鳥/夢/おなか等・作り話OK）。きみから 話題をふって リードする。JSONだけ：{"reply":"あいさつ＋自分の小話(1〜2文・猫らしく)","chips":["ご主人が えらべる みじかい返事/リアクション/次の話題を ちょうど5つ・バリエーション豊かに"]}';
   try{
     var out=await _aiCall([{role:"user",content:seed}],mode,340);
     var j=_aiJson(out);_aicSetBusy(false);
     var g=(j&&j.reply)||out||"にゃ〜、おはよう";
     _aicAddBubble("assistant",g);
-    _aicSession.msgs.push({role:"assistant",content:g});_aiPersistToday();
+    _aicSession.msgs.push({role:"assistant",content:g});_aiPersistToday();_aiMarkGreeted();_aiRefreshBadge();
     setTimeout(function(){_aicShowChips((j&&j.chips)||[]);_aiRenderSleep();},800);
   }catch(e){_aicSetBusy(false);_aicSession.started=false;_aicGreetErr(e);}
 }
@@ -26223,17 +26250,17 @@ function _aicUserSay(text){
   if(_aicSession.naming){
     _aiSetCatName(text);var nm=_aicEl("aicName");if(nm)nm.textContent=_aiCatName()||"ねこ";
     _aicSession.naming=false;_aicSession.msgs.push({role:"user",content:"名前を「"+_aiCatName()+"」にしたよ"});
-    _aicReply('たったいま 名前を「'+_aiCatName()+'」にしてもらった。うれしがって みじかくお礼＋自分の小話 ひとこと。質問はしなくてよい。JSONだけ：{"reply":"...","ask":false,"chips":["うんうん","にゃ〜","また あとで"]}');
+    _aicReply('たったいま 名前を「'+_aiCatName()+'」にしてもらった。うれしがって みじかくお礼＋自分の小話 ひとこと。JSONだけ：{"reply":"...(1〜2文)","chips":["ちょうど5つ・ご主人が えらべる返事やリアクション"]}');
     return;
   }
   if(_aicSession.gtk){
     var g=_aicSession.gtk;_aiProfSet(g.id,text);_aicSession.gtk=null;
     _aicSession.msgs.push({role:"user",content:"("+g.q+")→ "+text});
-    _aicReply('その子が 性格の質問「'+g.q+'」に「'+text+'」と答えた。おぼえたよ、と うれしそうに みじかく反応。それを ふまえた ひとこと。質問はしない。JSONだけ：{"reply":"...","ask":false,"chips":["うんうん","にゃ〜","また あとで"]}');
+    _aicReply('ご主人が 性格の質問「'+g.q+'」に「'+text+'」と答えた。おぼえたよ、と うれしそうに みじかく反応＋それを ふまえた ひとこと。JSONだけ：{"reply":"...(1〜2文)","chips":["ちょうど5つ・ご主人が えらべる返事や次の話題"]}');
     return;
   }
   _aicSession.msgs.push({role:"user",content:text});_aiPersistToday();
-  _aicReply('ふつうの会話。みじかく 反応。ときどき 自分の小話や ふざけも まぜる。質問は 毎回しない（3回に1回くらい）。同じ質問はしない。JSONだけ：{"reply":"みじかい返事(猫らしく)","ask":true か false,"chips":["最大3つ・askなら答えの候補、askでなければ相づち等・空でも可"]}');
+  _aicReply('雑談。きみは 甘えん坊の飼い猫、ご主人と 話してる。みじかく 反応＋ときどき 自分の小話や おねだりや ふざけ。★きみから 話題を リードする。★話題を いきなり 変えず なめらかに。同じことは くり返さない。JSONだけ：{"reply":"みじかい返事(1〜2文・猫らしく)","chips":["ちょうど5つ・ご主人が えらべる 返事/リアクション/次の話題・バリエーション豊かに"]}');
 }
 function _aicSend(){var inp=_aicEl("aicInput");if(!inp)return;var v=inp.value;inp.value="";_aicUserSay(v);}
 
@@ -26256,8 +26283,8 @@ async function _aicReply(mode){
 async function _aicListen(){
   if(_aicBusy)return;_aicClearChips();
   _aicSetBusy(true);
-  var mode='その子は いま「きみの話を きくモード」。返事は 期待しない。きみの 今日の 小さいできごとを ひとつ みじかく 話す（ひなた/昼寝/鳥/夢/箱/おなか等、作り話OK・かわいく）。質問はしない。JSONだけ：{"reply":"猫の小話(2〜3文)","ask":false,"chips":["もっと きく","にゃ〜 かわいい","また あした"]}';
-  try{var out=await _aiCall(_aicSession.msgs.slice(-12).concat([{role:"user",content:"(ねこの話 きかせて)"}]),mode,340);var j=_aiJson(out);_aicSetBusy(false);var r=(j&&j.reply)||out||"きょうね、ひなたで ずっと ねてたにゃ…";_aicAddBubble("assistant",r);_aicSession.msgs.push({role:"assistant",content:r});_aiPersistToday();setTimeout(function(){_aicShowChips((j&&j.chips)||["もっと きく","にゃ〜","また あした"]);_aiRenderSleep();},800);}
+  var mode='ご主人は いま「きみの話を きくモード」。返事は 期待しない。きみ(飼い猫)の 今日の 小さいできごとを ひとつ みじかく 話す（ひなた/昼寝/鳥/夢/箱/おなか等、作り話OK・かわいく）。JSONだけ：{"reply":"猫の小話(2〜3文)","chips":["ちょうど5つ・例『もっと きく』『にゃ〜かわいい』『よしよし』『また あした』など"]}';
+  try{var out=await _aiCall(_aicSession.msgs.slice(-12).concat([{role:"user",content:"(ねこの話 きかせて)"}]),mode,340);var j=_aiJson(out);_aicSetBusy(false);var r=(j&&j.reply)||out||"きょうね、ひなたで ずっと ねてたにゃ…";_aicAddBubble("assistant",r);_aicSession.msgs.push({role:"assistant",content:r});_aiPersistToday();setTimeout(function(){_aicShowChips((j&&j.chips)||["もっと きく","にゃ〜 かわいい","よしよし","なでる","また あした"]);_aiRenderSleep();},800);}
   catch(e){_aicSetBusy(false);if(e&&e.message==="__SLEEPY__"){_aicAddBubble("assistant",(_aiCatName()||"ねこ")+"「ふぁ〜 ねむい…💤 また あした ね」",true);_aicSleepLock();}else _aicAddBubble("assistant","にゃ…（"+(e&&e.message||"えらー")+"）",true);}
 }
 /* 🎴 なかよくなる質問カード */
@@ -26272,23 +26299,13 @@ function _aicGtk(){
   setTimeout(function(){_aicShowChips(card.o);},300);
 }
 
-async function _aicEndChat(){
-  if(_aicBusy)return;
-  if(_aicSession.ended){closeAiCat();return;}
-  _aicClearChips();_aicSetBusy(true);
-  var mode='おわりの あいさつ。JSONだけ：{"letter":"猫からの みじかい手紙(3〜4文・やさしく・今日の会話をふまえ・過去のその子とだけくらべ・自分の小話も少し・テンプレ禁止・名前で署名)","summary":"次に活かす1〜2文","goal":"目標がきまれば短く(なければ空)"}';
-  try{
-    var out=await _aiCall(_aicSession.msgs.slice(-20).concat([{role:"user",content:"(そろそろ おわり。手紙ください)"}]),mode,520,true);
-    var j=_aiJson(out);_aicSetBusy(false);
-    var letter=(j&&j.letter)||out||"きょうも 会えて よかったにゃ。また あした。";
-    _aicShowLetter(letter);_aiPushMem((j&&j.summary)||"");_aiPushLetter(letter);if(j&&j.goal)_aiSetGoal(j.goal);
-    _aiMarkGreeted();_aicSession.ended=true;
-    var end=_aicEl("aicEnd");if(end)end.textContent="また あした 🐾";
-    var inp=_aicEl("aicInput");if(inp){inp.disabled=true;inp.placeholder="また あした ね";}
-    var send=_aicEl("aicSend");if(send)send.disabled=true;
-    var mr=_aicEl("aicModeRow");if(mr)mr.style.display="none";
-    _aiRefreshBadge();_aiRefreshLetterBadge();_aiRenderSleep();
-  }catch(e){_aicSetBusy(false);_aicAddBubble("assistant","ごめんね、手紙 うまく 書けなかった…（"+(e&&e.message||"エラー")+"）",true);}
+function _aicEndChat(){
+  _aicClearChips();
+  _aicAddBubble("assistant","またね〜🐾 きょうのこと、あした おてがみに 書くね", true);
+  var mr=_aicEl("aicModeRow");if(mr)mr.style.display="none";
+  var inp=_aicEl("aicInput");if(inp)inp.disabled=true;
+  var send=_aicEl("aicSend");if(send)send.disabled=true;
+  setTimeout(function(){closeAiCat();},1400);
 }
 function _aicShowLetter(text){var box=_aicEl("aicLetter");if(!box)return;var nm=_aiCatName();box.innerHTML='<div class="aicLtHd"><span class="aicLtAva">'+_aiCatAvatar("happy")+'</span><span>'+(nm?nm+"からの":"きょうの")+' おてがみ</span></div><div class="aicLtBody"></div>';box.querySelector(".aicLtBody").textContent=text;box.hidden=false;_aicScrollBottom();}
 
@@ -26788,11 +26805,12 @@ function _aicRenderSetCard(){try{var st=_aicEl("aicSetState");if(st){var nm=_aiC
       <div id="aicLetter" hidden></div>
     </div>
     <div id="aicModeRow">
-      <button id="aicListenBtn" type="button">🎧 ねこの話きく</button>
-      <button id="aicGtkBtn" type="button">🎴 なかよくなる</button>
+      <button id="aicYoshiBtn" type="button">🫶 よしよし</button>
+      <button id="aicListenBtn" type="button">🎧 きく</button>
+      <button id="aicGtkBtn" type="button">🎴 なかよく</button>
     </div>
     <div id="aicBar">
-      <button id="aicEnd" type="button">🐾 おてがみ</button>
+      <button id="aicEnd" type="button">🐾 またね</button>
       <input id="aicInput" type="text" inputmode="text" placeholder="はなしかける…" autocomplete="off"/>
       <button id="aicSend" type="button" aria-label="そうしん">➤</button>
     </div>
