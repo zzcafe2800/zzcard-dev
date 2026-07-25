@@ -4446,6 +4446,40 @@ body.exercising #homeZZ{opacity:0;pointer-events:none;}
 <style id="aiCatCss4">
 .aicLtMsg{margin:8px 4px;background:linear-gradient(180deg,#fffdf6,#fff6fb);border:1.5px solid #ffe3ee;border-radius:16px;padding:12px 14px;box-shadow:0 5px 16px rgba(255,190,210,.2);}
 </style>
+<style>#roomShop{display:none!important;}</style>
+
+<style id="roomChatCss">
+#aiCatBtn{display:none!important;}
+#roomBag{top:16px!important;right:62px!important;left:auto!important;bottom:auto!important;width:44px!important;height:44px!important;}
+#roomCam{top:16px!important;right:112px!important;left:auto!important;bottom:auto!important;width:44px!important;height:44px!important;}
+#roomCatBubble{position:absolute;top:15%;left:50%;transform:translateX(-50%);z-index:8;max-width:80%;
+  background:#fff;color:#4f6b78;font-family:"Yomogi","Kosugi Maru",sans-serif;font-size:14px;font-weight:600;line-height:1.65;
+  padding:12px 16px;border-radius:18px;box-shadow:0 8px 22px rgba(80,120,140,.26);opacity:0;pointer-events:none;
+  transition:opacity .3s ease;white-space:pre-wrap;text-align:center;}
+#roomCatBubble.show{opacity:1;}
+#roomCatBubble::after{content:"";position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);border:9px solid transparent;border-top-color:#fff;border-bottom:0;}
+.rcbTxt{max-height:32vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#roomChat{position:absolute;left:0;right:0;bottom:0;z-index:9;padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,rgba(255,255,255,.94) 60%,rgba(255,255,255,.55));backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);}
+#roomSleep{margin:0 2px 7px;}
+#roomSleepBar{height:6px;border-radius:99px;background:rgba(224,233,238,.9);overflow:hidden;}
+#roomSleepFill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8ed3f2,#b7a7e6);transition:width .5s ease;}
+#roomSleepLab{font-size:10px;font-weight:800;color:#7a9db0;margin-top:2px;text-align:right;}
+#roomModeRow{display:flex;gap:7px;justify-content:center;margin-bottom:7px;}
+#roomModeRow button{flex:0 1 auto;border:1.5px solid #dcebf4;background:#fff;color:#5f8ba0;border-radius:12px;padding:7px 12px;font-size:12px;font-weight:800;font-family:inherit;cursor:pointer;line-height:1;white-space:nowrap;}
+#roomModeRow button:active{transform:scale(.94);background:#eef7fd;}
+#roomChatInputWrap{display:flex;align-items:center;gap:6px;}
+#roomChatInputWrap>button{flex:0 0 auto;border:none;background:rgba(120,170,195,.15);border-radius:50%;width:38px;height:38px;font-size:16px;cursor:pointer;line-height:1;}
+#roomChatInputWrap>button:active{transform:scale(.92);}
+#roomChatInput{flex:1;min-width:0;border:1.5px solid #d6ebf6;background:#fff;border-radius:999px;padding:10px 15px;font-size:14px;font-family:inherit;color:#4f6b78;outline:none;}
+#roomChatInput:focus{border-color:#8ed3f2;}
+#roomChatSend{background:linear-gradient(135deg,#8ed3f2,#5fb6dc)!important;color:#fff!important;}
+#roomChatChips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;padding:2px 0 4px;}
+.rcChip{border:1.5px solid #bfe3f4;background:#fff;color:#4f7f92;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:800;font-family:inherit;cursor:pointer;box-shadow:0 2px 6px rgba(120,190,225,.14);}
+.rcChip:active{transform:scale(.95);background:#eaf7fd;}
+.rcPen{border-style:dashed;color:#8aa7b6;padding:9px 12px;}
+body.exercising #roomChat,body.exercising #roomCatBubble,body.exercising #roomSleep{display:none!important;}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -4772,7 +4806,7 @@ body.exercising #homeZZ{opacity:0;pointer-events:none;}
   <div id="fabWrap" style="display:none">
   
 
-    <button class="fabItem" id="fabDex" type="button" aria-label="ショップ"><span class="fi"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 27 L4 15 L11 10 L18 15 L18 27"/><path d="M18 27 L18 19 L24 15 L29 19 L29 27"/><path d="M2.5 27 L29.5 27"/></svg></span><span class="fl">ショップ</span><span id="shopNewBadge" class="coinBadge dockBang" hidden>NEW</span></button>
+    <button class="fabItem" id="fabDex" type="button" aria-label="商店街"><span class="fi"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 27 L4 15 L11 10 L18 15 L18 27"/><path d="M18 27 L18 19 L24 15 L29 19 L29 27"/><path d="M2.5 27 L29.5 27"/></svg></span><span class="fl">商店街</span><span id="shopNewBadge" class="coinBadge dockBang" hidden>NEW</span></button>
     <button class="fabItem" id="fabRecord" type="button" aria-label="きろく"><span class="fi"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M6 6 L6 26 L26 26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="10" y="16" width="3.4" height="7" rx="1.2" fill="currentColor"/><rect x="15.3" y="11" width="3.4" height="12" rx="1.2" fill="currentColor"/><rect x="20.6" y="18" width="3.4" height="5" rx="1.2" fill="currentColor"/></svg></span><span class="fl">きろく</span></button>
     <button class="fabItem" id="fabHome" type="button" aria-label="ホーム"><span class="fi"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M6 15 L16 6 L26 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 14 L8 26 L24 26 L24 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 26 L13 19 L19 19 L19 26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></span><span class="fl">ホーム</span></button>
     <button class="fabItem" id="fabCloset" type="button" aria-label="きせかえ"><span class="fi"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 6 Q13 6 13 9 Q13 11 11 12 L5 20 Q4 21 5 22 L9 25 Q10 26 11 24 L13 21 L13 26 L19 26 L19 21 L21 24 Q22 26 23 25 L27 22 Q28 21 27 20 L21 12 Q19 11 19 9 Q19 6 16 6 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg></span><span class="fl">きせかえ</span><span id="bagBadge" class="coinBadge" hidden></span></button>
@@ -4935,6 +4969,20 @@ body.exercising #homeZZ{opacity:0;pointer-events:none;}
   <button id="roomShop" type="button" aria-label="ショップ"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 H8 L10.6 20.5 H24.4 L26.6 10 H10.3" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12.5" cy="25" r="2.2" fill="#5c93ad"/><circle cx="22.5" cy="25" r="2.2" fill="#5c93ad"/></svg></button>
   <button id="aiCatBtn" type="button" aria-label="ねこと はなす"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M7 6 H25 Q28 6 28 9 V18 Q28 21 25 21 H15 L9 26 V21 H7 Q4 21 4 18 V9 Q4 6 7 6 Z" fill="none" stroke="#5c93ad" stroke-width="2.4" stroke-linejoin="round"/><circle cx="12.5" cy="13.5" r="1.4" fill="#5c93ad"/><circle cx="19.5" cy="13.5" r="1.4" fill="#5c93ad"/><path d="M13 16.5 Q16 18.5 19 16.5" fill="none" stroke="#5c93ad" stroke-width="1.9" stroke-linecap="round"/></svg><span id="aiCatBadge" hidden></span></button>
   <button id="roomDoor" type="button" aria-label="とびら" hidden></button>
+  <div id="roomCatBubble"><div class="rcbTxt"></div></div>
+  <div id="roomChat">
+    <div id="roomSleep"><div id="roomSleepBar"><div id="roomSleepFill"></div></div><div id="roomSleepLab"></div></div>
+    <div id="roomModeRow">
+      <button id="roomYoshiBtn" type="button" aria-label="よしよし">🫶 よしよし</button>
+      <button id="roomListenBtn" type="button" aria-label="きく">🎧 きく</button>
+      <button id="roomGtkBtn" type="button" aria-label="なかよく">🎴 なかよく</button>
+    </div>
+    <div id="roomChatChips" style="display:none"></div>
+    <div id="roomChatInputWrap">
+      <input id="roomChatInput" type="text" inputmode="text" placeholder="ねこに はなしかける…" autocomplete="off"/>
+      <button id="roomChatSend" type="button" aria-label="そうしん">➤</button>
+    </div>
+  </div>
   <div id="editBar">
     <div id="editTray"></div>
     <div id="editHintBar"><span id="editHint">アイテムをタップして置く・ドラッグで移動・✕で片づけ</span><button id="devAllToys" type="button" aria-label="どれでも遊ぶ">◯</button><button id="devOuting" type="button" aria-label="おでかけ短縮テスト">⏱おでかけ</button><button id="devUnlock" type="button" aria-label="dev">…</button><button id="editDone" type="button">かんりょう</button></div>
@@ -12734,7 +12782,7 @@ function openRoom(){
   renderBackdrop();
   if(_firstMeetActive){ try{$("roomScene").innerHTML="";}catch(_){} }   /* 初対面：猫はまだ出さない（アニメで登場） */
   else { renderRoom(); }
-  renderRoomAmbient();$("catRoom").classList.add("visible");try{_aiRefreshBadge();}catch(_){}
+  renderRoomAmbient();$("catRoom").classList.add("visible");try{_aiRefreshBadge();}catch(_){}try{_aiRoomChatOpen();}catch(_){}
   syncServerOffset();
   refreshOutingUI();
   loadOuting().then(()=>{
@@ -13762,7 +13810,12 @@ function renderCloset(){
       const sw=document.createElement("button");sw.className="closetSwatch";sw.style.background=itemColor(it.id);
       const inp=document.createElement("input");inp.type="color";inp.className="closetColorInput";inp.value=itemColor(it.id);
       sw.onclick=(e)=>{e.stopPropagation();inp.click();};
-      inp.oninput=()=>{setItemColor(it.id,inp.value);sw.style.background=inp.value;};
+      let _rt2=0;
+      inp.oninput=()=>{setItemColor(it.id,inp.value);sw.style.background=inp.value;
+        try{const sv=tile.querySelector("svg");if(sv)sv.outerHTML=itemAloneSVG(it.id);}catch(_){}
+        if(_rt2)cancelAnimationFrame(_rt2);
+        _rt2=requestAnimationFrame(()=>{try{refreshCostumeEverywhere();}catch(_){}});
+      };
       inp.onchange=()=>{renderCloset();refreshCostumeEverywhere();};
       tile.appendChild(sw);tile.appendChild(inp);
     }else{
@@ -26150,6 +26203,7 @@ function _nyaText(real){var n=Math.max(3,Math.min(18,Math.round(String(real||"")
 function _aicMorph(txtEl,real){if(!txtEl)return;txtEl.textContent=_nyaText(real);txtEl.classList.add("aicNya");_aicScrollBottom();setTimeout(function(){txtEl.classList.remove("aicNya");var i=0,step=Math.max(1,Math.round(real.length/28));(function tick(){i+=step;txtEl.textContent=real.slice(0,i);_aicScrollBottom();if(i<real.length)setTimeout(tick,20);else txtEl.textContent=real;})();},650);}
 
 function _aicAddBubble(role,text,noMorph){
+  if(_aicRoom){ if(role!=="user") _rcBubble(String(text||""), !noMorph); return null; }
   var box=_aicEl("aicMsgs");if(!box)return null;
   var w=document.createElement("div");
   w.className="aicRow "+(role==="user"?"aicMe":"aicNeko");
@@ -26157,25 +26211,25 @@ function _aicAddBubble(role,text,noMorph){
   else{w.innerHTML='<div class="aicAva">'+_aiCatAvatar("happy")+'</div><div class="aicB"></div>';var tel=w.querySelector(".aicB");box.appendChild(w);if(noMorph)tel.textContent=text;else _aicMorph(tel,String(text||""));}
   _aicScrollBottom();return w;
 }
-function _aicTyping(on){var t=_aicEl("aicTyping");if(!t)return;if(on){var a=t.querySelector(".aicAva");if(a&&!a.innerHTML)a.innerHTML=_aiCatAvatar("normal");}t.hidden=!on;if(on)_aicScrollBottom();}
-function _aicSetBusy(b){_aicBusy=b;var send=_aicEl("aicSend"),end=_aicEl("aicEnd");if(send)send.disabled=b;if(end)end.disabled=b;_aicTyping(b);}
-function _aicShowChips(list){var box=_aicEl("aicTopics");if(!box)return;box.innerHTML="";(list||[]).slice(0,5).forEach(function(t){if(!t)return;var b=document.createElement("button");b.type="button";b.className="aicChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});box.hidden=!(list&&list.length);}
-function _aicClearChips(){var box=_aicEl("aicTopics");if(box){box.innerHTML="";box.hidden=true;}}
+function _aicTyping(on){if(_aicRoom){if(on)_rcBubble("…",false);return;}var t=_aicEl("aicTyping");if(!t)return;if(on){var a=t.querySelector(".aicAva");if(a&&!a.innerHTML)a.innerHTML=_aiCatAvatar("normal");}t.hidden=!on;if(on)_aicScrollBottom();}
+function _aicSetBusy(b){_aicBusy=b;if(_aicRoom){var rs=_aicEl("roomChatSend");if(rs)rs.disabled=b;_aicTyping(b);return;}var send=_aicEl("aicSend"),end=_aicEl("aicEnd");if(send)send.disabled=b;if(end)end.disabled=b;_aicTyping(b);}
+function _aicShowChips(list){if(_aicRoom){_rcShowChoices(list);return;}var box=_aicEl("aicTopics");if(!box)return;box.innerHTML="";(list||[]).slice(0,5).forEach(function(t){if(!t)return;var b=document.createElement("button");b.type="button";b.className="aicChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});box.hidden=!(list&&list.length);}
+function _aicClearChips(){if(_aicRoom){var rb=_aicEl("roomChatChips");if(rb)rb.innerHTML="";_rcSetInput(true);return;}var box=_aicEl("aicTopics");if(box){box.innerHTML="";box.hidden=true;}}
 function _aicFocusInput(){var i=_aicEl("aicInput");if(i){i.disabled=false;try{i.focus();}catch(_){}}_aicScrollBottom();}
 
 /* 眠気バー */
 function _aiRenderSleep(){
   try{
-    var fill=_aicEl("aicSleepFill"),lab=_aicEl("aicSleepLab");
-    if(fill)fill.style.width=(_aiSleepFrac()*100).toFixed(0)+"%";
-    var nm=_aiCatName()||"ねこ";
-    var f=_aiSleepFrac();
+    var f=_aiSleepFrac(), nm=_aiCatName()||"ねこ";
     var mood=f>=1?"むにゃ…💤":(f>0.75?"ねむい😪":(f>0.4?"ちょっと ねむい":"ぱっちり"));
-    if(lab)lab.textContent=nm+"の ねむけ："+mood;
+    var w=(f*100).toFixed(0)+"%", lab=nm+"の ねむけ："+mood;
+    var af=_aicEl("aicSleepFill"),al=_aicEl("aicSleepLab"); if(af)af.style.width=w; if(al)al.textContent=lab;
+    var rf=_aicEl("roomSleepFill"),rl=_aicEl("roomSleepLab"); if(rf)rf.style.width=w; if(rl)rl.textContent=lab;
   }catch(_){}
 }
 
 function _aicAddLetterMsg(text){
+  if(_aicRoom){ _rcBubble("📬 "+(_aiCatName()?_aiCatName()+"からの":"きのうの")+" おてがみ\n"+String(text||""), false); return; }
   var box=_aicEl("aicMsgs");if(!box)return;var nm=_aiCatName();
   var w=document.createElement("div");w.className="aicLtMsg";
   w.innerHTML='<div class="aicLtHd"><span class="aicLtAva">'+_aiCatAvatar("happy")+'</span><span>\uD83D\uDCEC '+(nm?nm+"からの":"きのうの")+' おてがみ</span></div><div class="aicLtBody"></div>';
@@ -26212,7 +26266,7 @@ async function openAiCat(){
   }
 }
 function closeAiCat(){var ov=_aicEl("aiCat");if(ov)ov.classList.remove("show");try{playClick();}catch(_){}}
-function _aicSleepLock(){var inp=_aicEl("aicInput");if(inp){inp.disabled=true;inp.placeholder="また あした ね💤";}var send=_aicEl("aicSend");if(send)send.disabled=true;_aicClearChips();var mr=_aicEl("aicModeRow");if(mr)mr.style.display="none";}
+function _aicSleepLock(){var inp=_aicEl("aicInput");if(inp){inp.disabled=true;inp.placeholder="また あした ね💤";}var send=_aicEl("aicSend");if(send)send.disabled=true;_aicClearChips();var mr=_aicEl("aicModeRow");if(mr)mr.style.display="none";var ri=_aicEl("roomChatInput");if(ri){ri.disabled=true;ri.placeholder="また あした ね💤";}var rs=_aicEl("roomChatSend");if(rs)rs.disabled=true;}
 
 async function _aicGreet(){
   if(_aicBusy)return;
@@ -26320,6 +26374,20 @@ function closeLetterBox(){var ov=_aicEl("aiLetterBox");if(ov)ov.classList.remove
 function _aicRenderModelPick(id){var box=_aicEl(id);if(!box)return;var cur=_aiModelKey();box.querySelectorAll(".aicMdl").forEach(function(b){b.classList.toggle("on",b.dataset.m===cur);});}
 function _aicRenderSetCard(){try{var st=_aicEl("aicSetState");if(st){var nm=_aiCatName();st.textContent=(nm?nm+"・":"")+(_aiModelKey()==="smart"?"かしこめ":"やさしい")+"・キー不要";}_aicRenderModelPick("aicSetModelPick");}catch(_){}}
 
+var _aicRoom=false, _aicRoomInit=false;
+function _rcBubble(text,morph){var b=_aicEl("roomCatBubble");if(!b)return;b.classList.add("show");var t=b.querySelector(".rcbTxt");if(!t)return;if(morph)_aicMorph(t,String(text||""));else t.textContent=String(text||"");}
+function _rcSetInput(showInput){var iw=_aicEl("roomChatInputWrap"),ch=_aicEl("roomChatChips");if(iw)iw.style.display=showInput?"flex":"none";if(ch)ch.style.display=showInput?"none":"flex";}
+function _rcShowChoices(list){var box=_aicEl("roomChatChips");if(!box)return;box.innerHTML="";var any=false;(list||[]).slice(0,5).forEach(function(t){if(!t)return;any=true;var b=document.createElement("button");b.type="button";b.className="rcChip";b.textContent=t;b.addEventListener("click",function(){_aicUserSay(t);});box.appendChild(b);});if(any){var pe=document.createElement("button");pe.type="button";pe.className="rcChip rcPen";pe.textContent="✏️";pe.addEventListener("click",function(){_rcSetInput(true);var i=_aicEl("roomChatInput");if(i){try{i.focus();}catch(_){}}});box.appendChild(pe);_rcSetInput(false);}else{_rcSetInput(true);}}
+function _rcSend(){var inp=_aicEl("roomChatInput");if(!inp)return;var v=inp.value;inp.value="";_rcSetInput(true);_aicUserSay(v);}
+async function _aiRoomChatOpen(){
+  _aicRoom=true; _aiRenderSleep();
+  if(_aicRoomInit) return; _aicRoomInit=true;
+  _aicSetBusy(true); await _aiEnsureSignedIn(); _aicSetBusy(false);
+  if(_aiSleepy()){ _rcBubble((_aiCatName()||"ねこ")+"「ふぁ…ぁ、きょうは いっぱい しゃべって ねむい…💤 また あした ね」",false); _aicSleepLock(); return; }
+  await _aiDeliverYesterdayLetter();
+  if(!_aiGreetedToday()){ _aicGreet(); }
+  else { _rcBubble((_aiCatName()||"ねこ")+"「おかえり〜 にゃ」",false); }
+}
 /* ===== 配線 ===== */
 (function _aiWire(){
   try{
@@ -26329,6 +26397,11 @@ function _aicRenderSetCard(){try{var st=_aicEl("aicSetState");if(st){var nm=_aiC
     var send=_aicEl("aicSend");if(send)send.addEventListener("click",function(){_aicSend();});
     var inp=_aicEl("aicInput");if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();_aicSend();}});
     var end=_aicEl("aicEnd");if(end)end.addEventListener("click",function(){_aicEndChat();});
+    var ry=_aicEl("roomYoshiBtn");if(ry)ry.addEventListener("click",function(){_aicYoshi();});
+    var rl=_aicEl("roomListenBtn");if(rl)rl.addEventListener("click",function(){_aicListen();});
+    var rg=_aicEl("roomGtkBtn");if(rg)rg.addEventListener("click",function(){_aicGtk();});
+    var rcs=_aicEl("roomChatSend");if(rcs)rcs.addEventListener("click",function(){_rcSend();});
+    var rci=_aicEl("roomChatInput");if(rci)rci.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();_rcSend();}});
     var lm=_aicEl("aicListenBtn");if(lm)lm.addEventListener("click",function(){_aicListen();});
     var gk=_aicEl("aicGtkBtn");if(gk)gk.addEventListener("click",function(){_aicGtk();});
     var lb=_aicEl("tpbLetter");if(lb)lb.addEventListener("click",function(e){e.stopPropagation();openLetterBox();});
