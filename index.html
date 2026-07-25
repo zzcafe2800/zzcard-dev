@@ -4522,6 +4522,22 @@ body.exercising #roomChatFull,#catRoom.editing #roomChatFull{display:none!import
 #roomVoice:active{transform:scale(.9);}
 #aicFriend{margin:0 14px 4px;}
 </style>
+
+<style id="askStepCss">
+#askProg{display:flex;gap:6px;margin:10px 4px 18px;}
+#askProg i{flex:1;height:6px;border-radius:99px;background:#e6eef3;transition:background .35s ease;}
+#askProg i.on{background:linear-gradient(90deg,#8ed3f2,#5fb6dc);}
+#askProg i.done{background:#7fd0a8;}
+.askSec{margin-bottom:4px;}
+.askRow{flex-direction:column;flex-wrap:nowrap;gap:9px;align-items:stretch;justify-content:flex-start;}
+.askChip{width:100%;flex:0 0 auto;display:flex;align-items:center;justify-content:flex-start;text-align:left;padding:15px 16px;border-radius:14px;gap:11px;font-size:14px;}
+.askChip .askL{font-size:14px;}
+.askBk{display:none!important;}
+#askBtnRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;}
+#askBack{border:none;background:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:800;color:#a9c3d1;padding:6px 4px;}
+#askBack:active{transform:scale(.95);}
+#askBtnRow #askSkip{margin-top:0;}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -4884,6 +4900,7 @@ body.exercising #roomChatFull,#catRoom.editing #roomChatFull{display:none!import
   <div id="askBox">
     <div id="askTtl">おはよう！</div>
     <div id="askSub">えらぶだけ。あとで でも いいよ</div>
+    <div id="askProg"><i></i><i></i><i></i></div>
 
     <div class="askSec">
       <div class="askHead">
@@ -4915,8 +4932,10 @@ body.exercising #roomChatFull,#catRoom.editing #roomChatFull{display:none!import
       <div class="askRow" id="askBedRow"></div>
     </div>
 
-    <button id="askGo" type="button">これで OK</button>
-    <button id="askSkip" type="button">スキップ</button>
+    <div id="askBtnRow">
+      <button id="askBack" type="button" aria-label="もどる">◀ もどる</button>
+      <button id="askSkip" type="button">スキップ</button>
+    </div>
   </div>
 </div>
 <div id="taisoScreen">
@@ -18820,7 +18839,7 @@ var ASKDONE_KEY="radio_ask_done";
 function _askDone(){try{return JSON.parse(localStorage.getItem(ASKDONE_KEY)||"{}")||{};}catch(_){return{};}}
 function _askMark(k,v){try{const o=_askDone();o[jstKey()]=Object.assign({},o[jstKey()]||{},{[k]:v});localStorage.setItem(ASKDONE_KEY,JSON.stringify(o));}catch(_){}}
 function askedToday(k){try{const d=_askDone()[jstKey()]||{};return !!d[k];}catch(_){return false;}}
-var _askM1=null,_askM2=null,_askM3=null,_askWG=null,_askWH=null,_askBG=null,_askBH=null,_askThen=null;
+var _askM1=null,_askM2=null,_askM3=null,_askWG=null,_askWH=null,_askBG=null,_askBH=null,_askThen=null,_askSec=0;
 function _askFmt(hf){
   if(!Number.isFinite(hf))return"－";
   let h=Math.floor(hf),m=Math.round((hf-h)*60);
@@ -18862,11 +18881,26 @@ function _askPaint(){
   };
   timeRow("askWakeRow","askWakeStep","askWakeV","askWakeBk",WAKE_G,_askWG,_askWH,"data-wg","data-wh");
   timeRow("askBedRow","askBedStep","askBedV","askBedBk",BED_G,_askBG,_askBH,"data-bg","data-bh");
+  try{
+    var _secs=document.querySelectorAll("#askCard .askSec");
+    for(var _i=0;_i<_secs.length;_i++)_secs[_i].style.display=(_i===_askSec)?"":"none";
+    var _segs=document.querySelectorAll("#askProg i");
+    for(var _j=0;_j<_segs.length;_j++)_segs[_j].className=(_j<_askSec?"done":(_j===_askSec?"on":""));
+    var _bk=$("askBack");if(_bk)_bk.style.visibility=(_askSec===0&&_askM1==null)?"hidden":"visible";
+  }catch(_){}
+}
+function _askAdvance(){ if(_askSec<2){_askSec++;_askPaint();} else {try{playPop();}catch(_){}_askClose(true);} }
+function _askSecDone(){ setTimeout(_askAdvance,300); }
+function _askBackStep(){
+  if(_askSec===0){ if(_askM2!=null){_askM2=null;_askM3=null;} else if(_askM1!=null){_askM1=null;} else {return;} }
+  else if(_askSec===1){ if(_askWG!=null){_askWG=null;_askWH=null;} else {_askSec=0;} }
+  else { if(_askBG!=null){_askBG=null;_askBH=null;} else {_askSec=1;} }
+  _askPaint();
 }
 function openAskCard(then){
   _askThen=then||null;
   if(askedToday("all")){if(_askThen){const f=_askThen;_askThen=null;f();}return;}
-  _askM1=null;_askM2=null;_askM3=null;_askBG=null;_askBH=null;
+  _askM1=null;_askM2=null;_askM3=null;_askBG=null;_askBH=null;_askSec=0;
   /* おきた時間は じどうで えらんでおく */
   _askWG=null;_askWH=null;
   try{
@@ -24104,13 +24138,13 @@ try{
     if(t.closest("#askBedBk")){try{playClick();}catch(_){}_askBG=null;_askBH=null;_askPaint();return;}
     if(pick("m1",v=>{_askM1=v;_askM2=null;_askM3=null;}))return;
     if(pick("m2",v=>{_askM2=v;_askM3=null;}))return;
-    if(pick("m3",v=>{_askM3=v;}))return;
-    if(pick("wg",v=>{_askWG=v;_askWH=(WAKE_G[v].h[0]!=null?WAKE_G[v].h[0]:null);}))return;
-    if(pick("wh",v=>{_askWH=v;}))return;
-    if(pick("bg",v=>{_askBG=v;_askBH=(BED_G[v].h[0]!=null?BED_G[v].h[0]:null);}))return;
-    if(pick("bh",v=>{_askBH=v;}))return;
-    if(t.closest("#askGo")){try{playPop();}catch(_){}_askClose(true);return;}
-    if(t.closest("#askSkip")){try{playClick();}catch(_){}_askClose(false);return;}
+    if(pick("m3",v=>{_askM3=v;})){_askSecDone();return;}
+    if(pick("wg",v=>{_askWG=v;_askWH=(WAKE_G[v].h[0]!=null?WAKE_G[v].h[0]:null);})){if(!WAKE_G[_askWG].h.length)_askSecDone();return;}
+    if(pick("wh",v=>{_askWH=v;})){_askSecDone();return;}
+    if(pick("bg",v=>{_askBG=v;_askBH=(BED_G[v].h[0]!=null?BED_G[v].h[0]:null);})){if(!BED_G[_askBG].h.length)_askSecDone();return;}
+    if(pick("bh",v=>{_askBH=v;})){_askSecDone();return;}
+    if(t.closest("#askBack")){try{playClick();}catch(_){}_askBackStep();return;}
+    if(t.closest("#askSkip")){try{playClick();}catch(_){}_askAdvance();return;}
   });
 }catch(_){}
 try{
