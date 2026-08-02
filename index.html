@@ -5397,6 +5397,19 @@ body.exercising #roomGoal,#catRoom.editing #roomGoal,#catRoom.decoing #roomGoal{
 #homeLoc.homeAdv:after{content:"";position:absolute;inset:0;border-radius:inherit;overflow:hidden;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);background-size:250% 100%;background-position:120% 0;animation:advSheen 4.6s ease-in-out infinite;pointer-events:none;}
 @keyframes advSheen{0%,74%{background-position:120% 0;}90%,100%{background-position:-40% 0;}}
 #homeLoc.homeAdv #homeLocBadge{background:#fff;color:#e06a1c;}
+/* --- ボスの 時間だけ 出る「ボス」ボタン（鬼） --- */
+#homeLoc.homeBoss{background:linear-gradient(135deg,#9b3352,#67142f 55%,#3a0718)!important;color:#ffd9e4!important;
+  border:1.5px solid rgba(255,140,160,.5)!important;padding:8px 22px!important;overflow:visible;
+  box-shadow:0 12px 26px rgba(120,10,35,.5),0 3px 9px rgba(120,10,35,.35),inset 0 1px 0 rgba(255,255,255,.18)!important;
+  animation:bossBtnPulse 2.6s ease-in-out infinite;}
+#homeLoc.homeBoss .hlIco{width:24px;height:24px;filter:drop-shadow(0 0 4px rgba(255,60,90,.8));}
+#homeLoc.homeBoss .hlTx{font-size:12.5px!important;font-weight:900;letter-spacing:.18em;color:#ffe0e8;
+  text-shadow:0 0 8px rgba(255,40,80,.75),0 1px 2px rgba(60,0,15,.7);}
+#homeLoc.homeBoss:after{content:"";position:absolute;inset:-3px;border-radius:inherit;pointer-events:none;
+  box-shadow:0 0 16px 2px rgba(255,40,80,.45);animation:bossBtnGlow 2.6s ease-in-out infinite;}
+#homeLoc.homeBoss #homeLocBadge{background:#ffd9e4;color:#7d0f2c;}
+@keyframes bossBtnPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
+@keyframes bossBtnGlow{0%,100%{opacity:.45;}50%{opacity:1;}}
 
 /* --- ぜんぶ見る ギャラリー --- */
 #advDex{position:fixed;inset:0;z-index:3400;display:none;flex-direction:column;background:linear-gradient(180deg,#eef4fb,#e2ecf6);font-family:"Yomogi","Kosugi Maru",sans-serif;}
@@ -5986,7 +5999,7 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
 <style id="bossCss5">
 @media (orientation:landscape) and (min-width:820px){
   /* 右パネルを 広く：縦長の絵を なるべく 大きく */
-  #bossPanel{flex:0 0 clamp(320px,32vw,520px) !important;max-width:none !important;padding:0 10px calc(10px + env(safe-area-inset-bottom)) !important;justify-content:flex-start;}
+  #bossPanel{flex:0 0 clamp(330px,28vw,440px) !important;max-width:none !important;padding:0 10px calc(10px + env(safe-area-inset-bottom)) !important;justify-content:flex-start;}
   #bossStage{flex:1 1 auto !important;}
   /* 全体版：カード枠をやめて 縦いっぱいに */
   #bossWhole{display:block;width:100%;max-height:none !important;height:auto;aspect-ratio:auto !important;flex:1 1 auto;min-height:0;border:none !important;border-radius:0 !important;box-shadow:none !important;background:transparent !important;margin:0 0 6px !important;}
@@ -6005,7 +6018,7 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   /* 右パネル：絵を いっぱいに 敷いて UIを その上に かさねる */
   #bossPanel{position:relative;padding:0 !important;justify-content:flex-end !important;}
   #bossWhole{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;margin:0 !important;z-index:0;}
-  #bossWhole .bwImg{object-fit:cover !important;}
+  #bossWhole .bwImg{object-fit:contain !important;object-position:center center !important;}
   /* 下に 影を 敷いて UIを 読みやすく */
   #bossPanel::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(4,6,16,.94) 0%,rgba(4,6,16,.75) 42%,rgba(4,6,16,0) 100%);}
   #bossTimeNote,#bossOneRow,#bossFightBtn{position:relative;z-index:2;}
@@ -6142,6 +6155,26 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   .bfUPic{width:48px;height:48px;}
   .bfU .bfBar.sm{width:54px;}
   .bfUN{font-size:8.5px;}
+}
+/* 上を すこし 暗くして HPバーを 読みやすく */
+#bfLayer::before{content:"";position:absolute;left:0;right:0;top:0;height:24%;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,6,16,.88),rgba(4,6,16,.5) 55%,rgba(4,6,16,0));}
+/* ★PC（よこなが）＝ぜんぶ 右の たてなが枠の 中に */
+@media (orientation:landscape) and (min-width:820px){
+  #bossPanel{overflow:hidden !important;}
+  #bfLayer::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;pointer-events:none;
+    background:linear-gradient(0deg,rgba(4,6,16,.95) 0%,rgba(4,6,16,.78) 45%,rgba(4,6,16,0) 100%);}
+  #bfBossHp{top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 26px);}
+  #bfBossAnchor{top:40%;}
+  #bfBanner{top:34%;}
+  #bfTeam{left:50%;right:auto;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));
+    flex-wrap:wrap;justify-content:center;gap:6px 8px;width:calc(100% - 18px);}
+  .bfU{width:68px;}
+  .bfUPic{width:52px;height:52px;}
+  .bfU .bfBar.sm{width:60px;}
+  #bfLog{left:9px;right:9px;width:auto;text-align:center;bottom:calc(152px + env(safe-area-inset-bottom));}
+  #bfResult{top:36%;}
+  #bfResult b{font-size:28px;}
 }
 </style>
 </head>
@@ -6642,9 +6675,6 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
     <div class="trRow"><span class="trIco">😊</span><span class="trLbl">気分</span><b class="trVal" id="trMood">–</b></div>
     <div class="trRow"><span class="trIco">📻</span><span class="trLbl">総日数</span><b class="trVal" id="trTotal">–</b></div>
     <div class="trRow"><span class="trIco">🔥</span><span class="trLbl">連続日数</span><b class="trVal" id="trStreak">–</b></div>
-  </div>
-  <div id="streakCard">
-    <button id="bossOpenBtn" type="button">ボス <span class="bossIco">👿</span></button>
   </div>
 </div>
 
@@ -17309,8 +17339,8 @@ try{const _hz=$("homeZZ");if(_hz){_hz.addEventListener("click",e=>{e.stopPropaga
 try{let _hl=$("homeLoc");if(_hl){
       /* 古い 配線を 落とすため、ボタンを 作りなおす */
       const _n=_hl.cloneNode(false);_hl.parentNode.replaceChild(_n,_hl);_hl=_n;
-      _hl.hidden=false;_hl.innerHTML=_advBtnHTML();_hl.classList.add("homeAdv");
-      _hl.addEventListener("click",e=>{e.stopPropagation();try{playClick();}catch(_){}try{openAdventure();}catch(_){}});setTimeout(()=>{try{_homeLocBadge();}catch(_){}},0);   /* ★商店街を ひらく リスナーは 外した（ストーリーだけ 出るように） */}}catch(_){}
+      _hl.hidden=false;try{_homeLocPaint(true);}catch(_){_hl.innerHTML=_advBtnHTML();_hl.classList.add("homeAdv");}
+      _hl.addEventListener("click",e=>{e.stopPropagation();try{playClick();}catch(_){}try{_homeLocGo();}catch(_){}});setTimeout(()=>{try{_homeLocBadge();}catch(_){}},0);   /* ★商店街を ひらく リスナーは 外した（ストーリーだけ 出るように） */}}catch(_){}
 try{var _hab=$("homeAlbumBtn");if(_hab)_hab.addEventListener("click",function(e){e.stopPropagation();try{playClick();}catch(_){}try{openJrnAlbum();}catch(_){}});}catch(_){}
 function _applyLite(){try{const m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");const p=(window.innerHeight||0)>=(window.innerWidth||0);document.documentElement.classList.toggle("lite",m||p);}catch(_){}}
 window.addEventListener("resize",()=>{_applyLite();try{_refreshRadioAlt();}catch(_){}});window.addEventListener("orientationchange",()=>{_applyLite();try{_refreshRadioAlt();}catch(_){}});_applyLite();
@@ -18421,7 +18451,7 @@ var JRN_PLACES=[
 ];
 function _jrnPlaceAt(km){km=Math.max(0,km||0);var r=JRN_PLACES[0];for(var i=0;i<JRN_PLACES.length;i++){if(JRN_PLACES[i][0]<=km)r=JRN_PLACES[i];else break;}return {pref:r[1],city:r[2]};}
 function _setHomeLoc(km){_homeKm=km;var el=$("homeLoc");if(el){el.hidden=false;
-  el.innerHTML=_advBtnHTML();el.classList.add("homeAdv");
+  try{_homeLocPaint(true);}catch(_){el.innerHTML=_advBtnHTML();el.classList.add("homeAdv");}
   try{_homeLocBadge();}catch(_){}
   return;}if(0){var p=_jrnPlaceAt(km);el.innerHTML='<span class="hlPin">📍</span>'+escHtml(p.pref)+' <b>'+escHtml(p.city)+'</b>';el.classList.remove("hlHidden");el.hidden=false;}try{var sc=$("selectScreen");if(sc&&!sc.classList.contains("hidden")&&typeof renderHomeScenery==="function")renderHomeScenery(_homeTier());}catch(_){}}
 var _myPartyUids=new Set();
@@ -28026,6 +28056,7 @@ function _homeLocBadge(){
     const b=$("homeLocBadge");if(!b)return;
     let unread=false;
     try{unread=(typeof _advAvailToday==="function")&&_advAvailToday();}catch(_){}
+    try{if(typeof _homeLocMode==="function"&&_homeLocMode()==="boss")unread=false;}catch(_){}
     if(unread){b.textContent="!";b.hidden=false;}else b.hidden=true;
   }catch(_){}
   try{_shopNewBadge();}catch(_){}
@@ -29713,6 +29744,46 @@ function _advStep(st){
 }
 
 /* --- ホームの ボタン（ストーリー → 冒険） --- */
+/* ★鬼の イラスト（ボスの 時間だけ 出る） */
+function _oniIconSVG(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
+    +'<path d="M6.3 6.9 L4.5 2.5 L9 4.6 Z" fill="currentColor"/>'
+    +'<path d="M17.7 6.9 L19.5 2.5 L15 4.6 Z" fill="currentColor"/>'
+    +'<path d="M12 4.5 C16.5 4.5 19 7.8 19 11.9 C19 16.4 15.9 19.6 12 19.6 C8.1 19.6 5 16.4 5 11.9 C5 7.8 7.5 4.5 12 4.5 Z"/>'
+    +'<path d="M7.9 9.7 L11 11.2 L7.9 12.1 Z" fill="currentColor" stroke="none"/>'
+    +'<path d="M16.1 9.7 L13 11.2 L16.1 12.1 Z" fill="currentColor" stroke="none"/>'
+    +'<path d="M8.5 15 L15.5 15"/>'
+    +'<path d="M9.9 15 L10.7 17 L11.5 15 Z" fill="currentColor" stroke="none"/>'
+    +'<path d="M12.5 15 L13.3 17 L14.1 15 Z" fill="currentColor" stroke="none"/>'
+    +'</svg>';
+}
+function _bossBtnHTML(){
+  return '<span class="hlIco">'+_oniIconSVG()+'</span>'
+    +'<span class="hlTx">ボス</span><span id="homeLocBadge" hidden></span>';
+}
+/* いまは ボスの 時間？（18時〜5時。全衣装モード中は いつでも） */
+function _homeLocMode(){ try{ return _bossInWindow()?"boss":"adv"; }catch(_){ return "adv"; } }
+/* ホームの ボタンを いまの じかんに 合わせて ぬりなおす */
+var _homeLocCur="";
+function _homeLocPaint(force){
+  try{
+    var el=$("homeLoc"); if(!el)return;
+    var m=_homeLocMode();
+    if(!force && m===_homeLocCur && el.querySelector(".hlTx"))return;
+    _homeLocCur=m;
+    el.hidden=false;
+    el.innerHTML=(m==="boss")?_bossBtnHTML():_advBtnHTML();
+    el.classList.toggle("homeBoss", m==="boss");
+    el.classList.toggle("homeAdv", m!=="boss");
+    try{_homeLocBadge();}catch(_){}
+  }catch(_){}
+}
+/* ボタンを おしたとき：ボスの 時間なら ボス、そうでなければ 冒険 */
+function _homeLocGo(){
+  try{ if(_homeLocMode()==="boss"){ _bossOpen(); return; } }catch(_){}
+  try{ openAdventure(); }catch(_){}
+}
+try{ setInterval(function(){ try{_homeLocPaint();}catch(_){} },60000); }catch(_){}
 function _advBtnHTML(){
   return '<span class="hlIco"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+
     '<circle cx="12" cy="12" r="9"/>'+
@@ -30125,12 +30196,100 @@ function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossM
       pn.insertBefore(one,$("bossFightBtn")); } }catch(_){}
   try{ bgmAudio.pause(); }catch(_){}
   try{ if(!window._bossBgm){window._bossBgm=new Audio("bgm14.mp3");window._bossBgm.loop=true;} window._bossBgm.volume=(typeof bgmVol!=="undefined"?bgmVol:0.1); if(typeof bgmMuted==="undefined"||!bgmMuted)window._bossBgm.play().catch(function(){}); }catch(_){}
-  try{clearInterval(_bossWhisperT);}catch(_){} _bossWhisperT=setInterval(_bossWhisper,7000); setTimeout(_bossWhisper,1200); }
+  try{clearInterval(_bossWhisperT);}catch(_){} _bossWhisperT=setInterval(_bossWhisper,7000); setTimeout(_bossWhisper,1200);
+  try{_bossCryStart();}catch(_){} }
 function _bossWhisper(){ try{ var w=$("bossWhisper"); if(!w||!_bossInWindow())return; if(Math.random()<0.35)return;
   w.textContent=BOSS_WHISPERS[Math.floor(Math.random()*BOSS_WHISPERS.length)];
   w.classList.remove("show"); void w.offsetWidth; w.classList.add("show");
   setTimeout(function(){try{w.classList.remove("show");}catch(_){}},4200); }catch(_){} }
-function _bossClose(){ try{_bfCleanup();}catch(_){}
+/* ===== ボスの 不気味な 鳴き声（Web Audioで つくる・何しゅるいか） ===== */
+var _bossCryT=0, BOSS_CRIES=["growl","shriek","whisper","laugh","creak","breath","wail"];
+function _bossNoise(ctx,dur){
+  var n=Math.max(1,Math.floor(ctx.sampleRate*dur)), b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0);
+  for(var i=0;i<n;i++)d[i]=Math.random()*2-1;
+  var src=ctx.createBufferSource(); src.buffer=b; return src;
+}
+function _bossVoice(kind,delay,vol){
+  try{
+    var ctx=ensureCtx(); if(!ctx)return; var out=sfxOut(ctx); if(!out)return;
+    if(typeof bgmMuted!=="undefined" && bgmMuted && typeof _sfxVol!=="undefined" && _sfxVol<=0)return;
+    var t0=ctx.currentTime+(delay||0), V=(vol==null?1:vol);
+    var g=ctx.createGain(); g.gain.value=0.0001; g.connect(out);
+    function env(a,peak,hold,dur){
+      g.gain.setValueAtTime(0.0001,t0);
+      g.gain.exponentialRampToValueAtTime(Math.max(0.0002,peak*V),t0+a);
+      g.gain.setValueAtTime(Math.max(0.0002,peak*V),t0+a+hold);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    }
+    function osc(type,f1,f2,dur,dest){
+      var o=ctx.createOscillator(); o.type=type; o.frequency.setValueAtTime(f1,t0);
+      if(f2)o.frequency.exponentialRampToValueAtTime(Math.max(12,f2),t0+dur);
+      o.connect(dest||g); o.start(t0); o.stop(t0+dur+0.06); return o;
+    }
+    function wobble(rate,depth,dur){
+      var l=ctx.createOscillator(), lg=ctx.createGain();
+      l.frequency.value=rate; lg.gain.value=depth; l.connect(lg); lg.connect(g.gain);
+      l.start(t0); l.stop(t0+dur); return l;
+    }
+    if(kind==="growl"){                       /* ひくい うなり */
+      var d1=1.9, f1=ctx.createBiquadFilter(); f1.type="lowpass"; f1.Q.value=7;
+      f1.frequency.setValueAtTime(430,t0); f1.frequency.exponentialRampToValueAtTime(110,t0+d1); f1.connect(g);
+      osc("sawtooth",58,34,d1,f1); osc("sawtooth",61.7,36,d1,f1); osc("sine",29,17,d1,f1);
+      wobble(6.2,0.16,d1); env(0.35,0.30,0.55,d1);
+    }else if(kind==="shriek"){                /* かん高い 悲鳴 */
+      var d2=0.85, f2=ctx.createBiquadFilter(); f2.type="bandpass"; f2.Q.value=4;
+      f2.frequency.setValueAtTime(900,t0); f2.frequency.exponentialRampToValueAtTime(2600,t0+d2*0.6); f2.connect(g);
+      osc("sawtooth",760,2100,d2*0.7,f2); osc("square",381,1050,d2*0.7,f2);
+      var nz=_bossNoise(ctx,d2), ng=ctx.createGain(); ng.gain.value=0.10; nz.connect(ng); ng.connect(f2); nz.start(t0); 
+      wobble(17,0.06,d2); env(0.05,0.22,0.16,d2);
+    }else if(kind==="whisper"){               /* ささやき（ざらざら） */
+      var d3=1.5, nz3=_bossNoise(ctx,d3);
+      var bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.Q.value=9;
+      bp.frequency.setValueAtTime(1250,t0); bp.frequency.linearRampToValueAtTime(760,t0+d3);
+      nz3.connect(bp); bp.connect(g); nz3.start(t0);
+      wobble(9,0.10,d3); env(0.3,0.16,0.5,d3);
+    }else if(kind==="laugh"){                 /* くぐもった 笑い */
+      var lf=ctx.createBiquadFilter(); lf.type="lowpass"; lf.frequency.value=900; lf.connect(g);
+      for(var i=0;i<6;i++){
+        var t=t0+i*0.17, o=ctx.createOscillator(), og=ctx.createGain();
+        o.type="sawtooth"; o.frequency.setValueAtTime(210-i*16,t); o.frequency.exponentialRampToValueAtTime(130-i*10,t+0.12);
+        og.gain.setValueAtTime(0.0001,t); og.gain.exponentialRampToValueAtTime(0.24*V,t+0.02); og.gain.exponentialRampToValueAtTime(0.0001,t+0.15);
+        o.connect(og); og.connect(lf); o.start(t); o.stop(t+0.2);
+      }
+      g.gain.setValueAtTime(1,t0);
+    }else if(kind==="creak"){                 /* きしむ 音 */
+      var d5=1.3, f5=ctx.createBiquadFilter(); f5.type="bandpass"; f5.Q.value=22;
+      f5.frequency.setValueAtTime(520,t0); f5.frequency.linearRampToValueAtTime(1500,t0+d5); f5.connect(g);
+      var nz5=_bossNoise(ctx,d5); nz5.connect(f5); nz5.start(t0);
+      wobble(23,0.22,d5); env(0.25,0.20,0.4,d5);
+    }else if(kind==="breath"){                /* 荒い いき */
+      var d6=1.7, lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=2;
+      lp.frequency.setValueAtTime(700,t0); lp.frequency.linearRampToValueAtTime(300,t0+d6); lp.connect(g);
+      var nz6=_bossNoise(ctx,d6); nz6.connect(lp); nz6.start(t0);
+      wobble(1.6,0.16,d6); env(0.4,0.19,0.5,d6);
+    }else{                                    /* wail＝長い うめき */
+      var d7=2.4, f7=ctx.createBiquadFilter(); f7.type="lowpass"; f7.Q.value=5;
+      f7.frequency.setValueAtTime(900,t0); f7.frequency.exponentialRampToValueAtTime(220,t0+d7); f7.connect(g);
+      osc("sawtooth",190,84,d7,f7); osc("sine",95,42,d7,f7); osc("triangle",286,126,d7,f7);
+      wobble(4.4,0.13,d7); env(0.5,0.26,0.9,d7);
+    }
+  }catch(_){}
+}
+function _bossCry(kind){ _bossVoice(kind||BOSS_CRIES[Math.floor(Math.random()*BOSS_CRIES.length)],0,1); }
+function _bossCryStart(){
+  try{clearInterval(_bossCryT);}catch(_){}
+  _bossCryT=setInterval(function(){
+    try{ var sc=$("bossScreen"); if(!sc||sc.hidden){ _bossCryStop(); return; }
+      if(!_bossInWindow())return;
+      if(Math.random()<0.34)return;                       /* たまに 鳴かない＝こわい */
+      _bossCry();
+      if(Math.random()<0.22)_bossVoice("whisper",1.2,0.7); /* かさねる */
+    }catch(_){}
+  },7000);
+  setTimeout(function(){ try{ var sc=$("bossScreen"); if(sc&&!sc.hidden&&_bossInWindow())_bossCry("breath"); }catch(_){} },2200);
+}
+function _bossCryStop(){ try{clearInterval(_bossCryT);}catch(_){} _bossCryT=0; }
+function _bossClose(){ try{_bfCleanup();}catch(_){} try{_bossCryStop();}catch(_){}
   try{var sc=$("bossScreen"); if(sc)sc.hidden=true;}catch(_){}
   try{clearInterval(_bossWhisperT);}catch(_){} try{if(window._bossBgm)window._bossBgm.pause();}catch(_){} try{startBGM();}catch(_){} }
 function _bossPaintSlots(){ var dex=_yumeDex()||[]; var mine=$("bossMine"), help=$("bossHelp"); if(!mine||!help)return;
@@ -30178,11 +30337,19 @@ function _bossFight(){ if(!_bossInWindow()){ try{toast("よる 18時〜あさ 5�
   _bfStart();
 }
 function _bfStart(){ try{clearInterval(_bfTimer);}catch(_){} if(!_bfState||_bfState.over)return; _bfTimer=setInterval(_bfTick,BF_TICK); }
+/* 画面の むき／大きさが かわったら バトルUIを 正しい枠に 置きなおす */
+var _bfRePos=0;
+try{ window.addEventListener("resize",function(){ if(!_bfState)return; clearTimeout(_bfRePos);
+  _bfRePos=setTimeout(function(){ try{ var l=document.getElementById("bfLayer"); var h=_bfHost();
+    if(l&&h&&l.parentElement!==h){ _bfBuildUI(); } }catch(_){} },260); }); }catch(_){}
 function _bfStop(){ try{clearInterval(_bfTimer);}catch(_){} _bfTimer=0; }
 
 /* --- 画面づくり（ボスの絵＝#bossStage の 上に かさねる） --- */
+/* ★バトルUIの 置き場所：PC(よこなが)＝右の たてなが枠／スマホ＝ボスの絵 */
+function _bfIsPC(){ try{return window.matchMedia("(orientation:landscape) and (min-width:820px)").matches;}catch(_){return false;} }
+function _bfHost(){ return _bfIsPC()? ($("bossPanel")||$("bossStage")) : $("bossStage"); }
 function _bfBuildUI(){
-  var host=$("bossStage"); if(!host||!_bfState)return;
+  var host=_bfHost(); if(!host||!_bfState)return;
   var old=document.getElementById("bfLayer"); if(old)old.remove();
   var d=document.createElement("div"); d.id="bfLayer";
   d.innerHTML=
@@ -30260,6 +30427,7 @@ function _bfPlayFx(st){ try{ (st.fx||[]).forEach(function(f){
       if(f.who==="enemy"){
         if(!f.skill&&!f.multi&&f.by)_bfAnimTeam(_bfUnits.indexOf(f.by),"atk");
         _bfAnimBoss(f.crit?"crit":"hurt"); _bfPopBoss("-"+f.v,f.crit?"crit":"");
+        if(f.crit)try{_bossVoice("shriek",0.05,0.75);}catch(_){}
       }else{
         _bfAnimBoss("atk"); _bfAnimTeam(_bfUnits.indexOf(f.u),f.crit?"crit":"hurt"); _bfPopTeam(f.u,"-"+f.v,f.crit?"crit":"");
       }
@@ -30295,6 +30463,7 @@ function _bfResolveAtk(tg){
   var e=st.enemy, aoe=!!(tg.cells&&tg.cells.length>1), hits=Math.max(1,tg.hits||1), hitNo=0;
   _bfAnimBoss("wind");
   try{_advWarnSound(420);}catch(_){}
+  try{_bossCry(tg.big?"shriek":(Math.random()<0.5?"growl":"breath"));}catch(_){}
   function wave(){
     if(!_bfState||_bfState!==st)return;
     st.fx=[]; var lines=[];
@@ -30350,6 +30519,7 @@ function _bfEnd(win){
   if(_bfState)_bfState.over=true;
   _bfLogPush([win?"★ ボスを おいはらった！":"… にげかえった …"],!win);
   try{ if(win){sndCrit();}else{sndDown();} }catch(_){}
+  try{ _bossVoice(win?"wail":"laugh",0.15,1); }catch(_){}
   try{ var r=document.getElementById("bfResult");
     if(r){ r.className=win?"win":"lose"; r.innerHTML='<b>'+(win?"おいはらった！":"にげかえった…")+'</b><span>'+(win?"よく がんばったね":"つよかった… もういちど いどもう")+'</span>';
       void r.offsetWidth; r.classList.add("go"); } }catch(_){}
