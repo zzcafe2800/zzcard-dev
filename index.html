@@ -5963,6 +5963,26 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   #bossFightBtn{padding:10px;font-size:14px;}
 }
 </style>
+<style id="bossCss4">
+/* 右パネルの「ぜんたい」ミニ画面（PC/横長のみ） */
+#bossWhole{display:none;position:relative;width:100%;aspect-ratio:9/16;max-height:52vh;margin:0 auto 10px;border-radius:12px;overflow:hidden;background:#05070f;border:1px solid rgba(255,255,255,.12);box-shadow:0 6px 20px rgba(0,0,0,.5);}
+#bossWhole .bwImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+#bossWholeMori{z-index:1;}#bossWholeImg{z-index:2;}#bossWholeMiti{z-index:3;}
+#bossWhole .bwTag{position:absolute;left:8px;bottom:6px;z-index:5;font-size:10px;font-weight:900;color:#cfd9f5;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:999px;letter-spacing:1px;}
+#bossWhole::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;box-shadow:inset 0 0 40px rgba(90,0,20,.55);}
+@media (orientation:landscape) and (min-width:820px){
+  #bossWhole{display:block;}
+  #bossPanel{justify-content:flex-start;padding-top:16px;overflow-y:auto;}
+  /* 左は ズーム＝顔が しっかり 見えるように */
+  #bossStage img{object-position:center 42% !important;transform:scale(1.18);transform-origin:center 42%;}
+  #bossStage{border-right:1px solid rgba(255,255,255,.06);}
+  #bossOneRow{margin-top:auto;}
+  #bossFightBtn{margin-bottom:4px;}
+}
+/* きょうかい（画面の ふち）を はっきり＋こわく */
+#bossMain::before{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;border:2px solid rgba(150,20,40,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 0 60px rgba(120,0,25,.5);animation:bossEdge 3.6s ease-in-out infinite;}
+@keyframes bossEdge{0%,100%{border-color:rgba(150,20,40,.35);}50%{border-color:rgba(220,40,70,.75);}}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -6294,7 +6314,9 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   <div id="bossMain" hidden>
     <button id="bossClose" type="button">✕</button>
     <div id="bossStage"><img id="bossBgMori" src="mori.png" alt=""><img id="bossImg" src="" alt=""><img id="bossFgMiti" src="miti.png" alt=""><div id="bossWhisper"></div></div>
-    <div id="bossPanel"><div id="bossTimeNote"></div>
+    <div id="bossPanel">
+      <div id="bossWhole"><img class="bwImg" id="bossWholeMori" src="mori.png" alt=""><img class="bwImg" id="bossWholeImg" src="" alt=""><img class="bwImg" id="bossWholeMiti" src="miti.png" alt=""><span class="bwTag">ぜんたい</span></div>
+      <div id="bossTimeNote"></div>
       <div class="bsRow"><span class="bsLbl">じぶんの ユメっ子</span><div class="bsSlots" id="bossMine"></div></div>
       <div class="bsRow"><span class="bsLbl">たすっと（ほかの人）</span><div class="bsSlots" id="bossHelp"></div></div>
       <button id="bossFightBtn" type="button">おいはらう</button></div>
@@ -29931,6 +29953,7 @@ function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossM
     var f=_bossPickImg(); _bossImgFile=f;
     var m=/bosu(\d+)\.png/.exec(f); _bossNo=m?parseInt(m[1],10):1;
     var bi=$("bossImg"); if(bi){ bi.src=f; bi.style.display=_bossInWindow()?"":"none"; }
+    var bw=$("bossWholeImg"); if(bw){ bw.src=f; bw.style.display=_bossInWindow()?"":"none"; }
   }catch(_){} });
   try{var tn=$("bossTimeNote"); if(tn)tn.textContent=_bossInWindow()?"いま たたかえる（18時〜5時）":"よる 18時〜あさ 5時 だけ あらわれる…";}catch(_){}
   try{var fb=$("bossFightBtn"); if(fb)fb.disabled=!_bossInWindow();}catch(_){}
