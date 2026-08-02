@@ -6000,6 +6000,22 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   #bossStage img{object-fit:cover !important;object-position:center top !important;transform:none !important;}
 }
 </style>
+<style id="bossCss6">
+@media (orientation:landscape) and (min-width:820px){
+  /* 右パネル：絵を いっぱいに 敷いて UIを その上に かさねる */
+  #bossPanel{position:relative;padding:0 !important;justify-content:flex-end !important;}
+  #bossWhole{position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;margin:0 !important;z-index:0;}
+  #bossWhole .bwImg{object-fit:cover !important;}
+  /* 下に 影を 敷いて UIを 読みやすく */
+  #bossPanel::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(4,6,16,.94) 0%,rgba(4,6,16,.75) 42%,rgba(4,6,16,0) 100%);}
+  #bossTimeNote,#bossOneRow,#bossFightBtn{position:relative;z-index:2;}
+  #bossTimeNote{margin:0 12px 8px;}
+  #bossOneRow{margin:0 12px 10px;}
+  #bossFightBtn{margin:0 12px calc(14px + env(safe-area-inset-bottom));width:calc(100% - 24px);}
+  /* 左も 端まで つかう */
+  #bossStage img{object-position:center 40% !important;}
+}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
