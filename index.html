@@ -6016,6 +6016,134 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   #bossStage img{object-position:center 40% !important;}
 }
 </style>
+<style id="bfCss">
+/* ===== ボス戦：ボスの 絵の 上で たたかう（プレイヤー操作なし・じどう） ===== */
+#bfLayer{position:absolute;inset:0;z-index:12;pointer-events:none;font-family:var(--font);}
+/* --- ボスの HP（スマホ＝上／PC＝左の画面の 上） --- */
+#bfBossHp{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:min(90%,470px);text-align:center;}
+#bfBossHp .bfName{display:block;color:#ffd6d6;font-weight:900;font-size:13px;letter-spacing:3px;
+  text-shadow:0 0 10px rgba(255,40,70,.55),0 2px 6px #000;margin-bottom:5px;}
+.bfBar{display:block;position:relative;height:14px;border-radius:999px;background:rgba(0,0,0,.66);
+  border:1px solid rgba(255,255,255,.28);overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.55);}
+.bfBar.sm{height:7px;border-width:1px;}
+#bfBossFill{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff6070,#ff2d46 55%,#8d0f24);
+  transition:width .34s cubic-bezier(.2,.9,.3,1);box-shadow:0 0 12px rgba(255,50,80,.55) inset;}
+#bfBossHp.low #bfBossFill{animation:bfLowPulse 1s ease-in-out infinite;}
+@keyframes bfLowPulse{0%,100%{filter:brightness(1);}50%{filter:brightness(1.5);}}
+#bfBossNum{display:block;margin-top:3px;font-size:10.5px;font-weight:900;color:#ffdede;text-shadow:0 1px 4px #000;letter-spacing:1px;}
+#bfBossSt{display:block;margin-top:2px;font-size:13px;line-height:1;}
+#bfBossSt .abSt{margin:0 1px;}
+/* --- なかま（PC＝左下／スマホ＝下） --- */
+#bfTeam{position:absolute;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));
+  display:flex;gap:10px;align-items:flex-end;}
+.bfU{width:76px;display:flex;flex-direction:column;align-items:center;transition:transform .18s ease,opacity .3s;}
+.bfUPic{position:relative;width:60px;height:60px;filter:drop-shadow(0 4px 7px rgba(0,0,0,.65));}
+.bfUPic .advPicInner{width:100%;height:100%;position:relative;overflow:visible;}
+.bfUShadow{width:44px;height:7px;border-radius:50%;background:rgba(0,0,0,.5);filter:blur(2.5px);margin-top:-3px;}
+.bfUN{display:block;font-size:9.5px;font-weight:900;color:#eef3ff;text-shadow:0 1px 3px #000,0 0 6px rgba(0,0,0,.9);
+  margin-top:2px;max-width:76px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bfU .bfBar.sm{width:68px;margin-top:3px;}
+.bfUFill{display:block;height:100%;width:100%;background:linear-gradient(90deg,#9df58a,#3fb85c);transition:width .3s;}
+.bfU.hurtHp .bfUFill{background:linear-gradient(90deg,#ffd36b,#f08a2c);}
+.bfU.dangerHp .bfUFill{background:linear-gradient(90deg,#ff8f8f,#e03b3b);}
+.bfHpNum{display:block;font-size:8.5px;font-weight:900;color:#cfe0ff;text-shadow:0 1px 3px #000;margin-top:1px;letter-spacing:.5px;}
+.bfSt{display:block;font-size:11px;line-height:1.1;min-height:12px;}
+.bfSt .abSt{margin:0 1px;}
+.bfU.down{opacity:.34;filter:grayscale(1);}
+.bfU.down .bfUPic{transform:rotate(-14deg) translateY(6px);}
+/* --- うごき：こうげきは とびだす／ダメージは 赤く 光って ゆれる --- */
+.bfU.atk{animation:bfAtk .44s cubic-bezier(.3,1.5,.4,1);}
+@keyframes bfAtk{0%{transform:translateY(0) scale(1);}30%{transform:translateY(-30px) scale(1.14);}55%{transform:translateY(-16px) scale(1.06);}100%{transform:translateY(0) scale(1);}}
+.bfU.hurt .bfUPic{animation:bfHurtU .42s ease;}
+.bfU.crit .bfUPic{animation:bfHurtU2 .58s ease;}
+@keyframes bfHurtU{0%,100%{filter:drop-shadow(0 4px 7px rgba(0,0,0,.65));transform:translateX(0);}
+  15%{filter:brightness(1.7) sepia(1) saturate(9) hue-rotate(-24deg);transform:translateX(-7px);}
+  45%{filter:brightness(1.6) sepia(1) saturate(9) hue-rotate(-24deg);transform:translateX(6px);}
+  70%{filter:brightness(1.4) sepia(1) saturate(6) hue-rotate(-24deg);transform:translateX(-3px);}}
+@keyframes bfHurtU2{0%,100%{filter:drop-shadow(0 4px 7px rgba(0,0,0,.65));transform:translateX(0) scale(1);}
+  10%{filter:brightness(2) sepia(1) saturate(10) hue-rotate(-20deg);transform:translateX(-11px) scale(1.1);}
+  35%{filter:brightness(1.8) sepia(1) saturate(10) hue-rotate(-20deg);transform:translateX(9px) scale(1.06);}
+  65%{filter:brightness(1.5) sepia(1) saturate(8) hue-rotate(-20deg);transform:translateX(-5px);}}
+/* ボスの うごき（左の絵＋PCの 右の絵 どちらも） */
+#bossImg.bfHurt,#bossWholeImg.bfHurt{animation:bfHurtB .42s ease !important;}
+#bossImg.bfCrit,#bossWholeImg.bfCrit{animation:bfHurtB2 .62s ease !important;}
+#bossImg.bfAtk,#bossWholeImg.bfAtk{animation:bfBossAtk2 .5s cubic-bezier(.3,1.4,.4,1) !important;}
+#bossImg.bfWind,#bossWholeImg.bfWind{animation:bfBossWind .46s ease !important;}
+#bossImg.bfEvo,#bossWholeImg.bfEvo{animation:bfBossEvo 1.3s ease !important;}
+@keyframes bfHurtB{0%,100%{filter:none;transform:translateX(0);}
+  15%{filter:brightness(1.7) sepia(1) saturate(9) hue-rotate(-24deg);transform:translateX(-8px);}
+  45%{filter:brightness(1.6) sepia(1) saturate(9) hue-rotate(-24deg);transform:translateX(7px);}
+  75%{filter:brightness(1.3) sepia(1) saturate(5) hue-rotate(-24deg);transform:translateX(-3px);}}
+@keyframes bfHurtB2{0%,100%{filter:none;transform:translateX(0) scale(1);}
+  8%{filter:brightness(2.1) sepia(1) saturate(12) hue-rotate(-18deg);transform:translateX(-14px) scale(1.04);}
+  30%{filter:brightness(1.9) sepia(1) saturate(12) hue-rotate(-18deg);transform:translateX(12px) scale(1.02);}
+  55%{filter:brightness(1.6) sepia(1) saturate(9) hue-rotate(-18deg);transform:translateX(-7px);}
+  80%{filter:brightness(1.2) sepia(1) saturate(4) hue-rotate(-18deg);transform:translateX(3px);}}
+@keyframes bfBossAtk2{0%{transform:scale(1) translateY(0);}
+  28%{transform:scale(1.12) translateY(22px);filter:brightness(1.15) contrast(1.2);}
+  60%{transform:scale(1.04) translateY(6px);}100%{transform:scale(1) translateY(0);}}
+@keyframes bfBossWind{0%{transform:scale(1) translateY(0);}
+  55%{transform:scale(.96) translateY(-14px);filter:brightness(.82) contrast(1.3);}100%{transform:scale(1) translateY(0);}}
+@keyframes bfBossEvo{0%{filter:none;transform:scale(1);}
+  20%{filter:brightness(2.4) saturate(0);transform:scale(1.1);}
+  45%{filter:brightness(.4) hue-rotate(-40deg) saturate(3);transform:scale(1.03) translateX(-6px);}
+  70%{filter:brightness(2) saturate(2.5) hue-rotate(-20deg);transform:scale(1.08) translateX(5px);}
+  100%{filter:none;transform:scale(1);}}
+/* --- とびだす 数字 --- */
+.bfPop{position:absolute;left:50%;top:8%;transform:translateX(-50%);font-weight:900;font-size:19px;color:#fff;
+  text-shadow:-2px -2px 0 #2b0a12,2px -2px 0 #2b0a12,-2px 2px 0 #2b0a12,2px 2px 0 #2b0a12,0 4px 10px rgba(0,0,0,.8);
+  pointer-events:none;white-space:nowrap;animation:bfPop 1.05s ease-out forwards;z-index:20;}
+.bfPop.crit{font-size:29px;color:#ffe259;}
+.bfPop.heal{color:#8dfba4;}
+.bfPop.miss{color:#cfd8ee;font-size:15px;}
+.bfPop.state{color:#b7d6ff;font-size:14px;}
+@keyframes bfPop{0%{opacity:0;transform:translate(-50%,10px) scale(.6);}
+  18%{opacity:1;transform:translate(-50%,-14px) scale(1.15);}
+  34%{transform:translate(-50%,-8px) scale(1);}
+  100%{opacity:0;transform:translate(-50%,-52px) scale(.95);}}
+#bfBossAnchor{position:absolute;left:50%;top:34%;width:2px;height:2px;}
+/* --- 技の 名まえ --- */
+#bfBanner{position:absolute;left:0;right:0;top:38%;text-align:center;opacity:0;pointer-events:none;z-index:22;}
+#bfBanner.go{animation:bfBan 1.35s ease;}
+#bfBanner .bfBanE{display:block;font-size:30px;line-height:1;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7));}
+#bfBanner .bfBanN{display:inline-block;margin-top:4px;font-size:20px;font-weight:900;color:var(--bfc,#ffd45e);
+  text-shadow:-2px -2px 0 #180810,2px -2px 0 #180810,-2px 2px 0 #180810,2px 2px 0 #180810,0 0 16px var(--bfc,#ffd45e);letter-spacing:2px;}
+@keyframes bfBan{0%{opacity:0;transform:scale(.7);}14%{opacity:1;transform:scale(1.08);}26%{transform:scale(1);}76%{opacity:1;}100%{opacity:0;transform:scale(1.04);}}
+/* --- 画面の 明滅 --- */
+#bfFlash{position:absolute;inset:0;pointer-events:none;opacity:0;z-index:14;}
+#bfFlash.hit.go{animation:bfFl .3s ease;background:radial-gradient(circle at 50% 45%,rgba(255,90,110,.42),transparent 70%);}
+#bfFlash.crit.go{animation:bfFl .42s ease;background:radial-gradient(circle at 50% 45%,rgba(255,232,120,.6),transparent 74%);}
+@keyframes bfFl{0%{opacity:0;}25%{opacity:1;}100%{opacity:0;}}
+/* --- ログ --- */
+#bfLog{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:min(44%,320px);text-align:right;z-index:16;}
+.bfLine{font-size:11.5px;font-weight:700;color:#e8eefc;text-shadow:0 1px 4px #000,0 0 8px rgba(0,0,0,.9);margin-top:3px;animation:bfLineIn .3s ease;}
+.bfLine.en{color:#ff9fa8;}
+@keyframes bfLineIn{0%{opacity:0;transform:translateY(6px);}100%{opacity:1;transform:translateY(0);}}
+/* --- けっか --- */
+#bfResult{position:absolute;left:0;right:0;top:42%;text-align:center;z-index:26;opacity:0;pointer-events:none;}
+#bfResult.go{animation:bfRes 2.6s ease forwards;}
+#bfResult b{display:block;font-size:34px;font-weight:900;letter-spacing:4px;
+  text-shadow:-2px -2px 0 #14060c,2px -2px 0 #14060c,-2px 2px 0 #14060c,2px 2px 0 #14060c,0 6px 22px rgba(0,0,0,.9);}
+#bfResult.win b{color:#ffe259;}#bfResult.lose b{color:#9fb0d6;}
+#bfResult span{display:block;margin-top:6px;font-size:12.5px;font-weight:900;color:#e9eeff;text-shadow:0 2px 6px #000;}
+@keyframes bfRes{0%{opacity:0;transform:scale(.72);}12%{opacity:1;transform:scale(1.06);}22%{transform:scale(1);}82%{opacity:1;}100%{opacity:0;}}
+/* --- スマホ／たてながは 下に ふつうに ならべる --- */
+@media (orientation:portrait),(max-width:819px){
+  #bfTeam{left:50%;right:auto;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom));gap:7px;}
+  .bfU{width:68px;}
+  .bfUPic{width:54px;height:54px;}
+  .bfU .bfBar.sm{width:60px;}
+  #bfLog{left:0;right:0;width:auto;text-align:center;bottom:calc(150px + env(safe-area-inset-bottom));}
+  #bfBossHp{top:calc(8px + env(safe-area-inset-top));width:92%;}
+  #bfBanner{top:32%;}
+}
+@media (max-width:400px){
+  .bfU{width:60px;}
+  .bfUPic{width:48px;height:48px;}
+  .bfU .bfBar.sm{width:54px;}
+  .bfUN{font-size:8.5px;}
+}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -30002,7 +30130,8 @@ function _bossWhisper(){ try{ var w=$("bossWhisper"); if(!w||!_bossInWindow())re
   w.textContent=BOSS_WHISPERS[Math.floor(Math.random()*BOSS_WHISPERS.length)];
   w.classList.remove("show"); void w.offsetWidth; w.classList.add("show");
   setTimeout(function(){try{w.classList.remove("show");}catch(_){}},4200); }catch(_){} }
-function _bossClose(){ try{var sc=$("bossScreen"); if(sc)sc.hidden=true;}catch(_){}
+function _bossClose(){ try{_bfCleanup();}catch(_){}
+  try{var sc=$("bossScreen"); if(sc)sc.hidden=true;}catch(_){}
   try{clearInterval(_bossWhisperT);}catch(_){} try{if(window._bossBgm)window._bossBgm.pause();}catch(_){} try{startBGM();}catch(_){} }
 function _bossPaintSlots(){ var dex=_yumeDex()||[]; var mine=$("bossMine"), help=$("bossHelp"); if(!mine||!help)return;
   function cell(y,kind,idx){ if(!y)return '<button class="bsAdd" data-k="'+kind+'" type="button">＋</button>';
@@ -30015,19 +30144,226 @@ function _bossOpenPick(kind){ var list=$("bossPickList"), box=$("bossPick"); if(
   if(kind==="mine"){ (_yumeDex()||[]).forEach(function(y){ html+='<button class="bpItem" data-k="mine" data-id="'+y.id+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="じぶんの ユメっ子"; }
   else { _bossHelperPool().forEach(function(y){ html+='<button class="bpItem" data-k="help" data-id="'+y.uid+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="たすっと（見たことのある子だけ）"; }
   list.innerHTML=html||'<div class="bpEmpty">まだ いないよ</div>'; box.hidden=false; }
-function _bossEnemy(){ var base=[0,1.0,1.25,1.5][_bossNo]||1.0; var hp=Math.round(5200*base);
-  return {name:"ボス", teki:(_bossImgFile||("bosu"+_bossNo+".png")), atk:Math.round(300*base), spd:120, hp:hp, maxhp:hp,
-    confused:0, sleep:0, kind:"power", diff:9, phase2:0, evolved:false, isBoss:1}; }
+function _bossEnemy(n){ var base=[0,1.0,1.25,1.5][_bossNo]||1.0;
+  /* ★えらんだ 人数で つよさを かえる（ひとりでも 育っていれば 勝てるように） */
+  var k=Math.max(1,Math.min(4,n||1));
+  var hpK=[0,0.58,0.78,0.92,1.0][k], atK=[0,0.62,0.80,0.92,1.0][k];
+  var hp=Math.round(5200*base*hpK);
+  return {name:"ボス", teki:(_bossImgFile||("bosu"+_bossNo+".png")), atk:Math.round(210*base*atK), spd:120, hp:hp, maxhp:hp,
+    confused:0, sleep:0, poison:0, dark:0, atkDown:0, atkOrig:0, kind:"power",
+    diff:[0,4,6,7,8][k], phase2:0, evolved:false, isBoss:1}; }
+
+/* ===== ボス戦の たたかい =====
+   ★冒険と おなじ しくみ（_advInit / _advStep）を そのまま つかう。
+   ★ちがうのは「ボスの 絵の 上で うごく」ことと「プレイヤーの そうさが ない」こと。
+     ・かわす／前後の いれかえ／ターゲットえらび は ぜんぶ じどう。            */
+var _bfState=null,_bfTimer=0,_bfUnits=null;
+var BF_TICK=640;
+
 function _bossFight(){ if(!_bossInWindow()){ try{toast("よる 18時〜あさ 5時 だけだよ");}catch(_){} return; }
+  if(_bfState)return;
   var dex=_yumeDex()||[], team=[];
   (_bossTeam.mine||[]).forEach(function(id){ var y=dex.filter(function(d){return d.id===id;})[0]; if(y)team.push(_advUnit(y)); });
   var pool=_bossHelperPool();
   (_bossTeam.help||[]).forEach(function(uid){ var h=pool.filter(function(p){return p.uid===uid;})[0]; if(h)team.push(_advUnit({id:"h_"+uid,img:h.img,name:h.name,star:h.star||1,hp:h.hp||420,atk:h.atk||420,spd:h.spd||420,lv:h.lv||300,sk:null})); });
   if(!team.length){ try{toast("ユメっ子を えらんでね");}catch(_){} return; }
-  _advTeamUnits=team; _advState=_advInit(team,_bossEnemy()); try{_advState.noDodge=1;}catch(_){}
-  _advSelIdx=0; _advBuildBattleUI(); var bt=$("advBattle"); if(bt)bt.classList.add("show");
-  try{playPop();}catch(_){} try{window.addEventListener("keydown",_advBattleKey);}catch(_){}
-  clearInterval(_advBattleTimer); _advSetSpeed(false); }
+  /* ★この画面（ボスの 絵）の 上で たたかう：したの UIは いったん 消す */
+  try{["bossTimeNote","bossOneRow","bossFightBtn"].forEach(function(id){var e=$(id);if(e)e.style.display="none";});}catch(_){}
+  try{clearInterval(_bossWhisperT);}catch(_){} try{var w=$("bossWhisper"); if(w){w.classList.remove("show");w.textContent="";}}catch(_){}
+  _bfUnits=team;
+  _bfState=_advInit(team,_bossEnemy(team.length));
+  _bfBuildUI();
+  try{playPop();}catch(_){}
+  _bfLogPush(["👿 "+_bfState.enemy.name+" が こちらを 見た…！"],true);
+  _bfStart();
+}
+function _bfStart(){ try{clearInterval(_bfTimer);}catch(_){} if(!_bfState||_bfState.over)return; _bfTimer=setInterval(_bfTick,BF_TICK); }
+function _bfStop(){ try{clearInterval(_bfTimer);}catch(_){} _bfTimer=0; }
+
+/* --- 画面づくり（ボスの絵＝#bossStage の 上に かさねる） --- */
+function _bfBuildUI(){
+  var host=$("bossStage"); if(!host||!_bfState)return;
+  var old=document.getElementById("bfLayer"); if(old)old.remove();
+  var d=document.createElement("div"); d.id="bfLayer";
+  d.innerHTML=
+     '<div id="bfBossHp"><span class="bfName">'+escHtml(_bfState.enemy.name)+'</span>'
+    +'<span class="bfBar"><i id="bfBossFill"></i></span>'
+    +'<span id="bfBossNum"></span><span id="bfBossSt"></span></div>'
+    +'<div id="bfBossAnchor"></div>'
+    +'<div id="bfFlash"></div>'
+    +'<div id="bfBanner"></div>'
+    +'<div id="bfTeam"></div>'
+    +'<div id="bfLog"></div>'
+    +'<div id="bfResult"></div>';
+  host.appendChild(d);
+  var t=document.getElementById("bfTeam");
+  if(t)t.innerHTML=_bfUnits.map(function(u,i){
+    return '<div class="bfU" data-i="'+i+'">'
+      +'<div class="bfUPic">'+_yumeMiniInner(u.y)+'</div>'
+      +'<div class="bfUShadow"></div>'
+      +'<span class="bfSt" data-st="'+i+'"></span>'
+      +'<span class="bfUN">'+escHtml(u.name||"")+'</span>'
+      +'<span class="bfBar sm"><i class="bfUFill" data-f="'+i+'"></i></span>'
+      +'<span class="bfHpNum" data-n="'+i+'"></span>'
+      +'</div>';
+  }).join("");
+  _bfPaint();
+}
+/* --- HP・状態を ぬりなおす --- */
+function _bfPaint(){ try{ var st=_bfState; if(!st)return;
+  var r=Math.max(0,st.enemy.hp/st.enemy.maxhp);
+  var bf=document.getElementById("bfBossFill"); if(bf)bf.style.width=Math.round(r*100)+"%";
+  var bn=document.getElementById("bfBossNum"); if(bn)bn.textContent=Math.max(0,Math.round(st.enemy.hp))+" / "+st.enemy.maxhp;
+  var bh=document.getElementById("bfBossHp"); if(bh)bh.classList.toggle("low",r<=0.3);
+  var bs=document.getElementById("bfBossSt"); if(bs)bs.innerHTML=_advStatusIcons(st.enemy);
+  _bfUnits.forEach(function(u,i){
+    var ur=Math.max(0,u.hp/u.maxhp);
+    var f=document.querySelector('.bfUFill[data-f="'+i+'"]'); if(f)f.style.width=Math.round(ur*100)+"%";
+    var n=document.querySelector('.bfHpNum[data-n="'+i+'"]'); if(n)n.textContent=Math.max(0,Math.round(u.hp))+"/"+u.maxhp;
+    var sx=document.querySelector('.bfSt[data-st="'+i+'"]'); if(sx)sx.innerHTML=_advStatusIcons(u);
+    var el=document.querySelector('.bfU[data-i="'+i+'"]');
+    if(el){ el.classList.toggle("down",u.hp<=0);
+      el.classList.toggle("dangerHp",ur>0&&ur<=0.28);
+      el.classList.toggle("hurtHp",ur>0.28&&ur<=0.58); }
+  });
+}catch(_){} }
+/* --- ログ --- */
+function _bfLogPush(lines,en){ try{ var l=document.getElementById("bfLog"); if(!l)return;
+  (lines||[]).forEach(function(t){ var d=document.createElement("div"); d.className="bfLine"+(en?" en":""); d.textContent=t; l.appendChild(d); });
+  while(l.children.length>3)l.removeChild(l.firstChild); }catch(_){} }
+function _bfLog(t,en){ _bfLogPush([t],en); }
+/* --- うごき（こうげき＝とびだす／ダメージ＝赤く 光る） --- */
+function _bfAnimTeam(i,kind){ try{ if(i==null||i<0)return; var el=document.querySelector('.bfU[data-i="'+i+'"]'); if(!el)return;
+  el.classList.remove("atk","hurt","crit"); void el.offsetWidth; el.classList.add(kind);
+  setTimeout(function(){try{el.classList.remove(kind);}catch(_){}},640); }catch(_){} }
+function _bfAnimBoss(kind){ try{ var cls={hurt:"bfHurt",crit:"bfCrit",atk:"bfAtk",wind:"bfWind",evo:"bfEvo"}[kind]||"bfHurt";
+  ["bossImg","bossWholeImg"].forEach(function(id){ var el=$(id); if(!el)return;
+    el.classList.remove("bfHurt","bfCrit","bfAtk","bfWind","bfEvo"); void el.offsetWidth; el.classList.add(cls);
+    setTimeout(function(){try{el.classList.remove(cls);}catch(_){}},kind==="evo"?1400:700); }); }catch(_){} }
+function _bfFlash(kind){ try{ var f=document.getElementById("bfFlash"); if(!f)return; f.className=""; void f.offsetWidth; f.className=(kind||"hit")+" go"; }catch(_){} }
+/* --- とびだす 数字 --- */
+function _bfPopAt(host,text,cls){ try{ if(!host)return; var el=document.createElement("span");
+  el.className="bfPop "+(cls||""); el.textContent=text; el.style.left=(46+Math.random()*14)+"%";
+  host.appendChild(el); setTimeout(function(){try{el.remove();}catch(_){}},1150); }catch(_){} }
+function _bfPopBoss(text,cls){ _bfPopAt(document.getElementById("bfBossAnchor"),text,cls); }
+function _bfPopTeam(u,text,cls){ try{ var i=_bfUnits.indexOf(u); if(i<0)return; _bfPopAt(document.querySelector('.bfU[data-i="'+i+'"]'),text,cls); }catch(_){} }
+/* --- 技の 名まえ --- */
+function _bfBanner(sk){ try{ var b=document.getElementById("bfBanner"); if(!b||!sk)return;
+  b.innerHTML='<span class="bfBanE">'+(sk.e||"✨")+'</span><span class="bfBanN">'+escHtml(sk.n||"")+'</span>';
+  b.style.setProperty("--bfc",sk.col||"#ffd45e");
+  b.classList.remove("go"); void b.offsetWidth; b.classList.add("go");
+  setTimeout(function(){try{b.classList.remove("go");}catch(_){}},1400); }catch(_){} }
+/* --- この手番で おきたことを 演出に する（冒険と おなじ fx を よむ） --- */
+function _bfPlayFx(st){ try{ (st.fx||[]).forEach(function(f){
+    if(f.t==="skill"){ _bfBanner(f.sk); try{sndSkill(f.sk.kind);}catch(_){} _bfAnimTeam(_bfUnits.indexOf(f.u),"atk"); }
+    else if(f.t==="dmg"){
+      if(f.who==="enemy"){
+        if(!f.skill&&!f.multi&&f.by)_bfAnimTeam(_bfUnits.indexOf(f.by),"atk");
+        _bfAnimBoss(f.crit?"crit":"hurt"); _bfPopBoss("-"+f.v,f.crit?"crit":"");
+      }else{
+        _bfAnimBoss("atk"); _bfAnimTeam(_bfUnits.indexOf(f.u),f.crit?"crit":"hurt"); _bfPopTeam(f.u,"-"+f.v,f.crit?"crit":"");
+      }
+      _bfFlash(f.crit?"crit":"hit");
+      try{ if(f.crit)sndCrit(); else sndHit(); }catch(_){}
+    }
+    else if(f.t==="heal"){ if(f.who==="enemy")_bfPopBoss("+"+f.v,"heal"); else _bfPopTeam(f.u,"+"+f.v,"heal"); try{sndHeal();}catch(_){} }
+    else if(f.t==="miss"){ if(f.who==="enemy")_bfPopBoss("MISS","miss"); else _bfPopTeam(f.u,"かわした！","miss"); try{sndMiss();}catch(_){} }
+    else if(f.t==="state"){ if(f.who==="enemy")_bfPopBoss(f.label,"state"); else _bfPopTeam(f.u,f.label,"state"); }
+    else if(f.t==="sleep"){ if(f.who==="enemy")_bfPopBoss("Zzz","state"); else _bfPopTeam(f.u,"Zzz","state"); }
+    else if(f.t==="down"){ try{sndDown();}catch(_){} }
+    else if(f.t==="evolve"){ try{sndEvolve();}catch(_){} _bfFlash("crit"); _bfAnimBoss("evo"); _bfPopBoss("しんか！","state"); }
+  }); }catch(_){} st.fx=[]; }
+/* --- 1手ずつ すすむ --- */
+function _bfTick(){
+  var st=_bfState; if(!st){ _bfStop(); return; }
+  if(st.over){ _bfStop(); return; }
+  var wasEnemy=(st.phase==="enemy");
+  var lines=_advStep(st);
+  if(lines&&lines.length)_bfLogPush(lines,wasEnemy);
+  _bfPlayFx(st);
+  _bfPaint();
+  /* ★かいふく／そせい の あいては じどうで きめる（プレイヤー操作なし） */
+  if(st.pick){ var pk=st.pick; st.pick=null; _bfAutoPick(pk); _bfPaint(); }
+  /* ★てきの こうげき：よけられないので すぐ 着弾させる */
+  if(st.telegraph){ var tg=st.telegraph; st.telegraph=null; _bfResolveAtk(tg); return; }
+  if(st.over){ _bfStop(); setTimeout(function(){ _bfEnd(st.win); },900); }
+}
+/* --- てきの こうげき（予告→着弾。かわす操作は なし） --- */
+function _bfResolveAtk(tg){
+  _bfStop();
+  var st=_bfState; if(!st){return;}
+  var e=st.enemy, aoe=!!(tg.cells&&tg.cells.length>1), hits=Math.max(1,tg.hits||1), hitNo=0;
+  _bfAnimBoss("wind");
+  try{_advWarnSound(420);}catch(_){}
+  function wave(){
+    if(!_bfState||_bfState!==st)return;
+    st.fx=[]; var lines=[];
+    var alive=st.team.filter(function(u){return u.hp>0;});
+    if(!alive.length){ st.over=true; st.win=false; }
+    else{
+      var targets;
+      if(aoe)targets=alive.slice();
+      else{
+        var t0=(tg.cells&&tg.cells[0])?st.team[tg.cells[0].col]:null;
+        if(!t0||t0.hp<=0)t0=_advPickTarget(alive);
+        targets=[t0];
+      }
+      var mul=(tg.big?1.8:1)*(aoe?0.40:1);   /* はんい攻撃は かわせないので 1体ぶんを 軽く */
+      if(aoe)lines.push("⚔️ てきの ぜんたい こうげき！");
+      targets.forEach(function(u){
+        var d=_advDmg(e.atk*mul,0.12);
+        if(u.guard>0){u.guard--;d.v=Math.round(d.v*0.45);}
+        u.hp=Math.max(0,u.hp-d.v);
+        lines.push((tg.big?"⚔️ つよい いちげき！":"てきの こうげき！")+(d.crit?" クリティカル！":"")+" "+u.name+"に "+d.v+"ダメージ！");
+        _advFx(st,{t:"dmg",who:"team",u:u,v:d.v,crit:d.crit||tg.big});
+        if(u.hp<=0){ lines.push(u.name+" は たおれてしまった…"); _advFx(st,{t:"down",who:"team",u:u}); }
+      });
+      if(st.team.every(function(x){return x.hp<=0;})){ st.over=true; st.win=false; lines.push("ぜんめつ してしまった…"); }
+    }
+    if(lines.length)_bfLogPush(lines,true);
+    _bfPlayFx(st);
+    _bfPaint();
+    hitNo++;
+    if(st.over){ setTimeout(function(){ _bfEnd(st.win); },900); return; }
+    if(hitNo<hits){ setTimeout(wave,430); return; }
+    _bfStart();
+  }
+  setTimeout(wave,380);
+}
+/* --- かいふく／そせい の あいてを じどうで えらぶ --- */
+function _bfAutoPick(pk){
+  try{
+    var st=_bfState; if(!st||!pk)return;
+    var cands=[]; st.team.forEach(function(u,i){ var ok=(pk.pool==="downedTeam")?(u.hp<=0):(u.hp>0); if(ok)cands.push(i); });
+    if(!cands.length)return;
+    var def=cands[0];
+    if(pk.pool!=="downedTeam"){ var lo=2; cands.forEach(function(i){ var r=st.team[i].hp/st.team[i].maxhp; if(r<lo){lo=r;def=i;} }); }
+    var t=st.team[def];
+    if(pk.kind==="revive"){ t.hp=Math.round(t.maxhp*pk.pow); _bfLogPush([t.name+" が よみがえった！ HP"+t.hp+"！"]); _bfPopTeam(t,"ふっかつ！","state"); }
+    else{ var h=Math.round(t.maxhp*pk.pow); t.hp=Math.min(t.maxhp,t.hp+h); _bfLogPush([t.name+" は "+h+" かいふく した！"]); _bfPopTeam(t,"+"+h,"heal"); }
+    try{sndHeal();}catch(_){}
+  }catch(_){}
+}
+/* --- おわり --- */
+function _bfEnd(win){
+  _bfStop();
+  if(_bfState)_bfState.over=true;
+  _bfLogPush([win?"★ ボスを おいはらった！":"… にげかえった …"],!win);
+  try{ if(win){sndCrit();}else{sndDown();} }catch(_){}
+  try{ var r=document.getElementById("bfResult");
+    if(r){ r.className=win?"win":"lose"; r.innerHTML='<b>'+(win?"おいはらった！":"にげかえった…")+'</b><span>'+(win?"よく がんばったね":"つよかった… もういちど いどもう")+'</span>';
+      void r.offsetWidth; r.classList.add("go"); } }catch(_){}
+  setTimeout(function(){ _bfCleanup(); try{ if(win)toast("👿 ボスを おいはらった！"); else toast("つよかった…もういちど いどもう"); }catch(_){} },2600);
+}
+/* --- かたづけ（バトル画面を 消して もとの UIに もどす） --- */
+function _bfCleanup(){
+  _bfStop(); _bfState=null; _bfUnits=null;
+  try{ var l=document.getElementById("bfLayer"); if(l)l.remove(); }catch(_){}
+  try{ ["bossImg","bossWholeImg"].forEach(function(id){var e=$(id);if(e)e.classList.remove("bfHurt","bfCrit","bfAtk","bfWind","bfEvo");}); }catch(_){}
+  try{ ["bossTimeNote","bossOneRow","bossFightBtn"].forEach(function(id){var e=$(id);if(e)e.style.display="";}); }catch(_){}
+  try{ clearInterval(_bossWhisperT); }catch(_){}
+  try{ if(!$("bossScreen").hidden){ _bossWhisperT=setInterval(_bossWhisper,7000); } }catch(_){}
+}
 try{ document.addEventListener("click",function(e){ var t=e.target; if(!t||!t.closest)return;
   if(t.closest("#bossOpenBtn")){ try{playClick();}catch(_){} _bossOpen(); return; }
   if(t.closest("#bossWarnGo")){ try{playClick();}catch(_){} try{localStorage.setItem(BOSS_WARN_KEY,"1");}catch(_){} _bossEnter(); return; }
