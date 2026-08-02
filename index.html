@@ -5408,6 +5408,16 @@ body.exercising #roomGoal,#catRoom.editing #roomGoal,#catRoom.decoing #roomGoal{
 #homeLoc.homeBoss:after{content:"";position:absolute;inset:-3px;border-radius:inherit;pointer-events:none;
   box-shadow:0 0 16px 2px rgba(255,40,80,.45);animation:bossBtnGlow 2.6s ease-in-out infinite;}
 #homeLoc.homeBoss #homeLocBadge{background:#ffd9e4;color:#7d0f2c;}
+#homeLoc.homeBoss .hlTx.moji{font-family:"Courier New",monospace;letter-spacing:.06em;font-size:12px!important;
+  color:#ffe6ec;text-shadow:1.2px 0 rgba(255,40,90,.9),-1.2px 0 rgba(60,180,255,.75),0 1px 2px rgba(50,0,12,.8);
+  animation:mojiShake .9s steps(1,end) infinite;}
+#homeLoc.homeBoss .hlIco.moji{animation:mojiShake 1.3s steps(1,end) infinite;}
+@keyframes mojiShake{0%,100%{transform:translate(0,0) skewX(0);}
+  22%{transform:translate(1.2px,-.8px) skewX(-5deg);}
+  34%{transform:translate(-1.4px,.6px) skewX(4deg);}
+  46%{transform:translate(.6px,1px);}
+  58%{transform:translate(-.6px,-.6px) skewX(-3deg);}
+  70%{transform:translate(0,0);}}
 @keyframes bossBtnPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
 @keyframes bossBtnGlow{0%,100%{opacity:.45;}50%{opacity:1;}}
 
@@ -6025,9 +6035,38 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   #bossTimeNote{margin:0 12px 8px;}
   #bossOneRow{margin:0 12px 10px;}
   #bossFightBtn{margin:0 12px calc(14px + env(safe-area-inset-bottom));width:calc(100% - 24px);}
-  /* 左も 端まで つかう */
-  #bossStage img{object-position:center 40% !important;}
+  /* 左も 端まで つかう（カーソルで 上下に 動かす） */
+  #bossStage img{object-position:center 40% !important;transition:object-position .22s ease-out;}
 }
+</style>
+<style id="bossCss7">
+/* ★右の枠を 1080x2340（たてなが）の 比率で 固定 */
+@media (orientation:landscape) and (min-width:820px){
+  #bossPanel{flex:0 0 auto !important;width:auto !important;max-width:46vw !important;height:100% !important;
+    aspect-ratio:1080/2340;border-left:1px solid rgba(255,255,255,.10);}
+  #bossStage{flex:1 1 auto !important;min-width:0;}
+}
+/* ★鳴き声のときの ゆがみ */
+#bossStage.warp,#bossWhole.warp{animation:bossWarp var(--wd,900ms) cubic-bezier(.3,.9,.4,1);}
+@keyframes bossWarp{
+  0%{transform:none;filter:none;}
+  12%{transform:skewX(-1.6deg) scale(1.012,.988);filter:hue-rotate(-14deg) saturate(1.25) contrast(1.08);}
+  26%{transform:skewX(1.1deg) scale(.992,1.014);filter:hue-rotate(9deg) saturate(1.1) blur(.5px);}
+  41%{transform:skewY(.7deg) scale(1.008,.996);filter:contrast(1.2) brightness(1.06);}
+  58%{transform:skewX(-.8deg) translateY(2px);filter:hue-rotate(-8deg) blur(.3px);}
+  74%{transform:skewX(.5deg) scale(1.004,1.004);filter:saturate(1.15);}
+  100%{transform:none;filter:none;}
+}
+#bossWarpFx{position:absolute;inset:0;z-index:11;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(0deg,rgba(255,60,90,.18) 0 2px,transparent 2px 6px);mix-blend-mode:screen;}
+#bossWarpFx.go{animation:bossWarpFx var(--wd,900ms) steps(1,end);}
+@keyframes bossWarpFx{0%,100%{opacity:0;transform:translateY(0);}
+  10%{opacity:.85;transform:translateY(-6px);}18%{opacity:0;}
+  34%{opacity:.6;transform:translateY(5px);}44%{opacity:0;}
+  62%{opacity:.7;transform:translateY(-3px);}70%{opacity:0;}
+  86%{opacity:.45;transform:translateY(2px);}}
+/* ★戦闘ログは 出さない */
+#bfLog{display:none !important;}
 </style>
 <style id="bfCss">
 /* ===== ボス戦：ボスの 絵の 上で たたかう（プレイヤー操作なし・じどう） ===== */
@@ -29758,8 +29797,11 @@ function _oniIconSVG(){
     +'</svg>';
 }
 function _bossBtnHTML(){
-  return '<span class="hlIco">'+_oniIconSVG()+'</span>'
-    +'<span class="hlTx">ボス</span><span id="homeLocBadge" hidden></span>';
+  var seen=true; try{seen=_bossEverOpened();}catch(_){}
+  var tx = seen ? '<span class="hlTx">ボス</span>'
+                : '<span class="hlTx moji" id="homeLocMoji">'+escHtml(_bossGarble())+'</span>';
+  return '<span class="hlIco'+(seen?"":" moji")+'">'+_oniIconSVG()+'</span>'
+    +tx+'<span id="homeLocBadge" hidden></span>';
 }
 /* いまは ボスの 時間？（18時〜5時。全衣装モード中は いつでも） */
 function _homeLocMode(){ try{ return _bossInWindow()?"boss":"adv"; }catch(_){ return "adv"; } }
@@ -29775,6 +29817,7 @@ function _homeLocPaint(force){
     el.innerHTML=(m==="boss")?_bossBtnHTML():_advBtnHTML();
     el.classList.toggle("homeBoss", m==="boss");
     el.classList.toggle("homeAdv", m!=="boss");
+    try{ if(m==="boss" && !_bossEverOpened())_bossMojiStart(); else _bossMojiStop(); }catch(_){}
     try{_homeLocBadge();}catch(_){}
   }catch(_){}
 }
@@ -30177,6 +30220,7 @@ function _bossSeeYume(y1,uid){ try{ if(!y1||!y1.img||!uid)return; var seen={}; t
   if(!cur||((cur.lv||0)<lv))seen[uid]={img:y1.img,name:y1.name||"ユメっ子",star:y1.star||1,lv:lv,hp:y1.hp,atk:y1.atk,spd:y1.spd,uid:uid};
   localStorage.setItem(BOSS_SEEN_KEY,JSON.stringify(seen)); }catch(_){} }
 function _bossOpen(){ var sc=$("bossScreen"); if(!sc)return; sc.hidden=false;
+  try{_bossMarkOpened();}catch(_){}
   var warned=false; try{warned=(localStorage.getItem(BOSS_WARN_KEY)==="1");}catch(_){}
   if(!warned){ $("bossWarn").hidden=false; $("bossMain").hidden=true; return; } _bossEnter(); }
 function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossMain"); if(mn)mn.hidden=false;
@@ -30190,6 +30234,7 @@ function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossM
   try{var tn=$("bossTimeNote"); if(tn)tn.textContent=_bossInWindow()?"いま たたかえる（18時〜5時）":"よる 18時〜あさ 5時 だけ あらわれる…";}catch(_){}
   try{var fb=$("bossFightBtn"); if(fb)fb.disabled=!_bossInWindow();}catch(_){}
   _bossPaintSlots();
+  try{_bossPanWire();}catch(_){}
   try{ var pn=$("bossPanel"), one=document.getElementById("bossOneRow");
     if(pn&&!one){ one=document.createElement("div"); one.id="bossOneRow";
       one.appendChild($("bossMine")); one.appendChild($("bossHelp"));
@@ -30203,92 +30248,174 @@ function _bossWhisper(){ try{ var w=$("bossWhisper"); if(!w||!_bossInWindow())re
   w.classList.remove("show"); void w.offsetWidth; w.classList.add("show");
   setTimeout(function(){try{w.classList.remove("show");}catch(_){}},4200); }catch(_){} }
 /* ===== ボスの 不気味な 鳴き声（Web Audioで つくる・何しゅるいか） ===== */
-var _bossCryT=0, BOSS_CRIES=["growl","shriek","whisper","laugh","creak","breath","wail"];
+/* ===== ボスの 声（みじかく 切って つなぐ＝しゃべってるみたいに 不規則） ===== */
+var _bossCryT=0;
+var BOSS_CRIES=["growl","shriek","whisper","laugh","creak","breath","wail","words","call","chant","child","static","hiccup","name","sob","hum"];
 function _bossNoise(ctx,dur){
   var n=Math.max(1,Math.floor(ctx.sampleRate*dur)), b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0);
   for(var i=0;i<n;i++)d[i]=Math.random()*2-1;
   var src=ctx.createBufferSource(); src.buffer=b; return src;
 }
-function _bossVoice(kind,delay,vol){
+function _rr(a){ return a[0]+Math.random()*(a[1]-a[0]); }
+/* 声の ひとかけら（＝1音）。のばさずに ぶつ切りにする */
+function _bossSyl(ctx,dest,t0,o){
   try{
-    var ctx=ensureCtx(); if(!ctx)return; var out=sfxOut(ctx); if(!out)return;
-    if(typeof bgmMuted!=="undefined" && bgmMuted && typeof _sfxVol!=="undefined" && _sfxVol<=0)return;
-    var t0=ctx.currentTime+(delay||0), V=(vol==null?1:vol);
-    var g=ctx.createGain(); g.gain.value=0.0001; g.connect(out);
-    function env(a,peak,hold,dur){
-      g.gain.setValueAtTime(0.0001,t0);
-      g.gain.exponentialRampToValueAtTime(Math.max(0.0002,peak*V),t0+a);
-      g.gain.setValueAtTime(Math.max(0.0002,peak*V),t0+a+hold);
-      g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
-    }
-    function osc(type,f1,f2,dur,dest){
-      var o=ctx.createOscillator(); o.type=type; o.frequency.setValueAtTime(f1,t0);
-      if(f2)o.frequency.exponentialRampToValueAtTime(Math.max(12,f2),t0+dur);
-      o.connect(dest||g); o.start(t0); o.stop(t0+dur+0.06); return o;
-    }
-    function wobble(rate,depth,dur){
-      var l=ctx.createOscillator(), lg=ctx.createGain();
-      l.frequency.value=rate; lg.gain.value=depth; l.connect(lg); lg.connect(g.gain);
-      l.start(t0); l.stop(t0+dur); return l;
-    }
-    if(kind==="growl"){                       /* ひくい うなり */
-      var d1=1.9, f1=ctx.createBiquadFilter(); f1.type="lowpass"; f1.Q.value=7;
-      f1.frequency.setValueAtTime(430,t0); f1.frequency.exponentialRampToValueAtTime(110,t0+d1); f1.connect(g);
-      osc("sawtooth",58,34,d1,f1); osc("sawtooth",61.7,36,d1,f1); osc("sine",29,17,d1,f1);
-      wobble(6.2,0.16,d1); env(0.35,0.30,0.55,d1);
-    }else if(kind==="shriek"){                /* かん高い 悲鳴 */
-      var d2=0.85, f2=ctx.createBiquadFilter(); f2.type="bandpass"; f2.Q.value=4;
-      f2.frequency.setValueAtTime(900,t0); f2.frequency.exponentialRampToValueAtTime(2600,t0+d2*0.6); f2.connect(g);
-      osc("sawtooth",760,2100,d2*0.7,f2); osc("square",381,1050,d2*0.7,f2);
-      var nz=_bossNoise(ctx,d2), ng=ctx.createGain(); ng.gain.value=0.10; nz.connect(ng); ng.connect(f2); nz.start(t0); 
-      wobble(17,0.06,d2); env(0.05,0.22,0.16,d2);
-    }else if(kind==="whisper"){               /* ささやき（ざらざら） */
-      var d3=1.5, nz3=_bossNoise(ctx,d3);
-      var bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.Q.value=9;
-      bp.frequency.setValueAtTime(1250,t0); bp.frequency.linearRampToValueAtTime(760,t0+d3);
-      nz3.connect(bp); bp.connect(g); nz3.start(t0);
-      wobble(9,0.10,d3); env(0.3,0.16,0.5,d3);
-    }else if(kind==="laugh"){                 /* くぐもった 笑い */
-      var lf=ctx.createBiquadFilter(); lf.type="lowpass"; lf.frequency.value=900; lf.connect(g);
-      for(var i=0;i<6;i++){
-        var t=t0+i*0.17, o=ctx.createOscillator(), og=ctx.createGain();
-        o.type="sawtooth"; o.frequency.setValueAtTime(210-i*16,t); o.frequency.exponentialRampToValueAtTime(130-i*10,t+0.12);
-        og.gain.setValueAtTime(0.0001,t); og.gain.exponentialRampToValueAtTime(0.24*V,t+0.02); og.gain.exponentialRampToValueAtTime(0.0001,t+0.15);
-        o.connect(og); og.connect(lf); o.start(t); o.stop(t+0.2);
-      }
-      g.gain.setValueAtTime(1,t0);
-    }else if(kind==="creak"){                 /* きしむ 音 */
-      var d5=1.3, f5=ctx.createBiquadFilter(); f5.type="bandpass"; f5.Q.value=22;
-      f5.frequency.setValueAtTime(520,t0); f5.frequency.linearRampToValueAtTime(1500,t0+d5); f5.connect(g);
-      var nz5=_bossNoise(ctx,d5); nz5.connect(f5); nz5.start(t0);
-      wobble(23,0.22,d5); env(0.25,0.20,0.4,d5);
-    }else if(kind==="breath"){                /* 荒い いき */
-      var d6=1.7, lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=2;
-      lp.frequency.setValueAtTime(700,t0); lp.frequency.linearRampToValueAtTime(300,t0+d6); lp.connect(g);
-      var nz6=_bossNoise(ctx,d6); nz6.connect(lp); nz6.start(t0);
-      wobble(1.6,0.16,d6); env(0.4,0.19,0.5,d6);
-    }else{                                    /* wail＝長い うめき */
-      var d7=2.4, f7=ctx.createBiquadFilter(); f7.type="lowpass"; f7.Q.value=5;
-      f7.frequency.setValueAtTime(900,t0); f7.frequency.exponentialRampToValueAtTime(220,t0+d7); f7.connect(g);
-      osc("sawtooth",190,84,d7,f7); osc("sine",95,42,d7,f7); osc("triangle",286,126,d7,f7);
-      wobble(4.4,0.13,d7); env(0.5,0.26,0.9,d7);
-    }
+    var dur=o.dur, g=ctx.createGain(); g.gain.value=0.0001;
+    var f1=ctx.createBiquadFilter(); f1.type="bandpass"; f1.Q.value=o.q; f1.frequency.value=o.form;
+    var f2=ctx.createBiquadFilter(); f2.type="bandpass"; f2.Q.value=o.q*0.7; f2.frequency.value=o.form*(1.7+Math.random()*0.8);
+    var mix=ctx.createGain(); mix.gain.value=0.55;
+    f1.connect(g); f2.connect(mix); mix.connect(g); g.connect(dest);
+    var end=Math.max(28,o.f0*o.bend);
+    [1,1.0075].forEach(function(det){
+      var osc=ctx.createOscillator(); osc.type=o.type;
+      osc.frequency.setValueAtTime(o.f0*det,t0);
+      osc.frequency.linearRampToValueAtTime(end*det,t0+dur);
+      osc.connect(f1); osc.connect(f2); osc.start(t0); osc.stop(t0+dur+0.03);
+    });
+    if(o.noise>0){ var nz=_bossNoise(ctx,dur+0.02), ng=ctx.createGain(); ng.gain.value=o.noise;
+      nz.connect(ng); ng.connect(f1); ng.connect(f2); nz.start(t0); }
+    var v=Math.max(0.0006,o.vol);
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(v,t0+Math.min(0.022,dur*0.3));
+    g.gain.setValueAtTime(v,t0+dur*0.62);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur+0.012);
   }catch(_){}
 }
-function _bossCry(kind){ _bossVoice(kind||BOSS_CRIES[Math.floor(Math.random()*BOSS_CRIES.length)],0,1); }
+var BOSS_VP={
+  growl :{n:[3,6], f:[52,86],   dur:[.09,.20],gap:[.04,.14],type:"sawtooth",form:[240,520], q:5, noise:.06,vol:.30,bend:[.70,1.06]},
+  shriek:{n:[2,4], f:[620,1150],dur:[.05,.13],gap:[.03,.11],type:"sawtooth",form:[1500,2900],q:9,noise:.12,vol:.20,bend:[1.0,1.95]},
+  whisper:{n:[4,8],f:[150,260], dur:[.05,.12],gap:[.04,.15],type:"triangle",form:[900,1800], q:13,noise:.55,vol:.15,bend:[.85,1.18]},
+  laugh :{n:[4,8], f:[155,245], dur:[.04,.09],gap:[.05,.11],type:"sawtooth",form:[380,780], q:7, noise:.09,vol:.23,bend:[.58,.86]},
+  creak :{n:[3,7], f:[70,135],  dur:[.04,.10],gap:[.05,.20],type:"square",  form:[1000,2100],q:20,noise:.28,vol:.16,bend:[.8,1.35]},
+  breath:{n:[2,4], f:[110,185], dur:[.10,.20],gap:[.09,.22],type:"triangle",form:[480,950], q:4, noise:.72,vol:.18,bend:[.78,1.12]},
+  wail  :{n:[2,4], f:[180,300], dur:[.15,.28],gap:[.06,.18],type:"sawtooth",form:[560,1150],q:6, noise:.06,vol:.24,bend:[.55,1.35]},
+  words :{n:[6,12],f:[120,300], dur:[.05,.15],gap:[.03,.17],type:"sawtooth",form:[400,1550],q:8, noise:.13,vol:.21,bend:[.72,1.32]},
+  call  :{n:[2,3], f:[200,360], dur:[.13,.24],gap:[.11,.24],type:"sawtooth",form:[680,1300],q:7, noise:.07,vol:.25,bend:[.8,1.4]},
+  chant :{n:[5,10],f:[95,132],  dur:[.08,.13],gap:[.05,.09],type:"sawtooth",form:[360,640], q:9, noise:.05,vol:.20,bend:[.96,1.04]},
+  child :{n:[3,6], f:[330,530], dur:[.05,.12],gap:[.04,.15],type:"triangle",form:[1250,2400],q:11,noise:.09,vol:.17,bend:[.78,1.45]},
+  static:{n:[5,11],f:[58,92],   dur:[.03,.08],gap:[.02,.11],type:"square",  form:[1400,3200],q:2, noise:.92,vol:.14,bend:[.9,1.1]},
+  hiccup:{n:[2,4], f:[140,265], dur:[.035,.07],gap:[.13,.32],type:"sawtooth",form:[560,1250],q:8,noise:.11,vol:.23,bend:[1.25,1.9]},
+  name  :{n:[3,5], f:[150,245], dur:[.09,.19],gap:[.05,.15],type:"sawtooth",form:[480,1050],q:7, noise:.08,vol:.24,bend:[.7,1.25]},
+  sob   :{n:[4,7], f:[210,340], dur:[.05,.11],gap:[.06,.16],type:"triangle",form:[700,1400],q:9, noise:.20,vol:.19,bend:[1.05,1.6]},
+  hum   :{n:[3,6], f:[88,150],  dur:[.10,.19],gap:[.05,.13],type:"sine",    form:[300,600], q:6, noise:.03,vol:.22,bend:[.92,1.1]}
+};
+/* 鳴らす。かかった 長さ(ms)を かえす */
+function _bossVoice(kind,delay,vol){
+  try{
+    var ctx=ensureCtx(); if(!ctx)return 0; var out=sfxOut(ctx); if(!out)return 0;
+    var P=BOSS_VP[kind]||BOSS_VP.words, V=(vol==null?1:vol);
+    var t0=ctx.currentTime+(delay||0), t=t0;
+    var n=Math.round(_rr(P.n));
+    for(var i=0;i<n;i++){
+      var d=_rr(P.dur);
+      _bossSyl(ctx,out,t,{
+        dur:d, f0:_rr(P.f), type:P.type, form:_rr(P.form), q:P.q,
+        noise:P.noise, vol:P.vol*V*(0.72+Math.random()*0.5), bend:_rr(P.bend)
+      });
+      t+=d+_rr(P.gap);
+      if(Math.random()<0.18)t+=_rr([0.10,0.34]);     /* ★ときどき 間があく＝会話みたい */
+      if(Math.random()<0.10){                         /* ★ときどき つまる（二重に 切る） */
+        var d2=_rr([0.02,0.05]);
+        _bossSyl(ctx,out,t,{dur:d2,f0:_rr(P.f)*1.3,type:P.type,form:_rr(P.form),q:P.q,noise:P.noise,vol:P.vol*V*0.6,bend:1.1});
+        t+=d2+0.03;
+      }
+    }
+    return Math.round((t-t0)*1000);
+  }catch(_){ return 0; }
+}
+/* ===== 声に あわせて 画面が すこし ゆがむ ===== */
+function _bossWarp(ms){
+  try{
+    var d=Math.max(520,Math.min(2800,ms||900));
+    ["bossStage","bossWhole"].forEach(function(id){
+      var e=$(id); if(!e)return;
+      e.style.setProperty("--wd",d+"ms");
+      e.classList.remove("warp"); void e.offsetWidth; e.classList.add("warp");
+      setTimeout(function(){try{e.classList.remove("warp");}catch(_){}},d+80);
+    });
+    var fx=document.getElementById("bossWarpFx");
+    if(!fx){ var host=$("bossMain"); if(host){ fx=document.createElement("div"); fx.id="bossWarpFx"; host.appendChild(fx); } }
+    if(fx){ fx.style.setProperty("--wd",d+"ms"); fx.classList.remove("go"); void fx.offsetWidth; fx.classList.add("go");
+      setTimeout(function(){try{fx.classList.remove("go");}catch(_){}},d+80); }
+  }catch(_){}
+}
+function _bossCry(kind){
+  var k=kind||BOSS_CRIES[Math.floor(Math.random()*BOSS_CRIES.length)];
+  var ms=_bossVoice(k,0,1);
+  _bossWarp(ms);
+  return ms;
+}
 function _bossCryStart(){
   try{clearInterval(_bossCryT);}catch(_){}
   _bossCryT=setInterval(function(){
     try{ var sc=$("bossScreen"); if(!sc||sc.hidden){ _bossCryStop(); return; }
       if(!_bossInWindow())return;
-      if(Math.random()<0.34)return;                       /* たまに 鳴かない＝こわい */
+      if(Math.random()<0.3)return;                              /* たまに 鳴かない＝こわい */
       _bossCry();
-      if(Math.random()<0.22)_bossVoice("whisper",1.2,0.7); /* かさねる */
+      if(Math.random()<0.26){                                   /* 二人めの 声が かぶる */
+        var k2=BOSS_CRIES[Math.floor(Math.random()*BOSS_CRIES.length)];
+        setTimeout(function(){try{_bossVoice(k2,0,0.62);}catch(_){}},420+Math.random()*900);
+      }
     }catch(_){}
-  },7000);
-  setTimeout(function(){ try{ var sc=$("bossScreen"); if(sc&&!sc.hidden&&_bossInWindow())_bossCry("breath"); }catch(_){} },2200);
+  },6500);
+  setTimeout(function(){ try{ var sc=$("bossScreen"); if(sc&&!sc.hidden&&_bossInWindow())_bossCry("breath"); }catch(_){} },2000);
 }
 function _bossCryStop(){ try{clearInterval(_bossCryT);}catch(_){} _bossCryT=0; }
+/* ===== PC：カーソルの 高さで 左の絵が 上下に 動く ===== */
+var _bossPanY=40;
+function _bossPanWire(){
+  try{
+    var st=$("bossStage"); if(!st||st._panWired)return; st._panWired=1;
+    var set=function(y){
+      _bossPanY=y;
+      var im=$("bossImg"); if(im)im.style.setProperty("object-position","center "+y+"%","important");
+      var mo=$("bossBgMori"); if(mo)mo.style.setProperty("object-position","center "+(40+(y-40)*0.35).toFixed(1)+"%","important");
+      var mi=$("bossFgMiti"); if(mi)mi.style.setProperty("object-position","center "+(40+(y-40)*1.25).toFixed(1)+"%","important");
+    };
+    st.addEventListener("pointermove",function(e){
+      try{
+        if(!_bfIsPC())return;
+        var r=st.getBoundingClientRect(); if(!r.height)return;
+        var p=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
+        var y=Math.round(4+p*92);
+        if(Math.abs(y-_bossPanY)<1)return;
+        set(y);
+      }catch(_){}
+    },{passive:true});
+    st.addEventListener("pointerleave",function(){ try{ if(_bfIsPC())set(40); }catch(_){} },{passive:true});
+  }catch(_){}
+}
+/* ===== ホームの ボスボタン：まだ 開いたことが ない人は 文字化け ===== */
+var BOSS_OPENED_KEY="radio_boss_opened", _bossMojiT=0;
+function _bossEverOpened(){ try{return localStorage.getItem(BOSS_OPENED_KEY)==="1";}catch(_){return true;} }
+function _bossMarkOpened(){
+  try{ if(_bossEverOpened())return; localStorage.setItem(BOSS_OPENED_KEY,"1"); }catch(_){}
+  try{ _homeLocPaint(true); }catch(_){}
+}
+var BOSS_MOJI=["\u00e3\u0192\u009c\u00e3\u0082\u00b9","\ufffd\ufffd\ufffd","\u00ef\u00bf\u00bd\u00ef\u00bf\u00bd",
+  "\u00e3\u0083\u009c\u00e3\u0082\u00b9","\u25a1\u25a1\u25a1","\u00c3\u00a3\u00c6\u2019\u00c5\u201c",
+  "\uff8c\uff9e\uff7d","\u2588\u2591\u2588","\u00e6\u2013\u2021\u00e5\u00ad\u2014"];
+var BOSS_MOJI_CH="\u00e3\u0192\u0082\u00b9\u00bf\u00bd\u00ef\ufffd\u25a1\u2588\u2591\u00c5\u2019\u2020\u00d8\u00be\u00a4";
+function _bossGarble(){
+  var t=BOSS_MOJI[Math.floor(Math.random()*BOSS_MOJI.length)].split("");
+  var n=Math.random()<0.55?1:2;
+  for(var i=0;i<n;i++){
+    var k=Math.floor(Math.random()*t.length);
+    t[k]=BOSS_MOJI_CH.charAt(Math.floor(Math.random()*BOSS_MOJI_CH.length));
+  }
+  return t.join("");
+}
+function _bossMojiStart(){
+  try{clearInterval(_bossMojiT);}catch(_){}
+  _bossMojiT=setInterval(function(){
+    try{
+      var el=document.getElementById("homeLocMoji");
+      if(!el){ _bossMojiStop(); return; }
+      el.textContent=_bossGarble();
+    }catch(_){}
+  },420);
+}
+function _bossMojiStop(){ try{clearInterval(_bossMojiT);}catch(_){} _bossMojiT=0; }
 function _bossClose(){ try{_bfCleanup();}catch(_){} try{_bossCryStop();}catch(_){}
   try{var sc=$("bossScreen"); if(sc)sc.hidden=true;}catch(_){}
   try{clearInterval(_bossWhisperT);}catch(_){} try{if(window._bossBgm)window._bossBgm.pause();}catch(_){} try{startBGM();}catch(_){} }
