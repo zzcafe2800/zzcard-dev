@@ -5910,6 +5910,35 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
 #bossPickClose{border:none;border-radius:10px;padding:9px 22px;background:#2c3760;color:#c3cee8;font-family:inherit;font-weight:900;cursor:pointer;}
 .bpTtl{font-weight:900;margin-bottom:12px;}
 </style>
+<style id="bossCss2">
+/* 絵を できるだけ 大きく（画面いっぱい） */
+#bossMain{justify-content:flex-start;}
+#bossStage{flex:1 1 auto !important;width:100% !important;max-width:none !important;aspect-ratio:auto !important;min-height:0;}
+#bossStage img{object-fit:cover !important;object-position:center top;}
+#bossPanel{flex:0 0 auto;max-width:520px;padding:8px 14px calc(12px + env(safe-area-inset-bottom));}
+#bossTimeNote{text-align:center !important;}
+/* じぶん＋たすっと を 横一列に */
+#bossPanel .bsRow{display:none;}
+#bossOneRow{display:flex;gap:8px;justify-content:center;align-items:flex-end;margin:6px 0 10px;}
+#bossOneRow .bsSlots{display:flex;gap:8px;}
+#bossOneRow .bsLbl{display:none;}
+.bsCell{position:relative;}
+.bsStat,.bpStat{position:absolute;top:2px;right:3px;font-size:10px;font-weight:900;color:#ffe9a8;text-shadow:-1.4px -1.4px 0 #2a1206,1.4px -1.4px 0 #2a1206,-1.4px 1.4px 0 #2a1206,1.4px 1.4px 0 #2a1206;pointer-events:none;}
+.bpItem{position:relative;}
+/* 現代風の こわさ：暗い口／ノイズ／脈打つ 赤／かすかな 揺れ */
+#bossScreen{background:#05070f;}
+#bossStage::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 42%,transparent 26%,rgba(0,0,0,.55) 62%,rgba(0,0,0,.92) 100%);mix-blend-mode:multiply;animation:bossVig 6s ease-in-out infinite;}
+@keyframes bossVig{0%,100%{opacity:.85;}50%{opacity:1;}}
+#bossStage::before{content:"";position:absolute;inset:-2%;z-index:5;pointer-events:none;opacity:.07;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.5) 0 1px,transparent 1px 3px);animation:bossScan 5.5s linear infinite;}
+@keyframes bossScan{0%{transform:translateY(0);}100%{transform:translateY(3px);}}
+#bossImg{animation:bossBreathe 5.2s ease-in-out infinite;transform-origin:50% 70%;}
+@keyframes bossBreathe{0%,100%{transform:scale(1) translateY(0);filter:none;}50%{transform:scale(1.014) translateY(-3px);filter:drop-shadow(0 0 14px rgba(190,20,40,.35));}}
+#bossMain::after{content:"";position:absolute;inset:0;z-index:7;pointer-events:none;box-shadow:inset 0 0 120px rgba(120,0,20,.35);animation:bossPulse 4.4s ease-in-out infinite;}
+@keyframes bossPulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+#bossWhisper{font-family:"Yomogi",serif;letter-spacing:4px;font-size:19px;text-shadow:0 0 12px rgba(255,30,60,.65),0 0 3px rgba(0,0,0,1),0 2px 8px #000;filter:blur(.2px);}
+#bossWhisper.show{animation:bwFade2 4.2s ease;}
+@keyframes bwFade2{0%{opacity:0;transform:translateY(6px);}12%{opacity:.95;}18%{opacity:.35;}24%{opacity:.95;}80%{opacity:.85;}100%{opacity:0;transform:translateY(-4px);}}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -29836,7 +29865,8 @@ function _advPushLog(lines,en){
 var BOSS_WARN_KEY="radio_boss_warned", BOSS_TEAM_KEY="radio_boss_team", BOSS_SEEN_KEY="radio_boss_seen";
 var BOSS_WHISPERS=["君だけ 起きてるね。","まだ 起きてるの…？","こっちを 見て。","ねむらないの？","もう おそいよ…","だれか いる…？"];
 var _bossTeam={mine:[],help:[]}, _bossNo=1, _bossWhisperT=0;
-function _bossInWindow(){ var h=new Date().getHours(); return (h>=18||h<5); }
+function _bossInWindow(){ try{ if(typeof _devUnlockAll!=="undefined" && _devUnlockAll)return true; }catch(_){}   /* ★全衣装モード中は テスト用に いつでも */
+  var h=new Date().getHours(); return (h>=18||h<5); }
 function _bossLoadTeam(){ try{var v=JSON.parse(localStorage.getItem(BOSS_TEAM_KEY)||"null"); if(v&&v.mine)_bossTeam=v;}catch(_){} }
 function _bossSaveTeam(){ try{localStorage.setItem(BOSS_TEAM_KEY,JSON.stringify(_bossTeam));}catch(_){} }
 function _bossHelperPool(){ var out=[]; try{ var owned={}; (_yumeDex()||[]).forEach(function(y){owned[y.img]=1;});
@@ -29855,6 +29885,10 @@ function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossM
   try{var tn=$("bossTimeNote"); if(tn)tn.textContent=_bossInWindow()?"いま たたかえる（18時〜5時）":"よる 18時〜あさ 5時 だけ あらわれる…";}catch(_){}
   try{var fb=$("bossFightBtn"); if(fb)fb.disabled=!_bossInWindow();}catch(_){}
   _bossPaintSlots();
+  try{ var pn=$("bossPanel"), one=document.getElementById("bossOneRow");
+    if(pn&&!one){ one=document.createElement("div"); one.id="bossOneRow";
+      one.appendChild($("bossMine")); one.appendChild($("bossHelp"));
+      pn.insertBefore(one,$("bossFightBtn")); } }catch(_){}
   try{ bgmAudio.pause(); }catch(_){}
   try{ if(!window._bossBgm){window._bossBgm=new Audio("bgm14.mp3");window._bossBgm.loop=true;} window._bossBgm.volume=(typeof bgmVol!=="undefined"?bgmVol:0.1); if(typeof bgmMuted==="undefined"||!bgmMuted)window._bossBgm.play().catch(function(){}); }catch(_){}
   try{clearInterval(_bossWhisperT);}catch(_){} _bossWhisperT=setInterval(_bossWhisper,7000); setTimeout(_bossWhisper,1200); }
@@ -29866,12 +29900,14 @@ function _bossClose(){ try{var sc=$("bossScreen"); if(sc)sc.hidden=true;}catch(_
   try{clearInterval(_bossWhisperT);}catch(_){} try{if(window._bossBgm)window._bossBgm.pause();}catch(_){} try{startBGM();}catch(_){} }
 function _bossPaintSlots(){ var dex=_yumeDex()||[]; var mine=$("bossMine"), help=$("bossHelp"); if(!mine||!help)return;
   function cell(y,kind,idx){ if(!y)return '<button class="bsAdd" data-k="'+kind+'" type="button">＋</button>';
-    return '<button class="bsCell" data-k="'+kind+'" data-i="'+idx+'" type="button"><img src="'+y.img+'" alt=""><span>'+escHtml(y.name||"")+'</span></button>'; }
+    var _lv=(typeof _yumeMaxLv==="function")?_yumeMaxLv(y):(y.lv||0);
+    return '<button class="bsCell" data-k="'+kind+'" data-i="'+idx+'" type="button"><img src="'+y.img+'" alt=""><b class="bsStat">'+_lv+'</b><span>'+escHtml(y.name||"")+'</span></button>'; }
   var mh="",i; for(i=0;i<1;i++){ var mid=_bossTeam.mine[i]; var my=mid?dex.filter(function(d){return d.id===mid;})[0]:null; mh+=cell(my,"mine",i); } mine.innerHTML=mh;
   var hh="",pool=_bossHelperPool(); for(i=0;i<3;i++){ var hid=_bossTeam.help[i]; var hy=hid?pool.filter(function(p){return p.uid===hid;})[0]:null; hh+=cell(hy,"help",i); } help.innerHTML=hh; }
 function _bossOpenPick(kind){ var list=$("bossPickList"), box=$("bossPick"); if(!list||!box)return; var html="";
-  if(kind==="mine"){ (_yumeDex()||[]).forEach(function(y){ html+='<button class="bpItem" data-k="mine" data-id="'+y.id+'" type="button"><img src="'+y.img+'" alt=""><span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="じぶんの ユメっ子"; }
-  else { _bossHelperPool().forEach(function(y){ html+='<button class="bpItem" data-k="help" data-id="'+y.uid+'" type="button"><img src="'+y.img+'" alt=""><span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="たすっと（見たことのある子だけ）"; }
+  function _st(y){ var v=(typeof _yumeMaxLv==="function")?_yumeMaxLv(y):(y.lv||0); return '<b class="bpStat">'+v+'</b>'; }
+  if(kind==="mine"){ (_yumeDex()||[]).forEach(function(y){ html+='<button class="bpItem" data-k="mine" data-id="'+y.id+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="じぶんの ユメっ子"; }
+  else { _bossHelperPool().forEach(function(y){ html+='<button class="bpItem" data-k="help" data-id="'+y.uid+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="たすっと（見たことのある子だけ）"; }
   list.innerHTML=html||'<div class="bpEmpty">まだ いないよ</div>'; box.hidden=false; }
 function _bossEnemy(){ var base=[0,1.0,1.25,1.5][_bossNo]||1.0; var hp=Math.round(5200*base);
   return {name:"ボス", teki:("bosu"+_bossNo+".png"), atk:Math.round(300*base), spd:120, hp:hp, maxhp:hp,
