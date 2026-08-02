@@ -5983,6 +5983,23 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
 #bossMain::before{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;border:2px solid rgba(150,20,40,.5);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 0 60px rgba(120,0,25,.5);animation:bossEdge 3.6s ease-in-out infinite;}
 @keyframes bossEdge{0%,100%{border-color:rgba(150,20,40,.35);}50%{border-color:rgba(220,40,70,.75);}}
 </style>
+<style id="bossCss5">
+@media (orientation:landscape) and (min-width:820px){
+  /* 右パネルを 広く：縦長の絵を なるべく 大きく */
+  #bossPanel{flex:0 0 clamp(320px,32vw,520px) !important;max-width:none !important;padding:0 10px calc(10px + env(safe-area-inset-bottom)) !important;justify-content:flex-start;}
+  #bossStage{flex:1 1 auto !important;}
+  /* 全体版：カード枠をやめて 縦いっぱいに */
+  #bossWhole{display:block;width:100%;max-height:none !important;height:auto;aspect-ratio:auto !important;flex:1 1 auto;min-height:0;border:none !important;border-radius:0 !important;box-shadow:none !important;background:transparent !important;margin:0 0 6px !important;}
+  #bossWhole .bwImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+  #bossWhole::after{box-shadow:none !important;}
+  #bossPanel{display:flex;flex-direction:column;}
+  #bossTimeNote{flex:0 0 auto;margin:2px 0 6px;}
+  #bossOneRow{flex:0 0 auto;margin:0 0 8px;}
+  #bossFightBtn{flex:0 0 auto;}
+  /* 左は スマホと 同じ見え方（寄せない・全部見せる） */
+  #bossStage img{object-fit:cover !important;object-position:center top !important;transform:none !important;}
+}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -6315,7 +6332,7 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
     <button id="bossClose" type="button">✕</button>
     <div id="bossStage"><img id="bossBgMori" src="mori.png" alt=""><img id="bossImg" src="" alt=""><img id="bossFgMiti" src="miti.png" alt=""><div id="bossWhisper"></div></div>
     <div id="bossPanel">
-      <div id="bossWhole"><img class="bwImg" id="bossWholeMori" src="mori.png" alt=""><img class="bwImg" id="bossWholeImg" src="" alt=""><img class="bwImg" id="bossWholeMiti" src="miti.png" alt=""><span class="bwTag">ぜんたい</span></div>
+      <div id="bossWhole"><img class="bwImg" id="bossWholeMori" src="mori.png" alt=""><img class="bwImg" id="bossWholeImg" src="" alt=""><img class="bwImg" id="bossWholeMiti" src="miti.png" alt=""></div>
       <div id="bossTimeNote"></div>
       <div class="bsRow"><span class="bsLbl">じぶんの ユメっ子</span><div class="bsSlots" id="bossMine"></div></div>
       <div class="bsRow"><span class="bsLbl">たすっと（ほかの人）</span><div class="bsSlots" id="bossHelp"></div></div>
