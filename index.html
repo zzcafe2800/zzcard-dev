@@ -5939,6 +5939,30 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
 #bossWhisper.show{animation:bwFade2 4.2s ease;}
 @keyframes bwFade2{0%{opacity:0;transform:translateY(6px);}12%{opacity:.95;}18%{opacity:.35;}24%{opacity:.95;}80%{opacity:.85;}100%{opacity:0;transform:translateY(-4px);}}
 </style>
+<style id="bossCss3">
+/* ★ボスの ぎこちない うごき（ガタガタ） */
+#bossImg{animation:bossBreathe 5.2s ease-in-out infinite, bossJitter 3.1s steps(1,end) infinite;}
+@keyframes bossJitter{0%,86%,100%{transform:translate(0,0) skewX(0);filter:none;}87%{transform:translate(-3px,1px) skewX(.6deg);filter:hue-rotate(-12deg) contrast(1.15);}89%{transform:translate(4px,-2px) skewX(-.8deg);filter:hue-rotate(10deg) brightness(1.12);}91%{transform:translate(-2px,2px);filter:none;}93%{transform:translate(3px,0) skewX(.5deg);filter:contrast(1.25);}95%{transform:translate(0,0);filter:none;}}
+#bossStage{overflow:hidden;}
+/* ★横長（PC）＝ 絵を 左、そうび を 右に */
+@media (orientation:landscape) and (min-width:820px){
+  #bossMain{flex-direction:row;align-items:stretch;}
+  #bossStage{flex:1 1 62% !important;height:100%;max-width:none !important;}
+  #bossStage img{object-fit:cover !important;object-position:center center;}
+  #bossPanel{flex:0 0 360px;max-width:360px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,rgba(10,14,32,.9),rgba(6,9,22,.96));border-left:1px solid rgba(255,255,255,.08);}
+  #bossOneRow{flex-wrap:wrap;}
+  #bossWhisper{font-size:24px;}
+}
+/* ★横長だけど せまい（タブレット横 など） */
+@media (orientation:landscape) and (max-width:819px){
+  #bossStage{flex:1 1 auto !important;}
+  #bossStage img{object-fit:cover !important;object-position:center 30%;}
+  #bossPanel{padding-top:4px;}
+  .bsAdd,.bsCell{width:52px;height:52px;}
+  .bsCell img{width:30px;height:30px;}
+  #bossFightBtn{padding:10px;font-size:14px;}
+}
+</style>
 </head>
 <body>
 <script>(function(){try{var m=/Mobi|Android|iPhone|iPod|iPad/i.test(navigator.userAgent||"");var p=(window.innerHeight||0)>=(window.innerWidth||0);if(m||p)document.documentElement.classList.add("lite");}catch(e){}})();</script>
@@ -29864,7 +29888,29 @@ function _advPushLog(lines,en){
 /* ===== ボス戦 ===== */
 var BOSS_WARN_KEY="radio_boss_warned", BOSS_TEAM_KEY="radio_boss_team", BOSS_SEEN_KEY="radio_boss_seen";
 var BOSS_WHISPERS=["君だけ 起きてるね。","まだ 起きてるの…？","こっちを 見て。","ねむらないの？","もう おそいよ…","だれか いる…？"];
-var _bossTeam={mine:[],help:[]}, _bossNo=1, _bossWhisperT=0;
+var _bossTeam={mine:[],help:[]}, _bossNo=1, _bossWhisperT=0, _bossImgFile="bosu1.png";
+var _bossImgsOK=null,_bossProbe=null;
+function _bossProbeImgs(){
+  if(_bossProbe)return _bossProbe;
+  _bossProbe=new Promise(function(resolve){ try{
+    var names=[]; for(var i=1;i<=20;i++)names.push("bosu"+i+".png");
+    var ok=[],left=names.length,done=false;
+    var finish=function(){ if(done)return; done=true; ok.sort(); _bossImgsOK=ok; resolve(ok); };
+    var to=setTimeout(finish,3200);
+    names.forEach(function(nm){ var im=new Image();
+      im.onload=function(){ if(im.naturalWidth>0)ok.push(nm); if(--left<=0){clearTimeout(to);finish();} };
+      im.onerror=function(){ if(--left<=0){clearTimeout(to);finish();} };
+      im.src=nm; });
+  }catch(_){ _bossImgsOK=[]; resolve([]); } });
+  return _bossProbe;
+}
+/* その日の ボスを えらぶ（ある画像の中から 毎日ランダム＝日付でシャッフル） */
+function _bossPickImg(){
+  var list=(_bossImgsOK&&_bossImgsOK.length)?_bossImgsOK:["bosu1.png"];
+  var d=new Date(), seed=(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate());
+  var r=(seed*9301+49297)%233280;
+  return list[Math.floor((r/233280)*list.length)%list.length];
+}
 function _bossInWindow(){ try{ if(typeof _devUnlockAll!=="undefined" && _devUnlockAll)return true; }catch(_){}   /* ★全衣装モード中は テスト用に いつでも */
   var h=new Date().getHours(); return (h>=18||h<5); }
 function _bossLoadTeam(){ try{var v=JSON.parse(localStorage.getItem(BOSS_TEAM_KEY)||"null"); if(v&&v.mine)_bossTeam=v;}catch(_){} }
@@ -29880,8 +29926,12 @@ function _bossOpen(){ var sc=$("bossScreen"); if(!sc)return; sc.hidden=false;
   var warned=false; try{warned=(localStorage.getItem(BOSS_WARN_KEY)==="1");}catch(_){}
   if(!warned){ $("bossWarn").hidden=false; $("bossMain").hidden=true; return; } _bossEnter(); }
 function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossMain"); if(mn)mn.hidden=false;
-  _bossLoadTeam(); _bossNo=1+((new Date().getDate())%3);
-  try{var bi=$("bossImg"); if(bi){ bi.src="bosu"+_bossNo+".png"; bi.style.display=_bossInWindow()?"":"none"; } }catch(_){}
+  _bossLoadTeam();
+  _bossProbeImgs().then(function(){ try{
+    var f=_bossPickImg(); _bossImgFile=f;
+    var m=/bosu(\d+)\.png/.exec(f); _bossNo=m?parseInt(m[1],10):1;
+    var bi=$("bossImg"); if(bi){ bi.src=f; bi.style.display=_bossInWindow()?"":"none"; }
+  }catch(_){} });
   try{var tn=$("bossTimeNote"); if(tn)tn.textContent=_bossInWindow()?"いま たたかえる（18時〜5時）":"よる 18時〜あさ 5時 だけ あらわれる…";}catch(_){}
   try{var fb=$("bossFightBtn"); if(fb)fb.disabled=!_bossInWindow();}catch(_){}
   _bossPaintSlots();
@@ -29910,7 +29960,7 @@ function _bossOpenPick(kind){ var list=$("bossPickList"), box=$("bossPick"); if(
   else { _bossHelperPool().forEach(function(y){ html+='<button class="bpItem" data-k="help" data-id="'+y.uid+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="たすっと（見たことのある子だけ）"; }
   list.innerHTML=html||'<div class="bpEmpty">まだ いないよ</div>'; box.hidden=false; }
 function _bossEnemy(){ var base=[0,1.0,1.25,1.5][_bossNo]||1.0; var hp=Math.round(5200*base);
-  return {name:"ボス", teki:("bosu"+_bossNo+".png"), atk:Math.round(300*base), spd:120, hp:hp, maxhp:hp,
+  return {name:"ボス", teki:(_bossImgFile||("bosu"+_bossNo+".png")), atk:Math.round(300*base), spd:120, hp:hp, maxhp:hp,
     confused:0, sleep:0, kind:"power", diff:9, phase2:0, evolved:false, isBoss:1}; }
 function _bossFight(){ if(!_bossInWindow()){ try{toast("よる 18時〜あさ 5時 だけだよ");}catch(_){} return; }
   var dex=_yumeDex()||[], team=[];
