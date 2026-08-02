@@ -6031,7 +6031,7 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   #bossWhole .bwImg{object-fit:contain !important;object-position:center center !important;}
   /* 下に 影を 敷いて UIを 読みやすく */
   #bossPanel::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(4,6,16,.94) 0%,rgba(4,6,16,.75) 42%,rgba(4,6,16,0) 100%);}
-  #bossTimeNote,#bossOneRow,#bossFightBtn{position:relative;z-index:2;}
+  #bossTimeNote,#bossOneRow,#bossFightBtn,#bossLvTag{position:relative;z-index:2;}
   #bossTimeNote{margin:0 12px 8px;}
   #bossOneRow{margin:0 12px 10px;}
   #bossFightBtn{margin:0 12px calc(14px + env(safe-area-inset-bottom));width:calc(100% - 24px);}
@@ -6067,6 +6067,37 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   86%{opacity:.45;transform:translateY(2px);}}
 /* ★戦闘ログは 出さない */
 #bfLog{display:none !important;}
+/* ★戦闘中は 下の 黒フェードを 消す（ユメっ子が 見えにくく なるので） */
+#bossMain.bfOn #bossPanel::after{opacity:0 !important;}
+#bossMain.bfOn #bossStage::after{opacity:.45 !important;}
+/* ★左上：こわい要素を 非表示 */
+#bossSafeWrap{position:absolute;top:calc(10px + env(safe-area-inset-top));left:12px;z-index:20;
+  display:flex;align-items:center;gap:7px;cursor:pointer;background:rgba(8,10,22,.62);
+  border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 13px 6px 10px;
+  font-family:var(--font);font-size:11.5px;font-weight:800;color:#cfd8ee;backdrop-filter:blur(4px);}
+#bossSafeWrap input{width:15px;height:15px;accent-color:#8fdcff;cursor:pointer;margin:0;}
+#bossSafeWrap:active{transform:scale(.97);}
+/* ★ボスの つよさ */
+#bossLvTag{text-align:center;margin:0 12px 6px;font-family:var(--font);line-height:1.35;}
+#bossLvTag b{display:block;font-size:13px;font-weight:900;color:#ffb3c1;letter-spacing:1px;text-shadow:0 0 10px rgba(255,40,80,.5),0 2px 5px #000;}
+#bossLvTag i{display:block;font-style:normal;font-size:10.5px;color:#9fb0d0;}
+#bossMain.bfOn #bossLvTag{display:none;}
+/* ★ホームに ぬっと 立つ（床のうら・背景のおもて） */
+#bossHaunt{position:absolute;z-index:0;pointer-events:none;width:118px;height:250px;bottom:74px;
+  opacity:0;animation:hauntBreath 11s ease-in-out infinite;}
+#bossHaunt[hidden]{display:none;}
+#bossHaunt img{width:100%;height:100%;object-fit:contain;object-position:center bottom;
+  filter:brightness(.18) contrast(1.5) saturate(.3) blur(.5px);}
+.sky-night #bossHaunt img,.sky-evening #bossHaunt img{filter:brightness(.32) contrast(1.4) saturate(.4) blur(.4px);}
+@keyframes hauntBreath{
+  0%{opacity:0;transform:translateY(8px) scaleX(1);}
+  16%{opacity:.42;transform:translateY(0) scaleX(1.005);}
+  38%{opacity:.5;transform:translateY(-2px) scaleX(.997);}
+  47%{opacity:.16;}
+  56%{opacity:.48;transform:translateY(1px);}
+  80%{opacity:.34;transform:translateY(0) scaleX(1.004);}
+  100%{opacity:0;transform:translateY(6px);}}
+@media (max-width:560px){#bossHaunt{width:92px;height:196px;bottom:80px;}}
 </style>
 <style id="bfCss">
 /* ===== ボス戦：ボスの 絵の 上で たたかう（プレイヤー操作なし・じどう） ===== */
@@ -6196,13 +6227,11 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   .bfUN{font-size:8.5px;}
 }
 /* 上を すこし 暗くして HPバーを 読みやすく */
-#bfLayer::before{content:"";position:absolute;left:0;right:0;top:0;height:24%;pointer-events:none;
-  background:linear-gradient(180deg,rgba(4,6,16,.88),rgba(4,6,16,.5) 55%,rgba(4,6,16,0));}
+#bfLayer::before{content:"";position:absolute;left:0;right:0;top:0;height:15%;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,6,16,.72),rgba(4,6,16,.3) 60%,rgba(4,6,16,0));}
 /* ★PC（よこなが）＝ぜんぶ 右の たてなが枠の 中に */
 @media (orientation:landscape) and (min-width:820px){
   #bossPanel{overflow:hidden !important;}
-  #bfLayer::after{content:"";position:absolute;left:0;right:0;bottom:0;height:50%;pointer-events:none;
-    background:linear-gradient(0deg,rgba(4,6,16,.95) 0%,rgba(4,6,16,.78) 45%,rgba(4,6,16,0) 100%);}
   #bfBossHp{top:14px;left:50%;transform:translateX(-50%);width:calc(100% - 26px);}
   #bfBossAnchor{top:40%;}
   #bfBanner{top:34%;}
@@ -6275,6 +6304,7 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
     <div class="cloud cloud1"></div>
     <div class="cloud cloud2"></div>
     <div class="cloud cloud3"></div>
+    <div id="bossHaunt" hidden aria-hidden="true"></div>
     <div class="hill hillBack"></div>
     <button id="worldTree" type="button" aria-label="世界樹を見る" hidden style="display:none!important">
       <span id="wtCrown"></span><span id="wtTrunk"></span>
@@ -6546,9 +6576,11 @@ body.tutFreezeBtn #randomModeBtn{animation:none !important;transform:none !impor
   <div id="bossWarn" hidden><div class="bwBox"><div class="bwTtl">⚠ ちゅうい</div><div class="bwTxt">これから <b>こわい 表現</b>が あります。<br>にがてな 方には おすすめしません。</div><div class="bwBtns"><button id="bossWarnNo" type="button">やめる</button><button id="bossWarnGo" type="button">すすむ</button></div></div></div>
   <div id="bossMain" hidden>
     <button id="bossClose" type="button">✕</button>
+    <label id="bossSafeWrap"><input id="bossSafe" type="checkbox"/><span>こわい要素を 非表示</span></label>
     <div id="bossStage"><img id="bossBgMori" src="mori.png" alt=""><img id="bossImg" src="" alt=""><img id="bossFgMiti" src="miti.png" alt=""><div id="bossWhisper"></div></div>
     <div id="bossPanel">
       <div id="bossWhole"><img class="bwImg" id="bossWholeMori" src="mori.png" alt=""><img class="bwImg" id="bossWholeImg" src="" alt=""><img class="bwImg" id="bossWholeMiti" src="miti.png" alt=""></div>
+      <div id="bossLvTag" hidden></div>
       <div id="bossTimeNote"></div>
       <div class="bsRow"><span class="bsLbl">じぶんの ユメっ子</span><div class="bsSlots" id="bossMine"></div></div>
       <div class="bsRow"><span class="bsLbl">たすっと（ほかの人）</span><div class="bsSlots" id="bossHelp"></div></div>
@@ -30235,6 +30267,7 @@ function _bossEnter(){ try{$("bossWarn").hidden=true;}catch(_){} var mn=$("bossM
   try{var fb=$("bossFightBtn"); if(fb)fb.disabled=!_bossInWindow();}catch(_){}
   _bossPaintSlots();
   try{_bossPanWire();}catch(_){}
+  try{_bmLoadCache();_bossPaintMeter();_bmWatch();}catch(_){}
   try{ var pn=$("bossPanel"), one=document.getElementById("bossOneRow");
     if(pn&&!one){ one=document.createElement("div"); one.id="bossOneRow";
       one.appendChild($("bossMine")); one.appendChild($("bossHelp"));
@@ -30362,22 +30395,23 @@ function _bossCryStart(){
 }
 function _bossCryStop(){ try{clearInterval(_bossCryT);}catch(_){} _bossCryT=0; }
 /* ===== PC：カーソルの 高さで 左の絵が 上下に 動く ===== */
-var _bossPanY=40;
+var _bossPanY=40, BOSS_PAN_MIN=14, BOSS_PAN_MAX=78;
 function _bossPanWire(){
   try{
     var st=$("bossStage"); if(!st||st._panWired)return; st._panWired=1;
+    /* ★3枚を まったく おなじだけ 動かす（ズレると うしろの mori が 見えてしまう） */
     var set=function(y){
       _bossPanY=y;
-      var im=$("bossImg"); if(im)im.style.setProperty("object-position","center "+y+"%","important");
-      var mo=$("bossBgMori"); if(mo)mo.style.setProperty("object-position","center "+(40+(y-40)*0.35).toFixed(1)+"%","important");
-      var mi=$("bossFgMiti"); if(mi)mi.style.setProperty("object-position","center "+(40+(y-40)*1.25).toFixed(1)+"%","important");
+      ["bossBgMori","bossImg","bossFgMiti"].forEach(function(id){
+        var e=$(id); if(e)e.style.setProperty("object-position","center "+y+"%","important");
+      });
     };
     st.addEventListener("pointermove",function(e){
       try{
         if(!_bfIsPC())return;
         var r=st.getBoundingClientRect(); if(!r.height)return;
         var p=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
-        var y=Math.round(4+p*92);
+        var y=Math.round(BOSS_PAN_MIN+p*(BOSS_PAN_MAX-BOSS_PAN_MIN));   /* ★はみ出さない はんい */
         if(Math.abs(y-_bossPanY)<1)return;
         set(y);
       }catch(_){}
@@ -30416,6 +30450,68 @@ function _bossMojiStart(){
   },420);
 }
 function _bossMojiStop(){ try{clearInterval(_bossMojiT);}catch(_){} _bossMojiT=0; }
+/* ===== ホームに ぬっと 立つ ボス（haunt） =====
+   出る条件：①注意の「すすむ」を押したことがある人だけ ②ボスボタンが 出ている 時間だけ
+             ③しばらく（40分）だれも おいはらっていない
+   だれかが おいはらうと（bossmeter の beat が 更新される）すぐ 消える。          */
+var BOSS_HAUNT_MS=40*60*1000, _bossHauntT=0, _bossHauntImg="", _bossHauntSlot=-1;
+function _bossWarned(){ try{return localStorage.getItem(BOSS_WARN_KEY)==="1";}catch(_){return false;} }
+function _bossWindowStart(){
+  try{ if(typeof _devUnlockAll!=="undefined" && _devUnlockAll)return Date.now()-BOSS_HAUNT_MS-60000; }catch(_){}
+  var d=new Date(), st=new Date(d.getFullYear(),d.getMonth(),d.getDate(),18,0,0,0);
+  if(d.getHours()<5)st.setDate(st.getDate()-1);
+  return st.getTime();
+}
+function _bossHauntOn(){
+  try{
+    if(!_bossWarned())return false;          /* ★見たことが ない人には 出さない */
+    if(!_bossInWindow())return false;        /* ★ボスボタンが 出てる 時だけ */
+    var last=BOSS_METER.beat||_bossWindowStart();
+    return (Date.now()-last)>BOSS_HAUNT_MS;  /* ★しばらく だれも おいはらっていない */
+  }catch(_){ return false; }
+}
+function _bossHauntPaint(){
+  try{
+    var el=$("bossHaunt"); if(!el)return;
+    if(!_bossHauntOn()){ el.hidden=true; el.innerHTML=""; _bossHauntImg=""; return; }
+    if(el.hidden||!el.innerHTML){
+      _bossProbeImgs().then(function(list){
+        try{
+          var el2=$("bossHaunt"); if(!el2||!_bossHauntOn())return;
+          var arr=(list&&list.length)?list:["bosu1.png"];
+          /* だれが 出るかは 30分ごとに かわる */
+          var slot=Math.floor(Date.now()/1800000);
+          if(slot!==_bossHauntSlot||!_bossHauntImg){ _bossHauntSlot=slot; _bossHauntImg=arr[Math.floor(Math.random()*arr.length)]; }
+          el2.innerHTML='<img src="'+_bossHauntImg+'" alt="" onerror="this.style.display=\'none\'"/>';
+          var lf=8+Math.random()*76;                       /* 立つ 場所も 毎回 かわる */
+          el2.style.left=lf.toFixed(1)+"%";
+          el2.style.animationDelay=(-Math.random()*8).toFixed(1)+"s";
+          el2.hidden=false;
+        }catch(_){}
+      });
+    }
+  }catch(_){}
+}
+function _bossHauntStart(){
+  try{clearInterval(_bossHauntT);}catch(_){}
+  _bossHauntT=setInterval(function(){ try{ if(_bossWarned())_bmWatch(); }catch(_){} try{_bossHauntPaint();}catch(_){} },60000);
+  try{_bmLoadCache();}catch(_){}
+  try{ if(_bossWarned())_bmWatch(); }catch(_){}   /* 見たことが ある人だけ 見はる */
+  setTimeout(function(){try{_bossHauntPaint();}catch(_){}},1500);
+}
+try{ setTimeout(_bossHauntStart,4200); }catch(_){}
+/* ===== こわい要素を 非表示（左上のチェック） ===== */
+function _bossSafeOff(){
+  try{ localStorage.removeItem(BOSS_WARN_KEY); }catch(_){}   /* ★「すすむ」を押した判定を 消す */
+  try{ var el=$("bossHaunt"); if(el){el.hidden=true;el.innerHTML="";} }catch(_){}
+  _bossHauntImg="";
+  try{ var c=$("bossSafe"); if(c)c.checked=false; }catch(_){}
+  try{ _bossClose(); }catch(_){}                             /* ★ホームに もどる */
+  try{ toast("こわい ひょうじを けしたよ"); }catch(_){}
+}
+try{ document.addEventListener("change",function(e){
+  var t=e.target; if(t&&t.id==="bossSafe"&&t.checked)_bossSafeOff();
+}); }catch(_){}
 function _bossClose(){ try{_bfCleanup();}catch(_){} try{_bossCryStop();}catch(_){}
   try{var sc=$("bossScreen"); if(sc)sc.hidden=true;}catch(_){}
   try{clearInterval(_bossWhisperT);}catch(_){} try{if(window._bossBgm)window._bossBgm.pause();}catch(_){} try{startBGM();}catch(_){} }
@@ -30430,7 +30526,57 @@ function _bossOpenPick(kind){ var list=$("bossPickList"), box=$("bossPick"); if(
   if(kind==="mine"){ (_yumeDex()||[]).forEach(function(y){ html+='<button class="bpItem" data-k="mine" data-id="'+y.id+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="じぶんの ユメっ子"; }
   else { _bossHelperPool().forEach(function(y){ html+='<button class="bpItem" data-k="help" data-id="'+y.uid+'" type="button"><img src="'+y.img+'" alt="">'+_st(y)+'<span>'+escHtml(y.name||"")+'</span></button>'; }); $("bossPickTtl").textContent="たすっと（見たことのある子だけ）"; }
   list.innerHTML=html||'<div class="bpEmpty">まだ いないよ</div>'; box.hidden=false; }
-function _bossEnemy(n){ var base=[0,1.0,1.25,1.5][_bossNo]||1.0;
+/* ===== ボスの つよさ（みんなで 共有）＝おいはらった 人数ぶん つよくなる =====
+   ・1人1回だけ かぞえる（おなじ人が 何回 勝っても ふえない）
+   ・だれか 1人でも 負けたら その日は もう つよく ならない
+   ・その日ごと（jstKey）に リセット。Firebase: bossmeter/<日付>            */
+var BOSS_METER={lv:0,lost:0,beat:0,n:0}, _bmKeyCur="", _bmWired=false, _bmCacheK="radio_boss_meter";
+function _bmKey(){ try{return jstKey();}catch(_){ var d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); } }
+function _bmLoadCache(){ try{ var v=JSON.parse(localStorage.getItem(_bmCacheK)||"null");
+  if(v&&v.k===_bmKey()&&v.m)BOSS_METER=v.m; }catch(_){} }
+function _bmSaveCache(){ try{ localStorage.setItem(_bmCacheK,JSON.stringify({k:_bmKey(),m:BOSS_METER})); }catch(_){} }
+function _bmApply(v){
+  BOSS_METER={lv:(v&&v.lv)|0, lost:(v&&v.lost)?1:0, beat:(v&&v.beat)||0, n:(v&&v.n)|0};
+  _bmSaveCache();
+  try{_bossPaintMeter();}catch(_){}
+  try{_bossHauntPaint();}catch(_){}
+}
+async function _bmWatch(){
+  try{
+    if(_bmWired && _bmKeyCur===_bmKey())return;
+    _bmKeyCur=_bmKey(); _bmWired=true;
+    var db=await getDB(); if(!db)return;
+    var{ref,onValue}=await import(FB_DB);
+    onValue(ref(db,"bossmeter/"+_bmKeyCur),function(sn){ try{_bmApply(sn&&sn.exists()?sn.val():null);}catch(_){} });
+  }catch(_){}
+}
+async function _bmResult(win){
+  try{
+    if(typeof tutOn==="function"&&tutOn())return;
+    var uid=""; try{uid=getUid()||"";}catch(_){}
+    var db=await getDB(); if(!db)return;
+    var{ref,runTransaction}=await import(FB_DB);
+    var k=_bmKey(), now=Date.now();
+    await runTransaction(ref(db,"bossmeter/"+k),function(cur){
+      cur=cur||{lv:0,lost:0,beat:0,n:0,w:{}};
+      if(!cur.w)cur.w={};
+      if(!win){ cur.lost=1; return cur; }                 /* ★1人でも 負けたら 打ちどめ */
+      cur.beat=now; cur.n=(cur.n|0)+1;                    /* おいはらった＝ホームの ボスは 消える */
+      if(!cur.lost && uid && !cur.w[uid]){ cur.w[uid]=1; cur.lv=(cur.lv|0)+1; }   /* ★1人1回だけ */
+      return cur;
+    });
+  }catch(_){}
+}
+/* つよさの ばいりつ（1人おいはらうごとに +14%・最大3倍） */
+function _bossLvMul(){ var lv=BOSS_METER.lv|0; return Math.min(3, 1+lv*0.14); }
+function _bossPaintMeter(){
+  try{ var el=$("bossLvTag"); if(!el)return;
+    var lv=BOSS_METER.lv|0;
+    el.innerHTML='<b>つよさ Lv'+(lv+1)+'</b><i>'+(lv?("みんなで "+lv+"人 おいはらった"):"まだ だれも おいはらってない")+(BOSS_METER.lost?"・もう つよくならない":"")+'</i>';
+    el.hidden=false;
+  }catch(_){}
+}
+function _bossEnemy(n){ var base=([0,1.0,1.25,1.5][_bossNo]||1.0)*_bossLvMul();
   /* ★えらんだ 人数で つよさを かえる（ひとりでも 育っていれば 勝てるように） */
   var k=Math.max(1,Math.min(4,n||1));
   var hpK=[0,0.58,0.78,0.92,1.0][k], atK=[0,0.62,0.80,0.92,1.0][k];
@@ -30457,6 +30603,7 @@ function _bossFight(){ if(!_bossInWindow()){ try{toast("よる 18時〜あさ 5�
   try{["bossTimeNote","bossOneRow","bossFightBtn"].forEach(function(id){var e=$(id);if(e)e.style.display="none";});}catch(_){}
   try{clearInterval(_bossWhisperT);}catch(_){} try{var w=$("bossWhisper"); if(w){w.classList.remove("show");w.textContent="";}}catch(_){}
   _bfUnits=team;
+  try{var _bm=$("bossMain"); if(_bm)_bm.classList.add("bfOn");}catch(_){}
   _bfState=_advInit(team,_bossEnemy(team.length));
   _bfBuildUI();
   try{playPop();}catch(_){}
@@ -30645,6 +30792,8 @@ function _bfEnd(win){
   _bfStop();
   if(_bfState)_bfState.over=true;
   _bfLogPush([win?"★ ボスを おいはらった！":"… にげかえった …"],!win);
+  try{_bmResult(!!win);}catch(_){}
+  try{ if(win){ BOSS_METER.beat=Date.now(); _bmSaveCache(); _bossHauntPaint(); } }catch(_){}
   try{ if(win){sndCrit();}else{sndDown();} }catch(_){}
   try{ _bossVoice(win?"wail":"laugh",0.15,1); }catch(_){}
   try{ var r=document.getElementById("bfResult");
@@ -30656,8 +30805,10 @@ function _bfEnd(win){
 function _bfCleanup(){
   _bfStop(); _bfState=null; _bfUnits=null;
   try{ var l=document.getElementById("bfLayer"); if(l)l.remove(); }catch(_){}
+  try{ var _bm2=$("bossMain"); if(_bm2)_bm2.classList.remove("bfOn"); }catch(_){}
   try{ ["bossImg","bossWholeImg"].forEach(function(id){var e=$(id);if(e)e.classList.remove("bfHurt","bfCrit","bfAtk","bfWind","bfEvo");}); }catch(_){}
   try{ ["bossTimeNote","bossOneRow","bossFightBtn"].forEach(function(id){var e=$(id);if(e)e.style.display="";}); }catch(_){}
+  try{ _bossPaintMeter(); }catch(_){}
   try{ clearInterval(_bossWhisperT); }catch(_){}
   try{ if(!$("bossScreen").hidden){ _bossWhisperT=setInterval(_bossWhisper,7000); } }catch(_){}
 }
